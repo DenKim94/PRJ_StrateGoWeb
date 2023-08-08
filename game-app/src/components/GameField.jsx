@@ -33,7 +33,7 @@ class GameField extends React.Component {
     const xAxisLetters = Array.from({ length: 10 }, (_, index) =>
       String.fromCharCode(65 + index)
     );
-
+    
     // Erstelle ein Array von Zahlen für die y-Achse
     const yAxisNumbers = Array.from({ length: 10 }, (_, index) => index + 1);
 
