@@ -1,5 +1,7 @@
 import React from 'react';
 import './GameField.css'
+import YAxis from './yAxis';
+import XAxis from './xAxis';
 
 class GameField extends React.Component {
   constructor(props) {
@@ -29,22 +31,19 @@ class GameField extends React.Component {
       border: '1px solid black', // Schwarze Linien um jedes Spielfeldquadrat
     };
 
-    // Erstelle ein Array von Buchstaben für die x-Achse
+    // Erstelle ein String-Array aus Buchstaben für die x-Achse
     const xAxisLetters = Array.from({ length: 10 }, (_, index) =>
       String.fromCharCode(65 + index)
     );
-    
-    // Erstelle ein Array von Zahlen für die y-Achse
-    const yAxisNumbers = Array.from({ length: 10 }, (_, index) => index + 1);
 
+    // Erstelle ein String-Array aus Zahlen für die y-Achse
+    const yAxisNumbers = (Array.from({ length: 10 }, (_, index) => 
+    String(index + 1))).reverse();
+    
     return (
         <div className="game-field-container">
           {/* y-Achse */}
-          <div className="y-axis">
-            {yAxisNumbers.map((number, index) => (
-              <div key={index}>{number}</div>
-            ))}
-          </div>
+          <YAxis yAxisArray = {yAxisNumbers} />
   
           {/* Das Spielfeld */}
           <div className="game-field" style={fieldStyle}>
@@ -68,11 +67,7 @@ class GameField extends React.Component {
           </div>
   
           {/* x-Achse */}
-          <div className="x-axis">
-            {xAxisLetters.map((letter, index) => (
-              <div key={index}>{letter}</div>
-            ))}
-          </div>
+          <XAxis xAxisArray = {xAxisLetters} />
         </div>
       );
   }
