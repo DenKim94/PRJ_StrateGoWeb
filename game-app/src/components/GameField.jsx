@@ -1,5 +1,6 @@
 import React from 'react';
 import './GameField.css'
+import * as helperFcn from './functions/helperFunctions.js'
 import YAxis from './yAxis';
 import XAxis from './xAxis';
 
@@ -7,7 +8,7 @@ class GameField extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      arrayFigures: [], // Array, um Spielfiguren hinzuzufügen
+      arrayFigures: [], // Array to add game figures
     };
   }
 
@@ -17,18 +18,17 @@ class GameField extends React.Component {
     const fieldStyle = {
       width: fieldWidth,
       height: fieldHeight,
-      backgroundColor: backgroundColor, // Hintergrundfarbe des Spielfeldes
-      border: '1px solid black', // Schwarze Linie um das Spielfeld
       display: 'grid',
-      // Aufteilung des Spielfeldes in einzelne Quadrate
+      // Separate the game field into single pattern
       gridTemplateColumns: `repeat(10, ${sizeSingleField}px)`,
-      gridTemplateRows: `repeat(10, ${sizeSingleField}px)`,
+      gridTemplateRows: `repeat(10, ${sizeSingleField}px)`
     };
 
     const styleSingleField = {
       width: sizeSingleField,
       height: sizeSingleField,
-      border: '1px solid black', // Schwarze Linien um jedes Spielfeldquadrat
+      backgroundColor: backgroundColor, // Hintergrundfarbe des Spielfeldes
+      border: '1px solid black' // Schwarze Linien um jedes Spielfeldquadrat
     };
 
     // Erstelle ein String-Array aus Buchstaben für die x-Achse
@@ -38,17 +38,22 @@ class GameField extends React.Component {
 
     // Erstelle ein String-Array aus Zahlen für die y-Achse
     const yAxisNumbers = (Array.from({ length: 10 }, (_, index) => 
-    String(index + 1))).reverse();
+    String(index + 1)));
     
+    // Create an array with coordinates 
+    const fieldCoordinates = helperFcn.getCoordinatesArray(xAxisLetters,yAxisNumbers);
+    console.log(">> coordinatesArray: ", fieldCoordinates);
+
     return (
         <div className="game-field-container">
           {/* y-Achse */}
           <div>
-              <YAxis yAxisArray = {yAxisNumbers} axisHeight = {fieldHeight}/>
+              <YAxis yAxisArray = {yAxisNumbers.reverse()} axisHeight = {fieldHeight}/>
           </div>
           {/* *** Das Spielfeld *** */}
           <div className="game-field" style={fieldStyle}>
             {/* Hier werden die Spielfelder erstellt */}
+
             {Array.from({ length: 100 }).map((_, index) => (
               <div key={index} className="single-field" style={styleSingleField}>
               </div>
