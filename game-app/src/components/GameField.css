@@ -1,41 +1,34 @@
-/* Externe CSS-Datei für GameField */
-/* Externe CSS-Datei für GameField */
+/* *** CSS-Datei für GameField *** */
 .game-field-container {
-    position: relative;
-  }
-  
-  .game-field {
-    /* Stile für das Spielfeld */
-    margin-bottom: 16px; /* Abstand für die x-Achse */
-  }
-  
-  .y-axis {
-    /* Stile für die y-Achse */
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding-left: 10px; /* Abstand zur Spielfeldkante */
-  }
-  
-  .y-axis div {
-    display: flex;
-    align-items: center;
-    height: calc(100% / 10);
-    padding-top: 1px; /* Reduziere den oberen Abstand */
-    padding-bottom: 1px; /* Reduziere den unteren Abstand */
-  }
-  
-  .x-axis {
-    /* Stile für die x-Achse */
-    display: flex;
-    justify-content: space-between;
-    padding-top: 10px; /* Abstand zur Spielfeldkante */
-  }
-  
-  .x-axis div {
-    letter-spacing: 1px; 
-  }
+  position: relative;
+}
+/* Stile für das Spielfeld */
+.game-field {
+  margin-bottom: 0px; /* Abstand für die x-Achse */
+}
+
+/* Stile für die x-Achse */
+.x-axis {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 20px; /* Abstand zur Spielfeldkante */
+} 
+
+  /* Stile für die y-Achse */
+.y-axis {
+  position: absolute;
+  left: -40px;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-left: 10px; /* Abstand zur Spielfeldkante */
+}
+
+.y-axis div {
+  display: flex;
+  align-items: center;
+  height: calc(100% / 10);
+}
+

@@ -13,7 +13,7 @@ class GameField extends React.Component {
 
   render() {
     const {fieldWidth, fieldHeight, backgroundColor} = this.props;
-    const sizeSingleField = fieldWidth / 10;
+    const sizeSingleField = Math.abs(fieldWidth)/10;
     const fieldStyle = {
       width: fieldWidth,
       height: fieldHeight,
@@ -43,31 +43,21 @@ class GameField extends React.Component {
     return (
         <div className="game-field-container">
           {/* y-Achse */}
-          <YAxis yAxisArray = {yAxisNumbers} />
-  
-          {/* Das Spielfeld */}
+          <div>
+              <YAxis yAxisArray = {yAxisNumbers} axisHeight = {fieldHeight}/>
+          </div>
+          {/* *** Das Spielfeld *** */}
           <div className="game-field" style={fieldStyle}>
-            {/* Hier werden die Spielfelder und Spielfiguren dargestellt */}
+            {/* Hier werden die Spielfelder erstellt */}
             {Array.from({ length: 100 }).map((_, index) => (
               <div key={index} className="single-field" style={styleSingleField}>
-                {/* Hier können Spielfiguren platziert werden */}
-                {this.state.arrayFigures.map((figur, figurIndex) => (
-                  <div
-                    key={figurIndex}
-                    style={{
-                      width: sizeSingleField,
-                      height: sizeSingleField,
-                      backgroundColor: 'blue', // Beispielhafte Farbe für Spielfiguren
-                      borderRadius: '50%',
-                    }}
-                  />
-                ))}
               </div>
             ))}
           </div>
-  
-          {/* x-Achse */}
-          <XAxis xAxisArray = {xAxisLetters} />
+          {/* x-Achse */}         
+          <div>           
+              <XAxis xAxisArray = {xAxisLetters} singleFieldWidth = {sizeSingleField} />
+          </div> 
         </div>
       );
   }

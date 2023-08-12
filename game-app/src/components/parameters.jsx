@@ -3,7 +3,7 @@
 
 /**** Component: GameField ****/
 export const gameFieldStruct = {
-    fieldWidth: 700,   // Breite des Spielfeldes in Pixeln
-    fieldHeight: 700,  // Höhe des Spielfeldes in Pixeln
+    fieldWidth: 600,                        // Breite des Spielfeldes in Pixeln
+    fieldHeight: 600,                       // Höhe des Spielfeldes in Pixeln
     backgroundColor: 'lightgoldenrodyellow' // Hintergrundfarbe des Spielfeldes
 };
