@@ -1,29 +1,27 @@
-/* *** CSS-Datei für GameField *** */
+/* *** CSS-File of 'GameField' *** */
 .game-field-container {
   position: relative;
 }
-/* Stile für das Spielfeld */
+/* Styl of the main board */
 .game-field {
-  margin-bottom: 0px; /* Abstand für die x-Achse */
+  margin-top: 0px; /* Distance to the upper side */
 }
 
-/* Stile für die x-Achse */
+/* Style of the x-Axis */
 .x-axis {
   display: flex;
   justify-content: space-between;
-  padding-top: 20px; /* Abstand zur Spielfeldkante */
+  padding-top: 20px; /* Distance between the axis and game field */
 } 
 
-  /* Stile für die y-Achse */
+  /* Style of the y-Axis */
 .y-axis {
   position: absolute;
   left: -40px;
-  top: 0;
-  bottom: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-left: 10px; /* Abstand zur Spielfeldkante */
+  padding-left: 0px; /* Distance between the axis and game field */
 }
 
 .y-axis div {

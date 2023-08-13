@@ -1,5 +1,5 @@
 import React from 'react';
-
+/* Component of the y-Axis */
 const YAxis = ({yAxisArray,axisHeight}) => {
   return (
     <div className="y-axis" style={{ height: axisHeight}}>

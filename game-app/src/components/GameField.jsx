@@ -4,6 +4,7 @@ import * as helperFcn from './functions/helperFunctions.js'
 import YAxis from './yAxis';
 import XAxis from './xAxis';
 
+/* ******************************************************************* */ 
 class GameField extends React.Component {
   constructor(props) {
     super(props);
@@ -13,53 +14,62 @@ class GameField extends React.Component {
   }
 
   render() {
-    const {fieldWidth, fieldHeight, backgroundColor} = this.props;
+    const {fieldWidth, fieldHeight, backgroundColor, coordsNonPlayableFields, colorNonPlayableFields} = this.props;
     const sizeSingleField = Math.abs(fieldWidth)/10;
     const fieldStyle = {
       width: fieldWidth,
       height: fieldHeight,
       display: 'grid',
-      // Separate the game field into single pattern
+      /* Separate the game field into single patterns */
       gridTemplateColumns: `repeat(10, ${sizeSingleField}px)`,
       gridTemplateRows: `repeat(10, ${sizeSingleField}px)`
     };
 
-    const styleSingleField = {
-      width: sizeSingleField,
-      height: sizeSingleField,
-      backgroundColor: backgroundColor, // Hintergrundfarbe des Spielfeldes
-      border: '1px solid black' // Schwarze Linien um jedes Spielfeldquadrat
-    };
-
-    // Erstelle ein String-Array aus Buchstaben für die x-Achse
+    /* Create a String-Array (Letters) for the x-Axis */
     const xAxisLetters = Array.from({ length: 10 }, (_, index) =>
       String.fromCharCode(65 + index)
     );
 
-    // Erstelle ein String-Array aus Zahlen für die y-Achse
+    /* Create a String-Array (Numbers) for the y-Axis */
     const yAxisNumbers = (Array.from({ length: 10 }, (_, index) => 
-    String(index + 1)));
+    String(index + 1))).reverse();
     
-    // Create an array with coordinates 
+    /* Merging the axis arrays into a new array of coordinates */
     const fieldCoordinates = helperFcn.getCoordinatesArray(xAxisLetters,yAxisNumbers);
-    console.log(">> coordinatesArray: ", fieldCoordinates);
 
+    /* Create and render the game elements (axis and game fields) */ 
     return (
         <div className="game-field-container">
-          {/* y-Achse */}
+          {/* *** y-Axis *** */}
           <div>
-              <YAxis yAxisArray = {yAxisNumbers.reverse()} axisHeight = {fieldHeight}/>
+              <YAxis yAxisArray = {yAxisNumbers} axisHeight = {fieldHeight}/>
           </div>
-          {/* *** Das Spielfeld *** */}
+          {/* *** The game field *** */}
           <div className="game-field" style={fieldStyle}>
-            {/* Hier werden die Spielfelder erstellt */}
-
-            {Array.from({ length: 100 }).map((_, index) => (
-              <div key={index} className="single-field" style={styleSingleField}>
-              </div>
-            ))}
+            {/* Create single game fields */}
+            {Array.from({ length: 100 }).map((_, index) => {
+              const singleFieldProps = helperFcn.setProps4SingleField(
+                fieldCoordinates[index],
+                sizeSingleField,
+                backgroundColor
+              );
+              /* Define non playable fields */
+              helperFcn.setNonPlayableFields(singleFieldProps,
+                fieldCoordinates[index],
+                coordsNonPlayableFields,
+                colorNonPlayableFields);
+              /* Create and render the elements with specific coordinates */    
+              return (
+                <div
+                  key={index}
+                  className={"singleField_"+index}
+                  style={singleFieldProps.style}
+                  data-coordinates={`${fieldCoordinates[0]},${fieldCoordinates[1]}`} 
+                ></div>
+              )
+            })}
           </div>
-          {/* x-Achse */}         
+          {/* *** x-Axis *** */}         
           <div>           
               <XAxis xAxisArray = {xAxisLetters} singleFieldWidth = {sizeSingleField} />
           </div> 
@@ -68,11 +78,18 @@ class GameField extends React.Component {
   }
 }
 
-// Vorgabe für die Spielfeldbreite und -höhe, falls nicht über 'props' definiert
+/* Default values of properties (if not predefined) */
 GameField.defaultProps = {
     fieldWidth: 500,
     fieldHeight: 500,
-    backgroundColor: 'lightgoldenrodyellow'
+    backgroundColor: 'lightgoldenrodyellow',
+    coordsNonPlayableFields:[                
+    ["C","5"],["C","6"],
+    ["D","5"],["D","6"],
+    ["G","5"],["G","6"],
+    ["H","5"],["H","6"],
+    ],
+    colorNonPlayableFields: 'brown' 
   };
 
 export default GameField;

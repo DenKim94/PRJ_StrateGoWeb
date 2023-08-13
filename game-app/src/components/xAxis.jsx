@@ -1,5 +1,5 @@
 import React from 'react';
-
+/* Component of the x-Axis */
 const XAxis = ({xAxisArray,singleFieldWidth}) => {
   return (
     <div className="x-axis">
