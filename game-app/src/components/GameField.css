@@ -1,41 +1,32 @@
-/* Externe CSS-Datei für GameField */
-/* Externe CSS-Datei für GameField */
+/* *** CSS-File of 'GameField' *** */
 .game-field-container {
-    position: relative;
-  }
-  
-  .game-field {
-    /* Stile für das Spielfeld */
-    margin-bottom: 16px; /* Abstand für die x-Achse */
-  }
-  
-  .y-axis {
-    /* Stile für die y-Achse */
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding-left: 10px; /* Abstand zur Spielfeldkante */
-  }
-  
-  .y-axis div {
-    display: flex;
-    align-items: center;
-    height: calc(100% / 10);
-    padding-top: 1px; /* Reduziere den oberen Abstand */
-    padding-bottom: 1px; /* Reduziere den unteren Abstand */
-  }
-  
-  .x-axis {
-    /* Stile für die x-Achse */
-    display: flex;
-    justify-content: space-between;
-    padding-top: 10px; /* Abstand zur Spielfeldkante */
-  }
-  
-  .x-axis div {
-    letter-spacing: 1px; 
-  }
+  position: relative;
+}
+/* Styl of the main board */
+.game-field {
+  margin-top: 0px; /* Distance to the upper side */
+}
+
+/* Style of the x-Axis */
+.x-axis {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 20px; /* Distance between the axis and game field */
+} 
+
+  /* Style of the y-Axis */
+.y-axis {
+  position: absolute;
+  left: -40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-left: 0px; /* Distance between the axis and game field */
+}
+
+.y-axis div {
+  display: flex;
+  align-items: center;
+  height: calc(100% / 10);
+}
+

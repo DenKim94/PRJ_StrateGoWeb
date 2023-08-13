@@ -14,7 +14,8 @@
     "react-konva": "18.0.0-0",
     "chess.js":"0.13.4",
     "simple-peer":"9.11.1",
-    "uuid":"9.0.0"
+    "uuid":"9.0.0",
+    "bootstrap": "^5.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
