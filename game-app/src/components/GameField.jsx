@@ -1,20 +1,19 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './GameField.css'
 import * as helperFcn from './functions/helperFunctions.js'
 import YAxis from './yAxis';
 import XAxis from './xAxis';
+import { gameFieldStruct } from './parameters';
+import { genCfg } from './parameters';
 
-/* ******************************************************************* */ 
-class GameField extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      arrayFigures: [], // Array to add game figures
-    };
-  }
-
-  render() {
-    const {fieldWidth, fieldHeight, backgroundColor, coordsNonPlayableFields, colorNonPlayableFields} = this.props;
+/* *********************** Functional Component ************************ */ 
+const GameField = ({
+  fieldWidth = gameFieldStruct.fieldWidth, 
+  fieldHeight = gameFieldStruct.fieldHeight, 
+  backgroundColor = gameFieldStruct.backgroundColor, 
+  coordsNonPlayableFields = gameFieldStruct.coordsNonPlayableFields, 
+  colorNonPlayableFields = gameFieldStruct.colorNonPlayableFields
+  }) => {
     const sizeSingleField = Math.abs(fieldWidth)/10;
     const fieldStyle = {
       width: fieldWidth,
@@ -24,6 +23,21 @@ class GameField extends React.Component {
       gridTemplateColumns: `repeat(10, ${sizeSingleField}px)`,
       gridTemplateRows: `repeat(10, ${sizeSingleField}px)`
     };
+
+    /* State as array to store and set game figure properties */
+    const arrayFigures = useState([]);
+    /* state as array to store and set game field properties */
+    const gameFieldProps = useState([]);
+
+    /* Helper function to update the array/properties of 'gameFieldProps' */
+    const updateStateGameField = (newProps) => {
+      gameFieldProps.push(newProps); // Update array
+    };
+
+    /* Helper function to update the array/properties of 'arrayFigures' */
+    // const updateStateArrayFigures = (newFigures) => {
+    //   arrayFigures.push(newFigures);   // Update array
+    // };
 
     /* Create a String-Array (Letters) for the x-Axis */
     const xAxisLetters = Array.from({ length: 10 }, (_, index) =>
@@ -36,9 +50,39 @@ class GameField extends React.Component {
     
     /* Merging the axis arrays into a new array of coordinates */
     const fieldCoordinates = helperFcn.getCoordinatesArray(xAxisLetters,yAxisNumbers);
+    const updatedStateArray = [];
 
+    Array.from({ length: 100 }).map((_, index) => {
+      const singleFieldProps = helperFcn.setProps4SingleField(
+        index,
+        fieldCoordinates[index],
+        sizeSingleField,
+        backgroundColor
+      );
+      /* Define non playable fields and modify the properties */
+      helperFcn.setNonPlayableFields(singleFieldProps,
+        fieldCoordinates[index],
+        coordsNonPlayableFields,
+        colorNonPlayableFields);
+      
+        return(updatedStateArray.push(singleFieldProps))
+    })
+
+    /* Update State of 'gameFieldProps' */ 
+      updateStateGameField(updatedStateArray);
+      
+    /* Checking parameters in 'debugMode' */
+    if(genCfg.debugMode){
+      console.log("################### Component: GameField #####################");
+      console.log(">> Settings 'gameFieldStruct': ", gameFieldStruct);
+      console.log(">> Array 'fieldCoordinates': ", fieldCoordinates);
+      console.log(">> State 'arrayFigures': ", arrayFigures);
+      console.log(">> State 'gameFieldProps': ", gameFieldProps);
+      
+      console.log(" #############################################################");
+    }
     /* Create and render the game elements (axis and game fields) */ 
-    return (
+    return(
         <div className="game-field-container">
           {/* *** y-Axis *** */}
           <div>
@@ -47,24 +91,16 @@ class GameField extends React.Component {
           {/* *** The game field *** */}
           <div className="game-field" style={fieldStyle}>
             {/* Create single game fields */}
-            {Array.from({ length: 100 }).map((_, index) => {
-              const singleFieldProps = helperFcn.setProps4SingleField(
-                fieldCoordinates[index],
-                sizeSingleField,
-                backgroundColor
-              );
-              /* Define non playable fields */
-              helperFcn.setNonPlayableFields(singleFieldProps,
-                fieldCoordinates[index],
-                coordsNonPlayableFields,
-                colorNonPlayableFields);
-              /* Create and render the elements with specific coordinates */    
+            {updatedStateArray.map((obj, index) => {
+              /* Create and render single field elements with specific coordinates */    
               return (
                 <div
                   key={index}
                   className={"singleField_"+index}
-                  style={singleFieldProps.style}
-                  data-coordinates={`${fieldCoordinates[0]},${fieldCoordinates[1]}`} 
+                  style={updatedStateArray[index].style}
+                  data-coordinates={`${updatedStateArray[index].pos_x},
+                  ${updatedStateArray[index].pos_y},
+                  ${updatedStateArray[index].isPlayable}`} 
                 ></div>
               )
             })}
@@ -74,22 +110,8 @@ class GameField extends React.Component {
               <XAxis xAxisArray = {xAxisLetters} singleFieldWidth = {sizeSingleField} />
           </div> 
         </div>
-      );
-  }
+      ); 
+      
 }
-
-/* Default values of properties (if not predefined) */
-GameField.defaultProps = {
-    fieldWidth: 500,
-    fieldHeight: 500,
-    backgroundColor: 'lightgoldenrodyellow',
-    coordsNonPlayableFields:[                
-    ["C","5"],["C","6"],
-    ["D","5"],["D","6"],
-    ["G","5"],["G","6"],
-    ["H","5"],["H","6"],
-    ],
-    colorNonPlayableFields: 'brown' 
-  };
 
 export default GameField;
