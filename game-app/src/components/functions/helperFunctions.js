@@ -5,6 +5,7 @@ Input: fieldCoordinates [column, row],
        backgroundColor [background color of a single field]
 Output: 
     singleFieldProps = {
+        ID: ID-Number
         pos_x: xCoord [column],
         pos_y: yCoord [row],
         style: {
@@ -17,7 +18,7 @@ Output:
 */
 export const setProps4SingleField = (id,fieldCoordinates,sizeSingleField,backgroundColor) => {
     let singleFieldProps = {
-        ID: id,
+        ID: id+1,
         pos_x: fieldCoordinates[0],
         pos_y: fieldCoordinates[1],
         isPlayable: true,
@@ -71,11 +72,6 @@ function arraysAreEqual(arr1, arr2) {
         }
     }
     return true;
-}
-/**** Helper function to update the array/properties of 'gameFieldProps' ****/
-export function updateGameFieldProps(currentFieldProps,newFieldProps){
-    const updatedFieldProps = currentFieldProps.push(newFieldProps);
-    return updatedFieldProps; 
 }
 
 /**** Helper function to get stored keys of an Object-Array ****/

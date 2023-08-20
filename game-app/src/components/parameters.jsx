@@ -1,5 +1,10 @@
 /**** Main file for setting required parameters ****/
-/**** Date: 13.08.2023 ****/
+/**** Date: 20.08.2023 ****/
+
+/**** General/Global Configurations ****/
+export const genCfg = {
+    debugMode: false   /* Boolean for showing parameter values in the console (if true) */
+};
 
 /**** Component: GameField ****/
 export const gameFieldStruct = {
@@ -14,3 +19,18 @@ export const gameFieldStruct = {
     ],
     colorNonPlayableFields: '#ADD8E6'       // Color (Colorcode) of non playable fields [String]
 };
+
+
+/* To-Do: Set default values of properties (if not defined) */
+/* gameFieldStruct.defaultProps = {
+    fieldWidth: 500,
+    fieldHeight: 500,
+    backgroundColor: 'lightgoldenrodyellow',
+    coordsNonPlayableFields:[                
+    ["C","5"],["C","6"],
+    ["D","5"],["D","6"],
+    ["G","5"],["G","6"],
+    ["H","5"],["H","6"],
+    ],
+    colorNonPlayableFields: 'brown' 
+  }; */
