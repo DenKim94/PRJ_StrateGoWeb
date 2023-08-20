@@ -9,9 +9,17 @@ class GameField extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      arrayFigures: [], // Array to add game figures
+      arrayFigures: [],  // Array to add game figures
+      gameFieldProps: []    // Array to store game field properties
     };
   }
+  
+  // Helper function to update the array/properties of 'gameFieldProps'
+  updateStateFieldProps = (newFieldProps) => {
+      this.setState(prevState => ({
+      gameFieldProps: prevState.gameFieldProps.concat(newFieldProps),
+    }));
+  };
 
   render() {
     const {fieldWidth, fieldHeight, backgroundColor, coordsNonPlayableFields, colorNonPlayableFields} = this.props;
@@ -37,6 +45,9 @@ class GameField extends React.Component {
     /* Merging the axis arrays into a new array of coordinates */
     const fieldCoordinates = helperFcn.getCoordinatesArray(xAxisLetters,yAxisNumbers);
 
+    /* Array to store game field properties */
+    const gameFieldProps = []; 
+
     /* Create and render the game elements (axis and game fields) */ 
     return (
         <div className="game-field-container">
@@ -49,6 +60,7 @@ class GameField extends React.Component {
             {/* Create single game fields */}
             {Array.from({ length: 100 }).map((_, index) => {
               const singleFieldProps = helperFcn.setProps4SingleField(
+                index,
                 fieldCoordinates[index],
                 sizeSingleField,
                 backgroundColor
@@ -58,17 +70,25 @@ class GameField extends React.Component {
                 fieldCoordinates[index],
                 coordsNonPlayableFields,
                 colorNonPlayableFields);
+
+              /* Add Object 'singleFieldProps' to Array 'gameFieldProps' */
+              helperFcn.updateGameFieldProps(gameFieldProps,singleFieldProps)
+
               /* Create and render the elements with specific coordinates */    
               return (
                 <div
                   key={index}
                   className={"singleField_"+index}
                   style={singleFieldProps.style}
-                  data-coordinates={`${fieldCoordinates[0]},${fieldCoordinates[1]}`} 
+                  data-coordinates={`${fieldCoordinates[0]},
+                  ${fieldCoordinates[1]},
+                  ${singleFieldProps.isPlayable}`} 
                 ></div>
               )
             })}
+            
           </div>
+
           {/* *** x-Axis *** */}         
           <div>           
               <XAxis xAxisArray = {xAxisLetters} singleFieldWidth = {sizeSingleField} />

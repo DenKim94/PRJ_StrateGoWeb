@@ -15,8 +15,9 @@ Output:
         }
     }; 
 */
-export const setProps4SingleField = (fieldCoordinates,sizeSingleField,backgroundColor) => {
+export const setProps4SingleField = (id,fieldCoordinates,sizeSingleField,backgroundColor) => {
     let singleFieldProps = {
+        ID: id,
         pos_x: fieldCoordinates[0],
         pos_y: fieldCoordinates[1],
         isPlayable: true,
@@ -47,7 +48,8 @@ export function setNonPlayableFields(singleFieldProps,
                                      currentCoordinates,
                                      coordsNonPlayableFields,
                                      color){
-      
+    /**** Check for coordinates of non playable fields 
+          and modify the properties if neccessary ****/ 
     const containsCoordinates = coordsNonPlayableFields.some(coords =>
         arraysAreEqual(coords, currentCoordinates)
     );
@@ -58,7 +60,7 @@ export function setNonPlayableFields(singleFieldProps,
       }
     return singleFieldProps  
 }
-
+/**** Helper function to check if the coordinates are equal ****/
 function arraysAreEqual(arr1, arr2) {
     if (arr1.length !== arr2.length) {
         return false;
@@ -69,4 +71,19 @@ function arraysAreEqual(arr1, arr2) {
         }
     }
     return true;
+}
+/**** Helper function to update the array/properties of 'gameFieldProps' ****/
+export function updateGameFieldProps(currentFieldProps,newFieldProps){
+    const updatedFieldProps = currentFieldProps.push(newFieldProps);
+    return updatedFieldProps; 
+}
+
+/**** Helper function to get stored keys of an Object-Array ****/
+export function getObjArrayKeys(objArray){
+    const keysArray = [];
+    objArray.forEach(obj => {
+        const keys = Object.keys(obj);
+        keysArray.push(keys)
+      });
+    return keysArray    
 }
