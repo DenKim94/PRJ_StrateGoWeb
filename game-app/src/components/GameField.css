@@ -1,7 +1,7 @@
 /* *** CSS-File of 'GameField' *** */
 .game-field-container {
   position: relative;
-  top: -100px;
+  top: -20px;
 }
 /* Style of the main board */
 .game-field {
