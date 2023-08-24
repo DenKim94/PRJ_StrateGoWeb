@@ -20,6 +20,15 @@ export const gameFieldStruct = {
     colorNonPlayableFields: '#ADD8E6'       // Color (Colorcode) of non playable fields [String]
 };
 
+/**** Component: GameFigure ****/
+export const gameFiguresStruct = {
+    path_redFig: "assets/images/redFigures/",
+    path_blueFig: "assets/images/blueFigures/",
+    path_deadFig: "assets/images/deadFigures/",
+    figWidth: 10,
+    figHeight: 10
+};
+
 
 /* To-Do: Set default values of properties (if not defined) */
 /* gameFieldStruct.defaultProps = {

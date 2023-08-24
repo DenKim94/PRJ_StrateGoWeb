@@ -1,8 +1,9 @@
 /* *** CSS-File of 'GameField' *** */
 .game-field-container {
   position: relative;
+  top: -100px;
 }
-/* Styl of the main board */
+/* Style of the main board */
 .game-field {
   margin-top: 0px; /* Distance to the upper side */
 }

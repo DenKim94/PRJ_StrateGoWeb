@@ -6,7 +6,7 @@ import XAxis from './xAxis';
 import { gameFieldStruct } from './parameters';
 import { genCfg } from './parameters';
 
-/* *********************** Functional Component ************************ */ 
+/* *********************** Game Field Component ************************ */ 
 const GameField = ({
   fieldWidth = gameFieldStruct.fieldWidth, 
   fieldHeight = gameFieldStruct.fieldHeight, 
