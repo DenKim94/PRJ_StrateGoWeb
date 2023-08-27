@@ -1,11 +1,6 @@
 /* *** CSS-File of 'GameField' *** */
 .game-field-container {
   position: relative;
-  top: -20px;
-}
-/* Style of the main board */
-.game-field {
-  margin-top: 0px; /* Distance to the upper side */
 }
 
 /* Style of the x-Axis */
