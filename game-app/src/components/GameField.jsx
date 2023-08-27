@@ -6,7 +6,7 @@ import XAxis from './xAxis';
 import { gameFieldStruct } from './parameters';
 import { genCfg } from './parameters';
 
-/* *********************** Functional Component ************************ */ 
+/* *********************** Game Field Component ************************ */ 
 const GameField = ({
   fieldWidth = gameFieldStruct.fieldWidth, 
   fieldHeight = gameFieldStruct.fieldHeight, 
@@ -34,11 +34,6 @@ const GameField = ({
       gameFieldProps.push(newProps); // Update array
     };
 
-    /* Helper function to update the array/properties of 'arrayFigures' */
-    // const updateStateArrayFigures = (newFigures) => {
-    //   arrayFigures.push(newFigures);   // Update array
-    // };
-
     /* Create a String-Array (Letters) for the x-Axis */
     const xAxisLetters = Array.from({ length: 10 }, (_, index) =>
       String.fromCharCode(65 + index)
@@ -50,8 +45,9 @@ const GameField = ({
     
     /* Merging the axis arrays into a new array of coordinates */
     const fieldCoordinates = helperFcn.getCoordinatesArray(xAxisLetters,yAxisNumbers);
+    
+    /* Set properties of a single field and store them in an array */
     const updatedStateArray = [];
-
     Array.from({ length: 100 }).map((_, index) => {
       const singleFieldProps = helperFcn.setProps4SingleField(
         index,
@@ -75,6 +71,7 @@ const GameField = ({
     if(genCfg.debugMode){
       console.log("################### Component: GameField #####################");
       console.log(">> Settings 'gameFieldStruct': ", gameFieldStruct);
+      console.log(">> sizeSingleField: ", sizeSingleField);
       console.log(">> Array 'fieldCoordinates': ", fieldCoordinates);
       console.log(">> State 'arrayFigures': ", arrayFigures);
       console.log(">> State 'gameFieldProps': ", gameFieldProps);

@@ -2,10 +2,6 @@
 .game-field-container {
   position: relative;
 }
-/* Styl of the main board */
-.game-field {
-  margin-top: 0px; /* Distance to the upper side */
-}
 
 /* Style of the x-Axis */
 .x-axis {
