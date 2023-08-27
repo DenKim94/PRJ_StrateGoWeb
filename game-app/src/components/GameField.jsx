@@ -71,6 +71,7 @@ const GameField = ({
     if(genCfg.debugMode){
       console.log("################### Component: GameField #####################");
       console.log(">> Settings 'gameFieldStruct': ", gameFieldStruct);
+      console.log(">> sizeSingleField: ", sizeSingleField);
       console.log(">> Array 'fieldCoordinates': ", fieldCoordinates);
       console.log(">> State 'arrayFigures': ", arrayFigures);
       console.log(">> State 'gameFieldProps': ", gameFieldProps);

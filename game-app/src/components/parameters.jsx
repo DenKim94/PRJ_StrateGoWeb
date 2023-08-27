@@ -1,5 +1,5 @@
 /**** Main file for setting required parameters ****/
-/**** Date: 20.08.2023 ****/
+/**** Date: 27.08.2023 ****/
 
 /**** General/Global Configurations ****/
 export const genCfg = {
@@ -41,12 +41,12 @@ const figNames = ["Marshal.png",
                 "Flag.png",
                 "FigureBack.png"];
 
-/* Size of a figure */
-const figWidth = 8 ;  // figure width in pixel
-const figHeight = 8 ; // figure height in pixel
+/***  Calculate size of a figure ***/
+const figWidth = (gameFieldStruct.fieldWidth)*0.95/10 ;  // figure width in pixel
+const figHeight = (gameFieldStruct.fieldWidth)*0.95/10 ; // figure height in pixel
 const figSize = [figWidth,figHeight];
 
-/* properties = {id: {[path_fig_active, path_fig_inactive], value_fig, size_fig}, figName} */
+/* Set properties: {id: {[path_fig_active, path_fig_inactive], value_fig, size_fig}, figName} */
 export const figProperties = {
     1: {image: [path_redFig+figNames[9],path_deadFig+figNames[9]], value: 1, size: figSize, figName: figNames[9]},
     2: {image: [path_redFig+figNames[8],path_deadFig+figNames[8]], value: 2, size: figSize, figName: figNames[8]},

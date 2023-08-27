@@ -22,22 +22,32 @@ const GameFigure = ({ id, playerColor, isActive}) => {
       backgroundColor: isActive ? playerColor : 'gray',
       width: `${size[0]}px`, 
       height: `${size[1]}px`, 
-      borderRadius: '30%',
+      borderRadius: '20%',
       display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center', 
-      justifyContent: 'center', 
+      alignItems: 'flex-start', 
+      justifyContent: 'flex-start', 
+      backgroundSize: '100%'
     };
 
     const valueStyle = {
-      fontSize: '7px', // Passen Sie die Schriftgröße an
+      fontSize: '12px', // Passen Sie die Schriftgröße an
+      position: 'absolute',
+      color: 'white',
+      backgroundColor: 'black',
+      padding: '1px 2px',
+      borderRadius: '3px',   
     };
+
+    /* Adapt settings for the back side of the figure */
+    if(figName === "FigureBack.png"){
+      figureStyle.backgroundColor = [];
+    }
 
     /* Checking parameters in 'debugMode' */
     if(genCfg.debugMode){
       console.log("################### Component: GameFigure #####################");
       console.log(">> ID: ", id); 
-      console.log(">> figureProperties[ID]: ", figureProperties[id]);     
+      console.log(">> figProperties[ID]: ", figProperties[id]);     
       console.log(" #############################################################");
     }
 
@@ -47,8 +57,13 @@ const GameFigure = ({ id, playerColor, isActive}) => {
         ref={drag}
         className={`figure ${isDragging ? 'dragging' : ''}`}
         style={figureStyle}
+        alt={`Name of the figure: ${figName}`}
       >
+    
+      {(figName !== 'Bomb.png') && (figName !== 'Flag.png') && (figName !== 'FigureBack.png') && (
         <span style={valueStyle}>{value}</span>
+      )}
+
       </div>
     );   
 };
