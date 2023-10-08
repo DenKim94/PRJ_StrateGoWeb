@@ -16,12 +16,13 @@ Output:
         }
     }; 
 */
-export const setProps4SingleField = (id,fieldCoordinates,sizeSingleField,backgroundColor) => {
+export const setProps4SingleField = (index,fieldCoordinates,sizeSingleField,backgroundColor) => {
     let singleFieldProps = {
-        ID: id+1,
+        id: `singleField_${index}`,
         pos_x: fieldCoordinates[0],
         pos_y: fieldCoordinates[1],
         isPlayable: true,
+        figure: null,
         style: {
             width: sizeSingleField,
             height: sizeSingleField,

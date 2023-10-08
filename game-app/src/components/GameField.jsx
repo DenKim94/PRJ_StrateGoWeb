@@ -1,19 +1,26 @@
 import React, {useState} from 'react';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import './GameField.css'
+import { gameFieldObj } from './parameters';
+import { genCfg } from './parameters';
+import SingleField from './SingleField';
+import { figProperties } from './parameters';
 import * as helperFcn from './functions/helperFunctions.js'
 import YAxis from './yAxis';
 import XAxis from './xAxis';
-import { gameFieldStruct } from './parameters';
-import { genCfg } from './parameters';
+
+
 
 /* *********************** Game Field Component ************************ */ 
-const GameField = ({
-  fieldWidth = gameFieldStruct.fieldWidth, 
-  fieldHeight = gameFieldStruct.fieldHeight, 
-  backgroundColor = gameFieldStruct.backgroundColor, 
-  coordsNonPlayableFields = gameFieldStruct.coordsNonPlayableFields, 
-  colorNonPlayableFields = gameFieldStruct.colorNonPlayableFields
-  }) => {
+function GameField({
+  fieldWidth = gameFieldObj.fieldWidth, 
+  fieldHeight = gameFieldObj.fieldHeight, 
+  backgroundColor = gameFieldObj.backgroundColor, 
+  coordsNonPlayableFields = gameFieldObj.coordsNonPlayableFields, 
+  colorNonPlayableFields = gameFieldObj.colorNonPlayableFields
+  })
+  {
+    /* ********************************************************************* */
     const sizeSingleField = Math.abs(fieldWidth)/10;
     const fieldStyle = {
       width: fieldWidth,
@@ -23,17 +30,7 @@ const GameField = ({
       gridTemplateColumns: `repeat(10, ${sizeSingleField}px)`,
       gridTemplateRows: `repeat(10, ${sizeSingleField}px)`
     };
-
-    /* State as array to store and set game figure properties */
-    const arrayFigures = useState([]);
-    /* state as array to store and set game field properties */
-    const gameFieldProps = useState([]);
-
-    /* Helper function to update the array/properties of 'gameFieldProps' */
-    const updateStateGameField = (newProps) => {
-      gameFieldProps.push(newProps); // Update array
-    };
-
+  
     /* Create a String-Array (Letters) for the x-Axis */
     const xAxisLetters = Array.from({ length: 10 }, (_, index) =>
       String.fromCharCode(65 + index)
@@ -46,6 +43,7 @@ const GameField = ({
     /* Merging the axis arrays into a new array of coordinates */
     const fieldCoordinates = helperFcn.getCoordinatesArray(xAxisLetters,yAxisNumbers);
     
+    /* ********************************************************************* */
     /* Set properties of a single field and store them in an array */
     const updatedStateArray = [];
     Array.from({ length: 100 }).map((_, index) => {
@@ -64,51 +62,64 @@ const GameField = ({
         return(updatedStateArray.push(singleFieldProps))
     })
 
-    /* Update State of 'gameFieldProps' */ 
-      updateStateGameField(updatedStateArray);
-      
+    /* State as array to store and set game field properties */
+    const [gameFieldState, setGameFieldState] = useState([... updatedStateArray]); 
+    /* State as array to store and set game figure properties */
+    const arrayFigures = useState([]);
+
     /* Checking parameters in 'debugMode' */
     if(genCfg.debugMode){
       console.log("################### Component: GameField #####################");
-      console.log(">> Settings 'gameFieldStruct': ", gameFieldStruct);
+      console.log(">> Settings 'gameFieldStruct': ", gameFieldObj);
       console.log(">> sizeSingleField: ", sizeSingleField);
       console.log(">> Array 'fieldCoordinates': ", fieldCoordinates);
       console.log(">> State 'arrayFigures': ", arrayFigures);
-      console.log(">> State 'gameFieldProps': ", gameFieldProps);
+      console.log(">> State 'gameFieldState': ", gameFieldState);
       
       console.log(" #############################################################");
     }
     /* Create and render the game elements (axis and game fields) */ 
     return(
-        <div className="game-field-container">
-          {/* *** y-Axis *** */}
-          <div>
+        <DragDropContext onDragEnd={console.log(">> End-DnD")}>
+          <div className="game-field-container">
+              {/* *** y-Axis *** */}
               <YAxis yAxisArray = {yAxisNumbers} axisHeight = {fieldHeight}/>
-          </div>
-          {/* *** The game field *** */}
-          <div className="game-field" style={fieldStyle}>
-            {/* Create single game fields */}
-            {updatedStateArray.map((obj, index) => {
-              /* Create and render single field elements with specific coordinates */    
-              return (
-                <div
-                  key={index}
-                  className={"singleField_"+index}
-                  style={updatedStateArray[index].style}
-                  data-coordinates={`${updatedStateArray[index].pos_x},
-                  ${updatedStateArray[index].pos_y},
-                  ${updatedStateArray[index].isPlayable}`} 
-                ></div>
-              )
-            })}
-          </div>
-          {/* *** x-Axis *** */}         
-          <div>           
+              {/* *** The game field *** */}
+              <div className="game-field" style={fieldStyle}>
+                {/* Create single game fields */}
+                {gameFieldState.map((fieldProps, index) => {
+                  /* Create and render single field elements with specific coordinates */    
+                  return (
+                    <Droppable droppableId={`singleField_${index}`} 
+                    key={`singleField_${index}`}
+                    type = "FIGURE"
+                    > 
+                    {(provided) => (                  
+                      <div
+                        style={fieldProps.style}
+                        key={index}
+                        className={"single-field"}
+                        ref={(ref) => {
+                          provided.innerRef(ref);
+                        }}
+                        {...provided.droppableProps}
+                      >
+                        <SingleField fieldState={fieldProps}/>
+                        {provided.placeholder}                        
+                      </div>
+                    )}
+                    </Droppable> 
+                  )
+                })}
+              </div>
+              {/* *** x-Axis *** */}                   
               <XAxis xAxisArray = {xAxisLetters} singleFieldWidth = {sizeSingleField} />
-          </div> 
-        </div>
-      ); 
-      
-}
+          </div>
+          {/* *** TO-DO: Figure Storage (Starting Position) *** */} 
+                
+
+        </DragDropContext>
+      )     
+};
 
 export default GameField;

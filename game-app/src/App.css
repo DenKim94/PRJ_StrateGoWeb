@@ -1,12 +1,12 @@
-#app{
+.App{
    display: grid;
    justify-content: center; 
-   background-color: white;
-   height: 80vh;
-   margin-top: 0;
+   background-color: rgb(255, 255, 255);
+   height: 100vh;
+   margin-bottom: 0vh;
 }
 
-.player-figures { 
+.fig-storage-zone { 
    display: flex;
    flex-wrap: wrap;
    justify-content: flex-start;
