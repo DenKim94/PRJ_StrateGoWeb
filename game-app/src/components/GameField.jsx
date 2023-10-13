@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import './GameField.css'
 import { gameFieldObj } from './parameters';
 import { genCfg } from './parameters';
 import SingleField from './SingleField';
+import FigureStorage from './FigureStorage';
 import { figProperties } from './parameters';
 import * as helperFcn from './functions/helperFunctions.js'
 import YAxis from './yAxis';
@@ -62,9 +63,10 @@ function GameField({
         return(updatedStateArray.push(singleFieldProps))
     })
 
-    /* State as array to store and set game field properties */
+    /* *** State as array to store and set game field properties *** */
     const [gameFieldState, setGameFieldState] = useState([... updatedStateArray]); 
-    /* State as array to store and set game figure properties */
+    /* *** State as array to store and set game figure properties *** */
+
     const arrayFigures = useState([]);
 
     /* Checking parameters in 'debugMode' */
@@ -78,9 +80,10 @@ function GameField({
       
       console.log(" #############################################################");
     }
-    /* Create and render the game elements (axis and game fields) */ 
+    /* *************** Rendering the game components *************** */ 
     return(
         <DragDropContext onDragEnd={console.log(">> End-DnD")}>
+         <div className = "dnd-container">
           <div className="game-field-container">
               {/* *** y-Axis *** */}
               <YAxis yAxisArray = {yAxisNumbers} axisHeight = {fieldHeight}/>
@@ -115,9 +118,9 @@ function GameField({
               {/* *** x-Axis *** */}                   
               <XAxis xAxisArray = {xAxisLetters} singleFieldWidth = {sizeSingleField} />
           </div>
-          {/* *** TO-DO: Figure Storage (Starting Position) *** */} 
-                
-
+            {/* *** TO-DO: Figure Storage (Starting Position) *** */} 
+            <FigureStorage figStateArray = {arrayFigures} />      
+          </div> 
         </DragDropContext>
       )     
 };

@@ -1,4 +1,28 @@
-/* *** CSS-File of 'GameField' *** */
+/* *** Style of 'GameField' *** */
+.dnd-container {
+  display: flex;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-height: 1000px) {
+  .dnd-container {
+    flex-direction: column; /* Vertikale Anordnung */
+    align-items: center;
+    justify-content: center;
+  }
+
+  .dnd-container .game-field-container {
+    order: 1; /* Die Hauptkomponente zuerst anzeigen */
+  }
+
+  .dnd-container .figure-storage {
+    order: 2; /* Die Seitenkomponente danach anzeigen */
+  }
+}
+
+/* *** Style of 'GameField' *** */
 .game-field-container {
   display: flex;  
   position: relative;  

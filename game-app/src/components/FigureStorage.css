@@ -1,0 +1,24 @@
+/* *** Style of 'FigureStorage' *** */
+.figure-storage {
+    max-height: 150px;
+    overflow-y: auto; 
+    width: 650px;
+    justify-content: center;
+    align-items: center;
+    margin-top: -160px;
+    border: 1px solid black;
+  }
+
+
+  @media (max-height: 1000px) {
+    .figure-storage { 
+        margin: auto;
+        max-height: 350px;
+        overflow-y: auto; 
+        width: 300px;
+        margin-top: 350px;
+        margin-left: 40px;
+        border: 1px solid black;
+    }
+  }
+  

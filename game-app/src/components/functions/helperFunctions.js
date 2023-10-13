@@ -84,3 +84,11 @@ export function getObjArrayKeys(objArray){
       });
     return keysArray    
 }
+
+/**** Helper function to sort and return game figures of each player ****/
+export function getFigures4Player(figList, playerColor){
+    // TO-DO: Return an array of corresponding figures for the player (depends of color) 
+
+
+    
+}

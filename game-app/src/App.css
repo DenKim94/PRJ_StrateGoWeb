@@ -2,8 +2,8 @@
    display: grid;
    justify-content: center; 
    background-color: rgb(255, 255, 255);
-   height: 100vh;
-   margin-bottom: 0vh;
+   height: 80vh;
+   margin-bottom: 20vh;
 }
 
 .fig-storage-zone { 
