@@ -14,6 +14,7 @@
 
 /* *** Style of the x-Axis *** */
 .x-axis {
+  font-family: 'Young Serif', serif;
   display: flex;
   position: absolute;
   align-items: center;
@@ -24,6 +25,7 @@
 
 /* *** Style of the y-Axis *** */
 .y-axis {
+  font-family: 'Young Serif', serif;
   position: absolute;
   left: 35px;
   display: flex;
@@ -42,7 +44,7 @@
   margin: auto;
   align-items: center;
   justify-content: center;
-  /* margin-top: 10vh; */
+  margin-bottom: 3vh ;
 }
 
 @media (min-height: 1000px) {

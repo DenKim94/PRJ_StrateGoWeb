@@ -1,5 +1,6 @@
 /* *** CSS-File of 'GameLogo' *** */
 .game-logo{
+    font-family: 'Young Serif', serif;
     color: black;
     position: relative;
     /* display: flex; */
