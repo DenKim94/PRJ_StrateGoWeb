@@ -4,8 +4,6 @@ import { Draggable } from 'react-beautiful-dnd';
 
 const SingleField = ({fieldState}) => {
 
-  console.log("fieldState: ", fieldState)
-
   const figProps = fieldState.figure; 
   const emptyFigProps = !figProps; 
 

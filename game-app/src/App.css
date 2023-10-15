@@ -1,17 +1,7 @@
 .App{
    display: grid;
    justify-content: center; 
+   align-items: center;
    background-color: rgb(255, 255, 255);
-   height: 80vh;
-   margin-bottom: 20vh;
+   /* height: 100vh; */
 }
-
-.fig-storage-zone { 
-   display: flex;
-   flex-wrap: wrap;
-   justify-content: flex-start;
-   align-items: flex-start;
-   gap: 2px; 
-   margin-top: 5vh; 
-   max-width: 550px;
- }

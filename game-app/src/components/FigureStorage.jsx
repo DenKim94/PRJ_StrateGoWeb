@@ -5,7 +5,10 @@ import "./FigureStorage.css";
 
 const FigureStorage = ({ figStateArray }) => {
     /* *** Handle Figure State Array *** */
-
+    if(!figStateArray){
+        // console.log('empty propsObj: ', propsObj)
+        return null;
+    }
     return(
         <Droppable droppableId="storageZone" type = "FIGURE"> 
         {/* *** Storage of Game Figures *** */}
@@ -14,17 +17,27 @@ const FigureStorage = ({ figStateArray }) => {
             {...provided.droppableProps}
             ref={provided.innerRef}
             >
-                <div data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example" tabindex="0">
-                    <h4 id="scrollspyHeading1">First heading</h4>
-                    <p>...</p>
-                    <h4 id="scrollspyHeading2">Second heading</h4>
-                    <p>...</p>
-                    <h4 id="scrollspyHeading3">Third heading</h4>
-                    <p>...</p>
-                    <h4 id="scrollspyHeading4">Fourth heading</h4>
-                    <p>...</p>
-                    <h4 id="scrollspyHeading5">Fifth heading</h4>
-                    <p>...</p>
+                <div data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" className="scrollspy-example" tabIndex="0">
+                        {/* Store the draggable Figure-Components */}
+                        {figStateArray.map((figProps, idx) => (
+                            <Draggable draggableId={figProps.color + "_"+`${figProps.id}`} 
+                            key= {figProps.color + "_"+`${figProps.id}`} 
+                            index={idx} 
+                            type = "FIGURE"
+                            >
+                                {(provided,snapshot)=>(
+                                    <div className='game-figure'
+                                        ref={(ref) => {
+                                            provided.innerRef(ref);
+                                        }}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                        >
+                                            <GameFigure propsObj={figProps}/>
+                                    </div>
+                                )} 
+                            </Draggable>  
+                            ))}                  
                 </div> 
                 {provided.placeholder}                                          
             </div>

@@ -1,38 +1,15 @@
-/* *** Style of 'GameField' *** */
-.dnd-container {
-  display: flex;
-  margin: auto;
-  align-items: center;
-  justify-content: center;
-}
-
-@media (min-height: 1000px) {
-  .dnd-container {
-    flex-direction: column; /* Vertikale Anordnung */
-    align-items: center;
-    justify-content: center;
-  }
-
-  .dnd-container .game-field-container {
-    order: 1; /* Die Hauptkomponente zuerst anzeigen */
-  }
-
-  .dnd-container .figure-storage {
-    order: 2; /* Die Seitenkomponente danach anzeigen */
-  }
-}
 
 /* *** Style of 'GameField' *** */
 .game-field-container {
   display: flex;  
-  position: relative;  
-  margin-bottom: 20vh; 
+  position: relative;   
   width: 700px;
   height: 700px;
   background-color: rgb(176, 175, 175);
   align-items: center;
   justify-content: center;
   border: 1px solid black;
+  margin-left: 20vw;
 }
 
 /* *** Style of the x-Axis *** */
@@ -60,3 +37,27 @@
   height: calc(100% / 10);
 }
 
+.dnd-container {
+  display: flex;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+  /* margin-top: 10vh; */
+}
+
+@media (min-height: 1000px) {
+  .dnd-container {
+    flex-direction: column; /* Vertikale Anordnung */
+    align-items: center;
+    justify-content: center;
+  }
+
+  .game-field-container {
+    order: 1; /* Die Hauptkomponente zuerst anzeigen */
+    margin-left: 0vw;
+  }
+
+  .figure-storage {
+    order: 2; /* Die Seitenkomponente danach anzeigen */
+  }
+}

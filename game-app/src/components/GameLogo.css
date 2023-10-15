@@ -1,9 +1,11 @@
 /* *** CSS-File of 'GameLogo' *** */
 .game-logo{
     color: black;
-    margin-top: 1vh;
-    margin-bottom: 1vh;
+    position: relative;
+    /* display: flex; */
+    text-align: center;
     justify-content: center;
     align-items: flex-start;
-    display: flex;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
 }

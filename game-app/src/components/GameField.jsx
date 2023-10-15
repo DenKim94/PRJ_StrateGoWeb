@@ -18,7 +18,8 @@ function GameField({
   fieldHeight = gameFieldObj.fieldHeight, 
   backgroundColor = gameFieldObj.backgroundColor, 
   coordsNonPlayableFields = gameFieldObj.coordsNonPlayableFields, 
-  colorNonPlayableFields = gameFieldObj.colorNonPlayableFields
+  colorNonPlayableFields = gameFieldObj.colorNonPlayableFields,
+  colorPlayer,
   })
   {
     /* ********************************************************************* */
@@ -66,18 +67,20 @@ function GameField({
     /* *** State as array to store and set game field properties *** */
     const [gameFieldState, setGameFieldState] = useState([... updatedStateArray]); 
     /* *** State as array to store and set game figure properties *** */
-
-    const arrayFigures = useState([]);
-
+    const playerFigures = helperFcn.getFigures4Player(figProperties, colorPlayer)
+    const [figureStorageState,setFigureStorageState] = useState([...playerFigures]); 
+  
+    
     /* Checking parameters in 'debugMode' */
     if(genCfg.debugMode){
+
       console.log("################### Component: GameField #####################");
       console.log(">> Settings 'gameFieldStruct': ", gameFieldObj);
       console.log(">> sizeSingleField: ", sizeSingleField);
       console.log(">> Array 'fieldCoordinates': ", fieldCoordinates);
-      console.log(">> State 'arrayFigures': ", arrayFigures);
+      console.log(">> playerFigures: ", playerFigures);
       console.log(">> State 'gameFieldState': ", gameFieldState);
-      
+      console.log(">> Color of player: ", colorPlayer);
       console.log(" #############################################################");
     }
     /* *************** Rendering the game components *************** */ 
@@ -119,7 +122,7 @@ function GameField({
               <XAxis xAxisArray = {xAxisLetters} singleFieldWidth = {sizeSingleField} />
           </div>
             {/* *** TO-DO: Figure Storage (Starting Position) *** */} 
-            <FigureStorage figStateArray = {arrayFigures} />      
+            <FigureStorage figStateArray = {figureStorageState} />      
           </div> 
         </DragDropContext>
       )     
