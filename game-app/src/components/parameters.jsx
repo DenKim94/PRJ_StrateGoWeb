@@ -1,12 +1,12 @@
 /**** Main file for setting required parameters ****/
-/**** Date: 08.10.2023 ****/
+/**** Date: 14.10.2023 ****/
 
 /**** General/Global Configurations ****/
 export const genCfg = {
-    debugMode: true   /* Boolean for showing parameter values in the console (if true) */
+    debugMode: false   /* Boolean for showing parameter values in the console (if true) */
 };
 
-/**** Component: GameField ****/
+/**** Settings for Component: GameField ****/
 export const gameFieldObj = {
     fieldWidth: 550,                         /* Width of the game field in pixel */
     fieldHeight: 550,                        /* Height of the game field in pixel */
@@ -20,14 +20,14 @@ export const gameFieldObj = {
     colorNonPlayableFields: '#ADD8E6'       // Color (Colorcode) of non playable fields [String]
 };
 
-/**** Component: GameFigure ****/
-/* Path to images */
+/**** Settings for Component: GameFigure ****/
+/* Default paths to images */
 const path_redFig = "assets/images/redFigures/" ;
 const path_blueFig = "assets/images/blueFigures/" ;
 const path_deadFig = "assets/images/deadFigures/" ;
 
 /* Array of figure names: 
-   Entries must be equal to the corresponding image names */
+   Entries must be equal to the stored image names */
 const figNames = ["Marshal.png",    // index: 0
                 "General.png",      // index: 1
                 "Colonel.png",      // index: 2
@@ -47,7 +47,7 @@ const figWidth = (gameFieldObj.fieldWidth)*0.95/10 ;  // figure width in pixel
 const figHeight = (gameFieldObj.fieldWidth)*0.95/10 ; // figure height in pixel
 const figSize = [figWidth,figHeight];
 
-/* Figure properties -> id: {imgPath: [path_fig_active, path_fig_inactive], value, size, figName, color} */
+/* Figure properties -> {id, imgPath: [path_fig_active, path_fig_inactive], value, size, figName, color} */
 export const figProperties = [
     {id: 1, imgPath: [path_redFig+figNames[9],path_deadFig+figNames[9]], value: 1, size: figSize, figName: figNames[9], color: "red"},
     {id: 2, imgPath: [path_redFig+figNames[8],path_deadFig+figNames[8]], value: 2, size: figSize, figName: figNames[8], color: "red"},

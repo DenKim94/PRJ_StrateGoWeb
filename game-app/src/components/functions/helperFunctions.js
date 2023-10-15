@@ -95,3 +95,21 @@ export function getFigures4Player(figList, colorPlayer){
     
     return playerFigures || null
 }
+
+/**** Helper function to handle the drag and drop action ****/
+export function handleDragDrop(results, gameFieldState, setGameFieldState, figureStorageState, setFigureStorageState) 
+{   
+    /* Extract the properties after the DnD action */
+    const { source, destination, type, draggableId } = results;
+    console.log("results: ",results)
+    console.log("gameFieldState: ", gameFieldState)
+    console.log("figureStorageState: ", figureStorageState)
+
+    /* TO-DO: Use-Cases */
+    /* If destination doesn't exist, do nothing */
+    if(!destination) 
+        return;
+    /* If source and destination are equal, do nothing */
+    if(source.droppableId === destination.droppableId && source.index === destination.index) 
+        return;    
+}

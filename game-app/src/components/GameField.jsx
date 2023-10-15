@@ -85,7 +85,9 @@ function GameField({
     }
     /* *************** Rendering the game components *************** */ 
     return(
-        <DragDropContext onDragEnd={console.log(">> End-DnD")}>
+      <DragDropContext onDragEnd={(result) => {
+        helperFcn.handleDragDrop(result, gameFieldState, setGameFieldState, figureStorageState, setFigureStorageState);
+      }}>
          <div className = "dnd-container">
           <div className="game-field-container">
               {/* *** y-Axis *** */}
