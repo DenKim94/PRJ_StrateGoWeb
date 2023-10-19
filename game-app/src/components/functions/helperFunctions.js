@@ -102,6 +102,13 @@ function getIndexOfGameField(stateArray, fieldObj){
     return indexField;
 }
 
+function getPropsOfGameField(stateArray, index){
+    const fieldProps = stateArray[index];
+    console.log("fieldProps: ", fieldProps)
+    return fieldProps;
+}
+
+
 function moveFigures(){
 
 
@@ -110,7 +117,6 @@ function moveFigures(){
 /**** Helper function to handle the drag and drop action ****/
 export function handleDragDrop(results, gameFieldState, figureStorageState) 
 {   
-
     /* Extract the properties after the DnD action */
     const { source, destination, type, draggableId } = results;
     console.log("results: ",results)
@@ -118,28 +124,35 @@ export function handleDragDrop(results, gameFieldState, figureStorageState)
     console.log("figureStorageState: ", figureStorageState)
     
     /**********************************************/
+    // Setting default values
+    let draggedFigure = null;                      // Placeholder for object properties of a dragged game figure 
+    let placedFigure = null;                       // Placeholder for object properties of a already placed figure
+    let isOccupiedField = null;                    // Flag for already occupied (or not playable) game field     
     const newFigureList = [...figureStorageState]; // Updated state of the list, which contains the game figures in starting position
     const newGameFieldState = [...gameFieldState]; // Updated state of the game-field-array
     let newFigureStorageState = null;              // Placeholder for an filtered array with removed game figures
 
-    /* TO-DO: Use-Cases */
+    // Identify the index [number] of source and target game field
+    const indexSourceField = getIndexOfGameField(gameFieldState, source); 
+    const indexTargetField = getIndexOfGameField(gameFieldState, destination); 
+
+    // Get properties of the target field object
+    const sourceFieldProps = getPropsOfGameField(gameFieldState, indexSourceField); 
+    const targetFieldProps = getPropsOfGameField(gameFieldState, indexTargetField); 
+
+    /****** TO-DO: Implement moving game figures for different Use-Cases ******/
     /* If destination doesn't exist, do nothing */
     if(!destination) 
         return;
     /* If source and destination are equal, do nothing */
     if(source.droppableId === destination.droppableId && source.index === destination.index) 
         return;  
+    /* It's only allowed to place game figures (on starting positions) on the own half */
+    if (targetFieldProps.pos_y > 4 && source.droppableId === 'storageZone')
+        return;
 
     /* *** Updating the States for defined type after dragging *** */
     if(type === "FIGURE" && source.droppableId !== destination.droppableId){
-        // Setting default values
-        let draggedFigure = null;                      // Placeholder for object properties of a dragged game figure 
-        let placedFigure = null;                       // Placeholder for object properties of a already placed figure
-        let isOccupiedField = null;                    // Flag for already occupied (or not playable) game field 
-
-        // Identify the index [number] of source and target game field
-        const indexSourceField = getIndexOfGameField(gameFieldState, source); 
-        const indexTargetField = getIndexOfGameField(gameFieldState, destination); 
         // Identify a (not) playable game field [bool]
         const isPlayable = newGameFieldState[indexTargetField].isPlayable;  
         // Early return if the destination field is not playable
@@ -168,6 +181,7 @@ export function handleDragDrop(results, gameFieldState, figureStorageState)
                 ...newGameFieldState[indexTargetField],
                 figure: draggedFigure,
             };
+            console.log(">> newGameFieldState:", newGameFieldState)
         }       
         
     }
