@@ -86,7 +86,14 @@ function GameField({
     /* *************** Rendering the game components *************** */ 
     return(
       <DragDropContext onDragEnd={(result) => {
-        helperFcn.handleDragDrop(result, gameFieldState, setGameFieldState, figureStorageState, setFigureStorageState);
+        const updatedStates = helperFcn.handleDragDrop(result, gameFieldState, figureStorageState);
+        if (updatedStates) {
+          // Get updated states from 'updatedStates'
+          const { gameFieldState: newGameFieldState, figureStorageState: newFigureStorageState } = updatedStates;
+  
+          setGameFieldState(newGameFieldState);         // Update the State of the game field 
+          setFigureStorageState(newFigureStorageState); // Update the State of the figure storage
+        }        
       }}>
          <div className = "dnd-container">
           <div className="game-field-container">
@@ -112,7 +119,7 @@ function GameField({
                         }}
                         {...provided.droppableProps}
                       >
-                        <SingleField fieldState={fieldProps}/>
+                        <SingleField fieldState={fieldProps} idx = {index}/>
                         {provided.placeholder}                        
                       </div>
                     )}

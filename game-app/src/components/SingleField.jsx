@@ -2,7 +2,7 @@ import React from 'react';
 import GameFigure from './GameFigure';
 import { Draggable } from 'react-beautiful-dnd';
 
-const SingleField = ({fieldState}) => {
+const SingleField = ({fieldState, idx}) => {
 
   const figProps = fieldState.figure; 
   const emptyFigProps = !figProps; 
@@ -14,9 +14,9 @@ const SingleField = ({fieldState}) => {
     return(
           <div>
               {/* Add draggable game figure component here, if 'fieldState' is not empty */}
-              <Draggable draggableId={figProps.id} 
-                          key= {figProps.id} 
-                          index={figProps.value} 
+              <Draggable draggableId={figProps.color + "_"+`${figProps.id}`}
+                          key= {figProps.color + "_"+`${figProps.id}`} 
+                          index={idx} 
                           type = "FIGURE"
                           >
                             {(provided,snapshot)=>(
