@@ -19,7 +19,8 @@ function GameField({
   backgroundColor = gameFieldObj.backgroundColor, 
   coordsNonPlayableFields = gameFieldObj.coordsNonPlayableFields, 
   colorNonPlayableFields = gameFieldObj.colorNonPlayableFields,
-  colorPlayer,
+  prefixSingleFieldID = gameFieldObj.prefixID,
+  gameSettings,
   })
   {
     /* ********************************************************************* */
@@ -50,6 +51,7 @@ function GameField({
     const updatedStateArray = [];
     Array.from({ length: 100 }).map((_, index) => {
       const singleFieldProps = helperFcn.setProps4SingleField(
+        prefixSingleFieldID,
         index,
         fieldCoordinates[index],
         sizeSingleField,
@@ -65,9 +67,9 @@ function GameField({
     })
 
     /* *** State as array to store and set game field properties *** */
-    const [gameFieldState, setGameFieldState] = useState([... updatedStateArray]); 
+    const [gameFieldState, setGameFieldState] = useState([...updatedStateArray]); 
     /* *** State as array to store and set game figure properties *** */
-    const playerFigures = helperFcn.getFigures4Player(figProperties, colorPlayer)
+    const playerFigures = helperFcn.getFigures4Player(figProperties, gameSettings.colorPlayer)
     const [figureStorageState,setFigureStorageState] = useState([...playerFigures]); 
   
     
@@ -80,16 +82,16 @@ function GameField({
       console.log(">> Array 'fieldCoordinates': ", fieldCoordinates);
       console.log(">> playerFigures: ", playerFigures);
       console.log(">> State 'gameFieldState': ", gameFieldState);
-      console.log(">> Color of player: ", colorPlayer);
+      console.log(">> Color of player: ", gameSettings.colorPlayer);
       console.log(" #############################################################");
     }
     /* *************** Rendering the game components *************** */ 
     return(
       <DragDropContext onDragEnd={(result) => {
-        const updatedStates = helperFcn.handleDragDrop(result, gameFieldState, figureStorageState);
+        const updatedStates = helperFcn.handleDragDrop(result, gameFieldState, figureStorageState,prefixSingleFieldID,gameSettings);
         if (updatedStates) {
           // Get updated states from 'updatedStates'
-          const { gameFieldState: newGameFieldState, figureStorageState: newFigureStorageState } = updatedStates;
+          const { gameFieldState: newGameFieldState, figureStorageState: newFigureStorageState} = updatedStates;
   
           setGameFieldState(newGameFieldState);         // Update the State of the game field 
           setFigureStorageState(newFigureStorageState); // Update the State of the figure storage
@@ -105,8 +107,8 @@ function GameField({
                 {gameFieldState.map((fieldProps, index) => {
                   /* Create and render single field elements with specific coordinates */    
                   return (
-                    <Droppable droppableId={`singleField_${index}`} 
-                    key={`singleField_${index}`}
+                    <Droppable droppableId={`${prefixSingleFieldID}_${index}`} 
+                    key={`${prefixSingleFieldID}_${index}`}
                     type = "FIGURE"
                     > 
                     {(provided) => (                  

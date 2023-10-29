@@ -4,15 +4,19 @@ import GameField from './components/GameField';
 import GameLogo from './components/GameLogo';  
 
 /* ******************************************************************* */ 
+/**** Add user inputs ****/
+let userSettings = {
+    colorPlayer: 'blue',  // player color as placeholder [string] 
+    ready2Play: false,   // state as placeholder [boolean]
+};
+
 const App = () => {
-    /**** Add user inputs ****/
-    const colorPlayer = 'red';
          
     /*** Rendering the components ***/  
     return(
         <div className = "App"> 
             <GameLogo />
-            <GameField colorPlayer = {colorPlayer}/> 
+            <GameField gameSettings = {userSettings}/> 
         </div>       
     )
 };

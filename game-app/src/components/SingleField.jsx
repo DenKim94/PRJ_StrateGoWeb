@@ -14,8 +14,8 @@ const SingleField = ({fieldState, idx}) => {
     return(
           <div>
               {/* Add draggable game figure component here, if 'fieldState' is not empty */}
-              <Draggable draggableId={figProps.color + "_"+`${figProps.id}`}
-                          key= {figProps.color + "_"+`${figProps.id}`} 
+              <Draggable draggableId={`${figProps.color}_${figProps.id}`}
+                          key= {`${figProps.color}_${figProps.id}`} 
                           index={idx} 
                           type = "FIGURE"
                           >

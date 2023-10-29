@@ -6,7 +6,7 @@ import "./FigureStorage.css";
 const FigureStorage = ({ figStateArray }) => {
     /* *** Handle Figure State Array *** */
     if(!figStateArray){
-        // console.log('empty propsObj: ', propsObj)
+        console.log('FigureStorage is empty: Please check unser input object and settings of parameters!')
         return null;
     }
     return(
@@ -20,8 +20,8 @@ const FigureStorage = ({ figStateArray }) => {
                 <div data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" className="scrollspy-example" tabIndex="0">
                         {/* Store the draggable Figure-Components */}
                         {figStateArray.map((figProps, idx) => (
-                            <Draggable draggableId={figProps.color + "_"+`${figProps.id}`} 
-                            key= {figProps.color + "_"+`${figProps.id}`} 
+                            <Draggable draggableId={`${figProps.color}_${figProps.id}`} 
+                            key= {`${figProps.color}_${figProps.id}`} 
                             index={idx} 
                             type = "FIGURE"
                             >

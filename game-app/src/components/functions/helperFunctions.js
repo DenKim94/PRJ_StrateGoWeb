@@ -16,9 +16,9 @@ Output:
         }
     }; 
 */
-export const setProps4SingleField = (index,fieldCoordinates,sizeSingleField,backgroundColor) => {
+export const setProps4SingleField = (prefixSingleFieldID,index,fieldCoordinates,sizeSingleField,backgroundColor) => {
     let singleFieldProps = {
-        id: `singleField_${index}`,
+        id: `${prefixSingleFieldID}_${index}`,
         pos_x: fieldCoordinates[0],
         pos_y: fieldCoordinates[1],
         isPlayable: true,
@@ -40,7 +40,7 @@ Output: coordinatesArray [column, row]
 */
 export function getCoordinatesArray(xCoordArray,yCoordArray){
     const coordinatesArray = yCoordArray.flatMap((yVal) => 
-        xCoordArray.map((xVal) => [xVal, yVal])
+        xCoordArray.map((xVal) => [xVal, Number(yVal)])
     );
     return coordinatesArray
 };
@@ -92,44 +92,85 @@ export function getFigures4Player(figList, colorPlayer){
     const playerFigures = figList.filter((figProps) => {
         return figProps.color === colorPlayer && figProps.figName !== 'FigureBack.png'
     }); 
-    
     return playerFigures || null
 }
 
 /**** Helper function to get the index of the game-field-array ****/
 function getIndexOfGameField(stateArray, fieldObj){
     const indexField = stateArray.findIndex((fieldProps) => fieldProps.id === fieldObj.droppableId);
-    return indexField;
+    return indexField || null;
 }
 
+/**** Helper function to get the properties of a single field element ****/
 function getPropsOfGameField(stateArray, index){
     const fieldProps = stateArray[index];
-    console.log("fieldProps: ", fieldProps)
-    return fieldProps;
+    return fieldProps || null
 }
 
+/**** Helper function to move game figures inside the game field ****/
+function moveFigureOnField(GameFieldState, gameSettings, draggableId, figureStorageState, 
+                           indexSourceField, indexTargetField)
+{
+    const newFigureStorageState = figureStorageState; 
+    console.log("**** Debugging moveFigureOnField ****")
+    console.log(">> FieldState:", GameFieldState)
+    console.log(">> draggableId:", draggableId)
 
-function moveFigures(){
+    // Identify properties of a dragged figure and corresponding field
+    const fieldProps = GameFieldState.find((obj) => {
+        return obj.figure && `${gameSettings.colorPlayer}_${obj.figure.id}` === draggableId;
+    });
+    const draggedFigure = fieldProps.figure;
 
+    // Update the State of the source game field 
+    GameFieldState[indexSourceField] = {
+        ...GameFieldState[indexSourceField],
+        isPlayable: true,
+        figure: null,
+    };        
+    // Update the State of the target game field 
+    GameFieldState[indexTargetField] = {
+        ...GameFieldState[indexTargetField],
+        isPlayable: false,
+        figure: draggedFigure,
+    };
 
+    const newGameFieldState = GameFieldState;
+
+    // handleOccupiedField(newGameFieldState, indexTargetField)
+
+    console.log(">> newGameFieldState:", newGameFieldState)
+    console.log(">> fieldProps:", fieldProps)            
+    console.log(">> draggedFigure:", draggedFigure)
+    console.log("*************************************")
+
+    return [newGameFieldState, newFigureStorageState]   
+}
+
+/**** Helper function to handle the interaction in case of an occupied game field ****/
+function handleOccupiedField(newGameFieldState, indexTargetField){
+    // Get properties of placed figure [object]
+    const placedFigure = newGameFieldState[indexTargetField].figure;
+    console.log(">> placedFigure: ", placedFigure)
+  
 }
 
 /**** Helper function to handle the drag and drop action ****/
-export function handleDragDrop(results, gameFieldState, figureStorageState) 
+export function handleDragDrop(results, gameFieldState, figureStorageState, prefixSingleFieldID, gameSettings) 
 {   
     /* Extract the properties after the DnD action */
     const { source, destination, type, draggableId } = results;
-    console.log("results: ",results)
-    console.log("gameFieldState: ", gameFieldState)
-    console.log("figureStorageState: ", figureStorageState)
+
+    // console.log("results: ",results)
+    // console.log("gameFieldState: ", gameFieldState)
+    // console.log("figureStorageState: ", figureStorageState)
     
     /**********************************************/
     // Setting default values
     let draggedFigure = null;                      // Placeholder for object properties of a dragged game figure 
-    let placedFigure = null;                       // Placeholder for object properties of a already placed figure
-    let isOccupiedField = null;                    // Flag for already occupied (or not playable) game field     
-    const newFigureList = [...figureStorageState]; // Updated state of the list, which contains the game figures in starting position
-    const newGameFieldState = [...gameFieldState]; // Updated state of the game-field-array
+    let isOccupiedField = false;                    // Flag for already occupied (or not playable) game field     
+    let newFigureList = [...figureStorageState];   // Updated state of the list, which contains the game figures in starting position
+    let newGameFieldState = [...gameFieldState];   // Updated state of the game-field-array
     let newFigureStorageState = null;              // Placeholder for an filtered array with removed game figures
 
     // Identify the index [number] of source and target game field
@@ -140,6 +181,14 @@ export function handleDragDrop(results, gameFieldState, figureStorageState)
     const sourceFieldProps = getPropsOfGameField(gameFieldState, indexSourceField); 
     const targetFieldProps = getPropsOfGameField(gameFieldState, indexTargetField); 
 
+    // If no target field is existing, do nothing
+    if(!targetFieldProps){
+        return
+    }
+    console.log("indexSourceField: ", indexSourceField)
+    console.log("sourceFieldProps: ", sourceFieldProps)
+    console.log("targetFieldProps: ", targetFieldProps)
+
     /****** TO-DO: Implement moving game figures for different Use-Cases ******/
     /* If destination doesn't exist, do nothing */
     if(!destination) 
@@ -147,42 +196,40 @@ export function handleDragDrop(results, gameFieldState, figureStorageState)
     /* If source and destination are equal, do nothing */
     if(source.droppableId === destination.droppableId && source.index === destination.index) 
         return;  
-    /* It's only allowed to place game figures (on starting positions) on the own half */
-    if (targetFieldProps.pos_y > 4 && source.droppableId === 'storageZone')
+    /* It's only allowed to place game figures on the own half (before starting the game) */
+    if (targetFieldProps.pos_y > 4 && !gameSettings.ready2Play)
         return;
 
-    /* *** Updating the States for defined type after dragging *** */
+    /* *** Updating the States of figures and game field after dragging *** */
     if(type === "FIGURE" && source.droppableId !== destination.droppableId){
         // Identify a (not) playable game field [bool]
         const isPlayable = newGameFieldState[indexTargetField].isPlayable;  
         // Early return if the destination field is not playable
         if (!isPlayable) return;   
                       
-        // Identify an occupied field [bool] and get properties of placed figure [object]
-        if(destination.droppableId !== "storageZone"){
-            isOccupiedField = newGameFieldState[indexTargetField].figure !== null;
-            
-            if(isOccupiedField){
-                placedFigure = newGameFieldState[indexTargetField].figure;
-                console.log(">> placedFigure:", placedFigure)
-            }
-        }
         // Placing figures from storage zone on the game field (starting positions)
-        if(newFigureList.length > 0 && source.droppableId === "storageZone" && !isOccupiedField){
+        if(newFigureList.length > 0 && source.droppableId === "storageZone"){
             // Identify dragged figure
-            draggedFigure = newFigureList.find((figProps) => (figProps.color+'_'+`${figProps.id}`) === draggableId);
-            console.log(">> draggedFigure:", draggedFigure)
+            draggedFigure = newFigureList.find((figProps) => `${figProps.color}_${figProps.id}` === draggableId);
             // Remove dropped figure from the origin figure list (if not empty)
             newFigureStorageState = figureStorageState.filter((props) => props.id !== draggedFigure.id);
-            console.log(">> newFigureStorageState:", newFigureStorageState)
-            
             // Update the State of the game field 
             newGameFieldState[indexTargetField] = {
                 ...newGameFieldState[indexTargetField],
+                isPlayable: false,
                 figure: draggedFigure,
             };
+
+            //console.log(">> draggedFigure:", draggedFigure)
+            //console.log(">> newFigureStorageState:", newFigureStorageState)
             console.log(">> newGameFieldState:", newGameFieldState)
-        }       
+        }
+        // Moving figures inside the game field
+        else if(destination.droppableId.includes(prefixSingleFieldID) && source.droppableId !== "storageZone"){
+            [newGameFieldState, newFigureStorageState] = moveFigureOnField(newGameFieldState, gameSettings, 
+                                                                           draggableId, figureStorageState, 
+                                                                           indexSourceField, indexTargetField)
+        }
         
     }
     // Return updates states
