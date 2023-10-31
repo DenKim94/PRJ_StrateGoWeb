@@ -7,7 +7,7 @@ import GameLogo from './components/GameLogo';
 /**** Add user inputs ****/
 let userSettings = {
     colorPlayer: 'blue',  // player color as placeholder [string] 
-    ready2Play: false,   // state as placeholder [boolean]
+    ready2Play: false,    // state as placeholder [boolean]
 };
 
 const App = () => {

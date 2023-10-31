@@ -7,10 +7,9 @@ import SingleField from './SingleField';
 import FigureStorage from './FigureStorage';
 import { figProperties } from './parameters';
 import * as helperFcn from './functions/helperFunctions.js'
+import * as gameLogic from '../game-logic/gameLogic.js'
 import YAxis from './yAxis';
 import XAxis from './xAxis';
-
-
 
 /* *********************** Game Field Component ************************ */ 
 function GameField({
@@ -88,7 +87,7 @@ function GameField({
     /* *************** Rendering the game components *************** */ 
     return(
       <DragDropContext onDragEnd={(result) => {
-        const updatedStates = helperFcn.handleDragDrop(result, gameFieldState, figureStorageState,prefixSingleFieldID,gameSettings);
+        const updatedStates = gameLogic.handleDragDrop(result, gameFieldState, figureStorageState,prefixSingleFieldID,gameSettings);
         if (updatedStates) {
           // Get updated states from 'updatedStates'
           const { gameFieldState: newGameFieldState, figureStorageState: newFigureStorageState} = updatedStates;
