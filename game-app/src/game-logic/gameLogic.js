@@ -87,11 +87,50 @@ function moveFigureOnField(GameFieldState, gameSettings, draggableId, figureStor
 }
 
 /**** Helper function to maintain a correct moving of a game figure ****/
-function checkCorrectMoving(sourceField, targetField, figureProps){
+function checkCorrectMoving(sourceFieldProps, targetFieldProps, figureProps){
+    const startPos = [sourceFieldProps.pos_x, sourceFieldProps.pos_y];  // Start position of dragged figure: [x,y]
+    const endPos = [targetFieldProps.pos_x, targetFieldProps.pos_y];    // Start position of dragged figure: [x,y]
     // It is only allowed to move a game figure vertically or horizontally
-    console.warn(">> Test")
-
+    const isAllowedDirection = checkMovingDirection(startPos, endPos);
+    if(isAllowedDirection){
+        // Handle moving steps dependent of figure property 
+        console.warn("**** function checkCorrectMoving: in progress ****")
+    }
 }
+
+/**** Helper function to check if the direction of a movement is allowed ****/
+function checkMovingDirection(startPos, endPos){
+    // Initialized parameter, which will be returned as boolean [true or false]
+    let isAllowed   
+    // Absolute difference between the y-coordinates
+    const absDiff_y = Math.abs(endPos[1] - startPos[1]); 
+    // Moving in x-direction (allowed)
+    if((startPos[0] !== endPos[0]) && absDiff_y === 0){
+        isAllowed = true;
+    }
+    // Moving in y-direction (allowed)
+    else if(absDiff_y >= 1 && (startPos[0] === endPos[0])){
+        isAllowed = true;
+    }
+    // Diagonal movement is not allowed
+    else{
+        isAllowed = false;
+    }
+    // Show values of parameters in a console when 'debugMode' is active
+    if(genCfg.debugMode){
+        console.log("**** function checkMovingDirection ****")
+        console.log(">> startPos: ", startPos)
+        console.log(">> endPos: ", endPos)
+        console.log(">> absDiff_y: ", absDiff_y)
+        console.log(">> isAllowed: ", isAllowed)
+    }   
+    return isAllowed
+}
+
+// /**** Helper function to maintain a correct number of movement steps of dragged figure ****/
+// function checkMovingSteps(startPos, endPos){
+
+// }    
 
 /**** Helper function to handle the interaction in case of an occupied game field ****/
 function handleOccupiedField(targetFieldProps, draggedFigure){ 
