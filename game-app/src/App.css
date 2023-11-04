@@ -1,7 +1,7 @@
 .App{
-   display: grid;
+   display: auto;
    justify-content: center; 
    align-items: center;
-   background-color: rgb(251, 251, 251);
+   background-color: rgb(255, 255, 255);
    height: 100vh;
 }

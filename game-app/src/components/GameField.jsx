@@ -72,16 +72,15 @@ function GameField({
     const [figureStorageState,setFigureStorageState] = useState([...playerFigures]); 
   
     
-    /* Checking parameters in 'debugMode' */
+    /* Checking values of parameters in 'debugMode' */
     if(genCfg.debugMode){
-
       console.log("################### Component: GameField #####################");
       console.log(">> Settings 'gameFieldStruct': ", gameFieldObj);
-      console.log(">> sizeSingleField: ", sizeSingleField);
+      console.log(">> sizeSingleField [px]: ", sizeSingleField);
       console.log(">> Array 'fieldCoordinates': ", fieldCoordinates);
       console.log(">> playerFigures: ", playerFigures);
       console.log(">> State 'gameFieldState': ", gameFieldState);
-      console.log(">> Color of player: ", gameSettings.colorPlayer);
+      console.log(">> User Settings: ", gameSettings);
       console.log(" #############################################################");
     }
     /* *************** Rendering the game components *************** */ 

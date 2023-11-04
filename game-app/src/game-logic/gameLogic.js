@@ -1,4 +1,5 @@
 // import * as helperFcn from '../components/functions/helperFunctions.js'
+import { genCfg } from '../components/parameters';
 
 /**** Helper function to get the index of the game-field-array ****/
 function getIndexOfGameField(stateArray, fieldObj){
@@ -16,65 +17,91 @@ function getPropsOfGameField(stateArray, index){
 function moveFigureOnField(GameFieldState, gameSettings, draggableId, figureStorageState, 
                            indexSourceField, indexTargetField)
 {
-    // Identify a (not) playable game field [bool]
-    const isPlayable = GameFieldState[indexTargetField].isPlayable; 
-    const newFigureStorageState = figureStorageState; 
-    console.log("**** Debugging moveFigureOnField ****")
-    console.log(">> FieldState:", GameFieldState)
-    console.log(">> draggableId:", draggableId)
+    // Get field properties of target field
+    const targetFieldProps = getPropsOfGameField(GameFieldState, indexTargetField)
+    // Initialize a state of figure storage component
+    const newFigureStorageState = figureStorageState ; 
+    // Get a property parameter of a target field
+    const isPlayable = targetFieldProps.isPlayable; 
 
     // Identify properties of a dragged figure and corresponding field
-    const fieldProps = GameFieldState.find((obj) => {
+    const sourceFieldProps = GameFieldState.find((obj) => {
         return obj.figure && `${gameSettings.colorPlayer}_${obj.figure.id}` === draggableId;
     });
-    const draggedFigure = fieldProps.figure;
+    const draggedFigure = sourceFieldProps.figure;
 
-    /* TO-DO: Limiting the movements of figures depending on their properties (31.10.2023) 
+    /* TO-DO: Limiting the movements of figures depending on their properties after starting the game (31.10.2023) 
             1) Only one field per turn is allowed except of a 'Scout' (current position as reference) 
             2) Moving directions: Only vertical or horizontal  */
 
+    // Maintain a correct moving of a dragged game figure after starting the game
+    if(gameSettings.ready2Play){
+        checkCorrectMoving(sourceFieldProps, targetFieldProps, draggedFigure)
+    }
+    
     // Update the State of the source game field 
-    GameFieldState = updateGameFieldStateProps(GameFieldState, indexSourceField, [true, null])       
-    // Update the State of the target game field 
-    GameFieldState = updateGameFieldStateProps(GameFieldState, indexTargetField, [false, draggedFigure])
+    let newGameFieldState = updateGameFieldStateProps(GameFieldState, indexSourceField, [true, null])       
 
     // Handle the action in case of an occupied field
     if(!isPlayable){
-        const winner = handleOccupiedField(GameFieldState, indexTargetField, draggedFigure)
-        // If 'winner' is existing and is not a string, update the state of the game field 
+        const winner = handleOccupiedField(targetFieldProps, draggedFigure)
+
+        // If the type of returned 'winner' is an object (not as 'null')
         if(winner && typeof winner !== "string"){
             // Update the State of the target game field 
-            GameFieldState = updateGameFieldStateProps(GameFieldState, indexTargetField, [false, winner])
+            newGameFieldState = updateGameFieldStateProps(newGameFieldState, indexTargetField, [false, winner])
         }
-        // If no 'winner' exists, both figures are going to be removed from game field
+        /* If the type of returned 'winner' is a string, both figures are going to be removed from game field 
+           and will be added to the figure storage list as 'dead' figure */
         else if(typeof winner === "string"){
             // Update the State of the target game field 
-            GameFieldState = updateGameFieldStateProps(GameFieldState, indexTargetField, [true, null]) 
+            newGameFieldState = updateGameFieldStateProps(newGameFieldState, indexTargetField, [true, null]) 
 
             /* TO-DO: Handle removed/dead figures (31.10.2023) 
-            1) Put the (dead) figures in a list/state of the component 'FigureStorage'
+            1) Put the (dead) figures in an empty list/state of the component 'FigureStorage'
             2) Render the updated component which includes the removed/dead figures */
         }
-        else { return }
+        // If returned value of 'winner' is 'null'
+        else {
+            // Reset the source game field to previous state  
+            newGameFieldState = updateGameFieldStateProps(newGameFieldState, indexSourceField, [false, draggedFigure]) 
+        }
     }
-
-    const newGameFieldState = GameFieldState;
-
-    console.log(">> fieldProps:", fieldProps)            
-    console.log(">> draggedFigure:", draggedFigure)
-    console.log(">> newGameFieldState:", newGameFieldState)
-    console.log("*************************************")
-
+    else {      
+        // Update the State of the target game field 
+        newGameFieldState = updateGameFieldStateProps(newGameFieldState, indexTargetField, [false, draggedFigure])
+    }
+    // Show values of parameters in a console when 'debugMode' is active
+    if(genCfg.debugMode){
+        console.log("**** function moveFigureOnField ****")
+        console.log(">> GameFieldState:", GameFieldState)
+        console.log(">> draggableId:", draggableId)
+        console.log(">> sourceFieldProps:", sourceFieldProps)  
+        console.log(">> targetFieldProps:", targetFieldProps)           
+        console.log(">> draggedFigure:", draggedFigure)
+        console.log(">> newGameFieldState:", newGameFieldState)
+        console.log("*************************************")
+    }
     // Return States
     return [newGameFieldState, newFigureStorageState]   
 }
 
-/**** Helper function to handle the interaction in case of an occupied game field ****/
-function handleOccupiedField(newGameFieldState, indexTargetField, draggedFigure){ 
-    // Get properties of placed figure [object]
-    const placedFigure = newGameFieldState[indexTargetField].figure;
-    console.log(">> placedFigure: ", placedFigure)
+/**** Helper function to maintain a correct moving of a game figure ****/
+function checkCorrectMoving(sourceField, targetField, figureProps){
+    // It is only allowed to move a game figure vertically or horizontally
+    console.warn(">> Test")
 
+}
+
+/**** Helper function to handle the interaction in case of an occupied game field ****/
+function handleOccupiedField(targetFieldProps, draggedFigure){ 
+    // Get properties of placed figure [object]
+    const placedFigure = targetFieldProps.figure;
+    // Show values of parameters in a console when 'debugMode' is active
+    if(genCfg.debugMode){
+        console.log("**** function handleOccupiedField ****")
+        console.log(">> placedFigure: ", placedFigure)
+    }
     // Return if the destination field is occupied by own figure
     if (placedFigure.color === draggedFigure.color){ 
         return null; 
@@ -125,10 +152,6 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
 {   
     /* Extract the properties after the DnD action */
     const { source, destination, type, draggableId } = results;
-
-    // console.log("results: ",results)
-    // console.log("gameFieldState: ", gameFieldState)
-    // console.log("figureStorageState: ", figureStorageState)
     
     /**********************************************/
     // Setting default values
@@ -142,18 +165,14 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
     const indexTargetField = getIndexOfGameField(gameFieldState, destination); 
 
     // Get properties of the target field object
-    const sourceFieldProps = getPropsOfGameField(gameFieldState, indexSourceField); 
     const targetFieldProps = getPropsOfGameField(gameFieldState, indexTargetField); 
 
     // If target field does not exist, do nothing
     if(!targetFieldProps){
         return
     }
-    console.log("indexSourceField: ", indexSourceField)
-    console.log("sourceFieldProps: ", sourceFieldProps)
-    console.log("targetFieldProps: ", targetFieldProps)
 
-    /****** Moving of game figures for different use-cases ******/
+    /****** Logic for moving game figures in different use-cases ******/
     /* If destination doesn't exist, do nothing */
     if(!destination) 
         return;
@@ -170,7 +189,7 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
         // Placing figures from storage zone on the game field (starting positions)
         if(newFigureList.length > 0 && source.droppableId === "storageZone"){
 
-            // Return if target field is not playable
+            // Return if target field is not playable or occupied by own figure
             if(!newGameFieldState[indexTargetField].isPlayable){ return; } 
             // Identify dragged figure
             draggedFigure = newFigureList.find((figProps) => `${figProps.color}_${figProps.id}` === draggableId);
@@ -182,8 +201,15 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
                 isPlayable: false,
                 figure: draggedFigure,
             };
-
-            console.log(">> newGameFieldState:", newGameFieldState)
+            // Show values of parameters in a console when 'debugMode' is active
+            if(genCfg.debugMode){
+                console.log("**** function handleDragDrop ****")
+                console.log(">> results: ",results)
+                console.log(">> figureStorageState: ", figureStorageState)
+                console.log(">> newFigureStorageState: ", newFigureStorageState)
+                console.log(">> gameFieldState: ", gameFieldState)
+                console.log(">> newGameFieldState:", newGameFieldState)
+            }
         }
         // Moving figures inside the game field
         else if(destination.droppableId.includes(prefixSingleFieldID) && source.droppableId !== "storageZone"){

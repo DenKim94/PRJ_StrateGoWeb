@@ -7,12 +7,18 @@ const SingleField = ({fieldState, idx}) => {
   const figProps = fieldState.figure; 
   const emptyFigProps = !figProps; 
 
+  /* Set style of the component */
+  const fieldStyle = {
+    alignItems: 'center', 
+    justifyContent: 'center', 
+  };
+
   if(emptyFigProps){
     return null;
   }
 
     return(
-          <div>
+          <div style={fieldStyle}>
               {/* Add draggable game figure component here, if 'fieldState' is not empty */}
               <Draggable draggableId={`${figProps.color}_${figProps.id}`}
                           key= {`${figProps.color}_${figProps.id}`} 

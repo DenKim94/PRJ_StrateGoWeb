@@ -1,5 +1,4 @@
 import React from "react";
-import { genCfg } from './parameters'; 
 
 /* *********************** Game Figure Component ************************ */ 
 const GameFigure = ({propsObj}) => {
@@ -14,7 +13,8 @@ const GameFigure = ({propsObj}) => {
     /* Set style of the component */
     const figureStyle = {
       width: `${size[0]}px`, 
-      height: `${size[1]}px`, 
+      height: `${size[1]}px`,
+      margin: 'auto', 
       display: 'flex',
       alignItems: 'flex-start', 
       justifyContent: 'flex-start', 
@@ -32,13 +32,6 @@ const GameFigure = ({propsObj}) => {
       top: '2px', // Passe den Abstand am unteren Rand an
       left: '2px', // Passe den Abstand am rechten Rand an        
     };
-
-    /* Checking parameters in 'debugMode' */
-    if(genCfg.debugMode){
-      console.log("################### Component: GameFigure #####################");
-      console.log(">> figProperties: ", propsObj);     
-      console.log(" #############################################################");
-    }
 
     /* Return to render the component */
     return (
