@@ -1,5 +1,6 @@
 /**** Main file for setting parameters [for developer] ****/
-/**** Date: 29.10.2023 ****/
+/* This file is mandatory to run the application 
+ * Date: 05.11.2023 */
 
 /**** General/Global Configurations ****/
 export const genCfg = {
@@ -19,6 +20,9 @@ export const gameFieldObj = {
     ],
     prefixID: 'SingleField',                 /* Prefix for the id of a single field */   
     colorNonPlayableFields: '#ADD8E6',       /* Color (Colorcode) of non playable fields [String] */
+    Letters2Numbers: { "A": 1, "B": 2, "C": 3, "D": 4, "E": 5, 
+                       "F": 6, "G": 7, "H": 8, "I": 9, "J": 10 }, /* Array to translate letters to 
+                                                                     corresponding numbers */ 
 };
 
 /**** Settings for Component: GameFigure ****/

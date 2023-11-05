@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import './GameField.css'
-import { gameFieldObj } from './parameters';
 import { genCfg } from './parameters';
 import SingleField from './SingleField';
 import FigureStorage from './FigureStorage';
@@ -12,16 +11,15 @@ import YAxis from './yAxis';
 import XAxis from './xAxis';
 
 /* *********************** Game Field Component ************************ */ 
-function GameField({
-  fieldWidth = gameFieldObj.fieldWidth, 
-  fieldHeight = gameFieldObj.fieldHeight, 
-  backgroundColor = gameFieldObj.backgroundColor, 
-  coordsNonPlayableFields = gameFieldObj.coordsNonPlayableFields, 
-  colorNonPlayableFields = gameFieldObj.colorNonPlayableFields,
-  prefixSingleFieldID = gameFieldObj.prefixID,
-  gameSettings,
-  })
+function GameField({gameFieldSettings, gameSettings})
   {
+     /* ********************************************************************* */
+    const fieldWidth = gameFieldSettings.fieldWidth;
+    const fieldHeight = gameFieldSettings.fieldHeight;
+    const backgroundColor = gameFieldSettings.backgroundColor;
+    const coordsNonPlayableFields = gameFieldSettings.coordsNonPlayableFields; 
+    const colorNonPlayableFields = gameFieldSettings.colorNonPlayableFields;
+    const prefixSingleFieldID = gameFieldSettings.prefixID;
     /* ********************************************************************* */
     const sizeSingleField = Math.abs(fieldWidth)/10;
     const fieldStyle = {
@@ -75,7 +73,7 @@ function GameField({
     /* Checking values of parameters in 'debugMode' */
     if(genCfg.debugMode){
       console.log("################### Component: GameField #####################");
-      console.log(">> Settings 'gameFieldStruct': ", gameFieldObj);
+      console.log(">> Settings 'gameFieldStruct': ", gameFieldSettings);
       console.log(">> sizeSingleField [px]: ", sizeSingleField);
       console.log(">> Array 'fieldCoordinates': ", fieldCoordinates);
       console.log(">> playerFigures: ", playerFigures);

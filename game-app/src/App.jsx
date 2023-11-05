@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import * as parameters from './components/parameters';
 import GameField from './components/GameField';
 import GameLogo from './components/GameLogo';  
 
@@ -18,7 +19,7 @@ const App = () => {
             <div>
                 <GameLogo /> 
             </div>
-            <GameField gameSettings = {userSettings}/> 
+            <GameField gameFieldSettings = {parameters.gameFieldObj} gameSettings = {userSettings}/> 
         </div>       
     )
 };

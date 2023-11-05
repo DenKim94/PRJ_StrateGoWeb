@@ -6,7 +6,7 @@ import "./FigureStorage.css";
 const FigureStorage = ({ figStateArray }) => {
     /* *** Handle Figure State Array *** */
     if(!figStateArray){
-        console.warn('>> FigureStorage is empty: Please check unser input object and settings of parameters!')
+        console.warn(">> 'FigureStorage' is empty: Please check unser input object and settings of parameters!")
         return null;
     }
     return(
