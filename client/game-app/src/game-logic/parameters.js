@@ -4,7 +4,7 @@
 
 /**** General/Global Configurations ****/
 export const genCfg = {
-    debugMode: true,  /* Boolean for showing parameter values in the console (if true) */
+    debugMode: false,  /* Boolean for showing parameter values in the console (if true) */
 };
 
 /**** Settings for Component: GameField ****/

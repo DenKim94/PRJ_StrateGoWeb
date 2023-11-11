@@ -1,6 +1,6 @@
 // import * as helperFcn from '../components/functions/helperFunctions.js'
-import { genCfg } from '../components/parameters';
-import { gameFieldObj } from '../components/parameters';
+import { genCfg } from './parameters';
+import { gameFieldObj } from './parameters';
 
 /**** Helper function to get the index of the game-field-array ****/
 function getIndexOfGameField(stateArray, fieldObj){

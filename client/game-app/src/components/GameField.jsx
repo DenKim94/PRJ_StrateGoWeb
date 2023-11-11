@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import './GameField.css'
-import { genCfg } from './parameters';
+import { genCfg } from '../game-logic/parameters.js';
 import SingleField from './SingleField';
 import FigureStorage from './FigureStorage';
-import { figProperties } from './parameters';
+import { figProperties } from '../game-logic/parameters.js';
 import * as helperFcn from './functions/helperFunctions.js'
 import * as gameLogic from '../game-logic/gameLogic.js'
 import YAxis from './yAxis';
