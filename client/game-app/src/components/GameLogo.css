@@ -3,10 +3,9 @@
     font-family: 'Young Serif', serif;
     color: black;
     position: relative;
-    /* display: flex; */
     text-align: center;
     justify-content: center;
     align-items: flex-start;
-    margin-top: 1vh;
-    margin-bottom: 2vh;
+    margin-top: 10px;
+    margin-bottom: 20px;
 }

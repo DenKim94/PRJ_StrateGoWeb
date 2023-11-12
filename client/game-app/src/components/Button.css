@@ -1,0 +1,13 @@
+.btn-container {
+    font-family: 'Young Serif', serif;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    max-height: 200px;
+    max-width: 80px;
+    right: 20px;
+    margin-top: 500px;
+    /* border: 1px solid black; */
+}

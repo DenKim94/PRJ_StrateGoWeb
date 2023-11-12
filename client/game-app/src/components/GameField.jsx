@@ -130,8 +130,8 @@ function GameField({gameFieldSettings, gameSettings})
           </div>
             {/* *** TO-DO: Figure Storage (Starting Position) *** */} 
             <FigureStorage figStateArray = {figureStorageState} />      
-          </div> 
-        </DragDropContext>
+        </div> 
+      </DragDropContext>
       )     
 };
 

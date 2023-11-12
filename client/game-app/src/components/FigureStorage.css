@@ -6,7 +6,7 @@
     justify-content: center;
     gap: 5px;
     align-items: center;
-    margin-top: 30px;
+    margin-top: 20px;
     border: 1px solid black;
   }
 
@@ -16,7 +16,7 @@
     justify-content: flex-start;
     gap: 5px;
   }
-  /* *** If display height is equal or higher than 1000 px *** */
+  /* *** If the viewport height is equal or lower than 1000 px *** */
   @media (max-height: 1000px) {
     .figure-storage { 
         margin: auto;
