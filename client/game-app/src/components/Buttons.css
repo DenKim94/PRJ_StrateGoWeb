@@ -11,3 +11,10 @@
     margin-top: 500px;
     /* border: 1px solid black; */
 }
+
+.btn-container button{
+    margin-top: 8px;
+    border: 1px solid black;
+    text-align: center;
+    font-size:15px;    
+}

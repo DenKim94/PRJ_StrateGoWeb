@@ -128,7 +128,6 @@ function GameField({gameFieldSettings, gameSettings})
               {/* *** x-Axis *** */}                   
               <XAxis xAxisArray = {xAxisLetters} singleFieldWidth = {sizeSingleField} />
           </div>
-            {/* *** TO-DO: Figure Storage (Starting Position) *** */} 
             <FigureStorage figStateArray = {figureStorageState} />      
         </div> 
       </DragDropContext>
