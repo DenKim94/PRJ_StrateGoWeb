@@ -242,12 +242,15 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
     // Get properties of the target field object
     const targetFieldProps = getPropsOfGameField(gameFieldState, indexTargetField); 
 
+    /****** Logic for moving game figures in different use-cases ******/
+    // If the game is paused, do nothing
+    if(gameSettings.isPaused){
+        return
+    }
     // If target field does not exist, do nothing
     if(!targetFieldProps){
         return
     }
-
-    /****** Logic for moving game figures in different use-cases ******/
     /* If destination doesn't exist, do nothing */
     if(!destination) 
         return;
