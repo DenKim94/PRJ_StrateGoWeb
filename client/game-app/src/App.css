@@ -9,7 +9,7 @@
 
 .ui-container {
    display: flex;
-   position:relative;
+   position: relative;
    flex-direction: row;
    justify-content: center;
 
@@ -17,8 +17,19 @@
 
  @media (max-height: 1000px) {
    .ui-container {
-      left: 6%;
+      left: 7%;
    }
+
+   @media (min-width: 1400px) {
+    .ui-container {
+      right: 3%;
+    }
+   } 
+   @media (min-width: 1600px) {
+     .ui-container {
+       left: 5%;
+     } 
+   } 
 
    @media (min-width: 2200px) {
       .ui-container {
@@ -27,15 +38,13 @@
       }
     } 
  } 
-
  @media (min-width: 1400px) {
-   .ui-container {
-     right: 3%;
-   }
+  .ui-container {
+    right: 3%;
+  }
  } 
-
  @media (min-width: 1700px) {
    .ui-container {
      right: 2%;
-   }
+   } 
  } 
