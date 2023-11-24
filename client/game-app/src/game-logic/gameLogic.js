@@ -225,9 +225,22 @@ function updateGameFieldStateProps(FieldState, indexField, props){
 /**** Function to handle the drag and drop action ****/
 export function handleDragDrop(results, gameFieldState, figureStorageState, prefixSingleFieldID, gameSettings) 
 {   
-    /* Extract the properties after the DnD action */
+    // Extract the properties after the DnD action
     const { source, destination, type, draggableId } = results;
-    
+
+    console.log(">> results: ",results)
+
+    // If the game is paused, do nothing
+    if(gameSettings.isPaused){
+        return;
+    }
+    // If destination doesn't exist, do nothing 
+    if(!destination) 
+        return;
+    // If source and destination are equal, do nothing 
+    if(source.droppableId === destination.droppableId && source.index === destination.index) 
+        return; 
+
     /**********************************************/
     // Setting default values
     let draggedFigure = null;                      // Placeholder for object properties of a dragged game figure   
@@ -243,20 +256,11 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
     const targetFieldProps = getPropsOfGameField(gameFieldState, indexTargetField); 
 
     /****** Logic for moving game figures in different use-cases ******/
-    // If the game is paused, do nothing
-    if(gameSettings.isPaused){
-        return
-    }
     // If target field does not exist, do nothing
     if(!targetFieldProps){
         return
     }
-    /* If destination doesn't exist, do nothing */
-    if(!destination) 
-        return;
-    /* If source and destination are equal, do nothing */
-    if(source.droppableId === destination.droppableId && source.index === destination.index) 
-        return;  
+
     /* It's only allowed to place game figures on the own half (before starting the game) */
     if (targetFieldProps.pos_y > 4 && !gameSettings.ready2Play)
         return;

@@ -12,6 +12,7 @@ const SingleField = ({fieldState, idx}) => {
     alignItems: 'center', 
     justifyContent: 'center', 
   };
+  
   // If empty field, return the function
   if(emptyFigProps){
     return null;

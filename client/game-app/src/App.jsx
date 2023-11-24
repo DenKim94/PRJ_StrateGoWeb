@@ -6,12 +6,6 @@ import GameLogo from './components/GameLogo';
 import './components/Buttons.css'
 
 /* ******************************************************************* */ 
-// const buttonStyle = {
-//     marginTop: '8px',
-//     border: '1px solid black',
-//     textAlign: 'center',
-//     fontSize:'15px',
-//   };
 
 const App = () => {
   
@@ -93,11 +87,13 @@ const App = () => {
         })); 
         
     }
-
-    console.log("##########################################################")
-    console.log(">> gameStates: ", gameStates)
-    console.log(">> buttonStates: ", buttonStates)
-    console.log("##########################################################")
+    
+    if(parameters.genCfg.debugMode){
+        console.log("##########################################################")
+        console.log(">> gameStates: ", gameStates)
+        console.log(">> buttonStates: ", buttonStates)
+        console.log("##########################################################")
+    }
 
     /*** Rendering the components ***/  
     return(
