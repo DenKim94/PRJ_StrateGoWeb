@@ -12,11 +12,24 @@ const SingleField = ({fieldState, idx}) => {
     alignItems: 'center', 
     justifyContent: 'center', 
   };
-  
+
   // If empty field, return the function
   if(emptyFigProps){
     return null;
   }
+  // Disable animation translate except element is dragging
+  function getStyle(style, snapshot) {
+    if (!snapshot.isDragging) return {};
+    if (!snapshot.isDropAnimating) {
+      return style;
+    }
+    return {
+      ...style,
+      // cannot be 0, but make it super tiny
+      transitionDuration: `0.001s`,
+    };
+  }
+
   // Render the game figure on the game field
     return(
           <div style={fieldStyle}>
@@ -28,11 +41,10 @@ const SingleField = ({fieldState, idx}) => {
                           >
                             {(provided,snapshot)=>(
                                   <div className='game-figure'
-                                      ref={(ref) => {
-                                          provided.innerRef(ref);
-                                      }}
+                                      ref={provided.innerRef} 
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
+                                      style={getStyle(provided.draggableProps.style, snapshot)}
                                       >                           
                                       <GameFigure propsObj={figProps}/>
                                   </div>

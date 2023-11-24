@@ -227,9 +227,7 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
 {   
     // Extract the properties after the DnD action
     const { source, destination, type, draggableId } = results;
-
-    console.log(">> results: ",results)
-
+    
     // If the game is paused, do nothing
     if(gameSettings.isPaused){
         return;
@@ -256,12 +254,11 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
     const targetFieldProps = getPropsOfGameField(gameFieldState, indexTargetField); 
 
     /****** Logic for moving game figures in different use-cases ******/
-    // If target field does not exist, do nothing
+    // If properties of 'targetFieldProps' Object don't exist, do nothing
     if(!targetFieldProps){
-        return
+        return;
     }
-
-    /* It's only allowed to place game figures on the own half (before starting the game) */
+    // It's only allowed to place game figures on the own half (before starting the game) 
     if (targetFieldProps.pos_y > 4 && !gameSettings.ready2Play)
         return;
 
@@ -290,6 +287,7 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
                 console.log(">> figureStorageState: ", figureStorageState)
                 console.log(">> newFigureStorageState: ", newFigureStorageState)
                 console.log(">> gameFieldState: ", gameFieldState)
+                console.log(">> targetFieldProps: ", targetFieldProps)
                 console.log(">> newGameFieldState:", newGameFieldState)
             }
         }

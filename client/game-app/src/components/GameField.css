@@ -17,9 +17,9 @@
   display: flex;
   position: absolute;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   flex-direction: row; 
-  top: 93%;
+  top: 92%;
   margin-top: 5px;
 } 
 
@@ -27,7 +27,7 @@
 .y-axis {
   font-family: 'Young Serif', serif;
   position: relative;
-  left: -20px;
+  left: -25px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

@@ -27,9 +27,7 @@ const FigureStorage = ({ figStateArray }) => {
                             >
                                 {(provided,snapshot)=>(
                                     <div className='game-figure'
-                                        ref={(ref) => {
-                                            provided.innerRef(ref);
-                                        }}
+                                        ref={provided.innerRef} 
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}
                                         >

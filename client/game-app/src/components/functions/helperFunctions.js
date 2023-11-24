@@ -86,7 +86,7 @@ export function getObjArrayKeys(objArray){
 }
 
 /**** Helper function to sort and return game figures of each player ****/
-export function getFigures4Player(figList, colorPlayer){
+export function getFiguresOfPlayer(figList, colorPlayer){
     
     // Filter the list to get figures with corrresponding color and without 'FigureBack.png'
     const playerFigures = figList.filter((figProps) => {
@@ -95,3 +95,28 @@ export function getFigures4Player(figList, colorPlayer){
     return playerFigures || null
 }
 
+/**** Helper function to return the color of current player ****/
+export function getColorOfPlayer(gameStates){
+    // Returned variable as string
+    let colorPlayer  
+    // Chosen color of player 1
+    if (gameStates.isPlayer1){ 
+        colorPlayer = gameStates.colorPlayer;
+    }
+    else {
+        // Color of player 2 depends on the chosen color by player 1
+        switch (gameStates.colorPlayer){
+            case 'red':
+                colorPlayer = 'blue';
+                break;
+
+            case 'blue':
+                colorPlayer = 'red';
+                break;
+            
+            default:
+                colorPlayer = null;    
+        }
+    }
+    return colorPlayer 
+}

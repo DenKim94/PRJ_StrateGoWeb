@@ -1,6 +1,9 @@
 import React from 'react';
 /* Component of the x-Axis */
-const XAxis = ({xAxisArray,singleFieldWidth}) => {
+const XAxis = ({xAxisArray,singleFieldWidth,gameStates}) => {
+  if (!gameStates.isPlayer1){
+    xAxisArray = xAxisArray.reverse();
+  }
   return (
     <div className="x-axis">
       {xAxisArray.map((letter, index) => (

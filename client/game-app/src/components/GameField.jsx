@@ -31,18 +31,21 @@ function GameField({gameFieldSettings, gameSettings})
       gridTemplateRows: `repeat(10, ${sizeSingleField}px)`
     };
   
-    /* Create a String-Array (Letters) for the x-Axis */
+    // Create a String-Array (Letters) for the x-Axis 
     const xAxisLetters = Array.from({ length: 10 }, (_, index) =>
       String.fromCharCode(65 + index)
     );
 
-    /* Create a String-Array (Numbers) for the y-Axis */
+    // Create a String-Array (Numbers) for the y-Axis 
     const yAxisNumbers = (Array.from({ length: 10 }, (_, index) => 
-    String(index + 1))).reverse();
+    String(index + 1)));
     
-    /* Merging the axis arrays into a new array of coordinates */
+    // Merging the axis arrays into a new array of coordinates 
     const fieldCoordinates = helperFcn.getCoordinatesArray(xAxisLetters,yAxisNumbers);
     
+    // Get color of the player
+    const playerColor = helperFcn.getColorOfPlayer(gameSettings);
+
     /* ********************************************************************* */
     /* Set properties of a single field and store them in an array */
     const updatedStateArray = [];
@@ -66,7 +69,7 @@ function GameField({gameFieldSettings, gameSettings})
     /* *** State as array to store and set game field properties *** */
     const [gameFieldState, setGameFieldState] = useState([...updatedStateArray]); 
     /* *** State as array to store and set game figure properties *** */
-    const playerFigures = helperFcn.getFigures4Player(figProperties, gameSettings.colorPlayer)
+    const playerFigures = helperFcn.getFiguresOfPlayer(figProperties, playerColor)
     const [figureStorageState,setFigureStorageState] = useState([...playerFigures]); 
   
     
@@ -76,9 +79,10 @@ function GameField({gameFieldSettings, gameSettings})
       console.log(">> Settings 'gameFieldStruct': ", gameFieldSettings);
       console.log(">> sizeSingleField [px]: ", sizeSingleField);
       console.log(">> Array 'fieldCoordinates': ", fieldCoordinates);
+      console.log(">> playerColor: ", playerColor);
       console.log(">> playerFigures: ", playerFigures);
       console.log(">> State 'gameFieldState': ", gameFieldState);
-      console.log(">> User Settings: ", gameSettings);
+      console.log(">> Game Settings: ", gameSettings);
       console.log(" #############################################################");
     }
     /* *************** Rendering the game components *************** */ 
@@ -96,7 +100,9 @@ function GameField({gameFieldSettings, gameSettings})
          <div className = "dnd-container">
           <div className="game-field-container">
               {/* *** y-Axis *** */}
-              <YAxis yAxisArray = {yAxisNumbers} axisHeight = {fieldHeight}/>
+              <YAxis yAxisArray = {yAxisNumbers} 
+                     axisHeight = {fieldHeight}
+                     gameStates = {gameSettings} />
               {/* *** The game field *** */}
               <div className="game-field" style={fieldStyle}>
                 {/* Create single game fields */}
@@ -112,9 +118,7 @@ function GameField({gameFieldSettings, gameSettings})
                         style={fieldProps.style}
                         key={index}
                         className={"single-field"}
-                        ref={(ref) => {
-                          provided.innerRef(ref);
-                        }}
+                        ref={provided.innerRef} 
                         {...provided.droppableProps}
                       >
                         <SingleField fieldState={fieldProps} idx = {index}/>
@@ -126,7 +130,9 @@ function GameField({gameFieldSettings, gameSettings})
                 })}
               </div>
               {/* *** x-Axis *** */}                   
-              <XAxis xAxisArray = {xAxisLetters} singleFieldWidth = {sizeSingleField} />
+              <XAxis xAxisArray = {xAxisLetters} 
+                     singleFieldWidth = {sizeSingleField} 
+                     gameStates = {gameSettings} />
           </div>
             <FigureStorage figStateArray = {figureStorageState} />      
         </div> 

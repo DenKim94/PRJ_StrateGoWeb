@@ -16,7 +16,8 @@ const App = () => {
     });  
     // Add general Game States by using default values
     const [gameStates, setGameStates] = useState({
-        colorPlayer: 'blue',   // player color as placeholder [string] 
+        colorPlayer: 'red',    // placeholder: player color [string] --> Has to be set by player 1
+        isPlayer1: true,       // placeholder: variable [boolean] to identify player 1 
         ready2Play: false,     // default value [boolean]
         isPaused: false,       // default value [boolean] 
         leavedGame: false,     // default value [boolean]        
@@ -87,7 +88,7 @@ const App = () => {
         })); 
         
     }
-    
+
     if(parameters.genCfg.debugMode){
         console.log("##########################################################")
         console.log(">> gameStates: ", gameStates)
