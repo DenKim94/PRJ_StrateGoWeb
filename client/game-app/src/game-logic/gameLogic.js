@@ -261,15 +261,18 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
     if (!gameSettings.ready2Play){
         switch(gameSettings.isPlayer1){
             case true:
+                console.log(">> targetFieldProps: ", targetFieldProps)
                 // Limitation of moving area from perspective of player 1
                 if (targetFieldProps.pos_y > 4){
                     return;
                 } 
+                break;
             case false:
                 // Limitation of moving area from perspective of player 2
                 if (targetFieldProps.pos_y < 7){
                     return;
                 } 
+                break;
         }
     } 
     /* *** Updating the States of figures and game field after dragging *** */
