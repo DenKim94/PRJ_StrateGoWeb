@@ -1,7 +1,7 @@
 import React from 'react';
 /* Component of the y-Axis */
 const YAxis = ({yAxisArray,axisHeight,gameStates}) => {
-  if (gameStates.isPlayer1){
+  if (!gameStates.isPlayer1){
     yAxisArray = yAxisArray.reverse();
   }
   return (

@@ -31,17 +31,17 @@ function GameField({gameFieldSettings, gameSettings})
       gridTemplateRows: `repeat(10, ${sizeSingleField}px)`
     };
   
-    // Create a String-Array (Letters) for the x-Axis 
+    // Create an array (Strings) for the x-Axis 
     const xAxisLetters = Array.from({ length: 10 }, (_, index) =>
       String.fromCharCode(65 + index)
     );
 
-    // Create a String-Array (Numbers) for the y-Axis 
+    // Create an array (Numbers) for the y-Axis 
     const yAxisNumbers = (Array.from({ length: 10 }, (_, index) => 
-    String(index + 1)));
+    (10 - index)));
     
     // Merging the axis arrays into a new array of coordinates 
-    const fieldCoordinates = helperFcn.getCoordinatesArray(xAxisLetters,yAxisNumbers);
+    let fieldCoordinates = helperFcn.getCoordinatesArray(xAxisLetters,yAxisNumbers, gameSettings.isPlayer1);
     
     // Get color of the player
     const playerColor = helperFcn.getColorOfPlayer(gameSettings);

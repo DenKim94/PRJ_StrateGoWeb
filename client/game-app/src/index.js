@@ -1,7 +1,7 @@
 /*** Project-File of the web game 'StrateGo' 
  * Author: Denis Kim
  * Version: 1.0.0 
- * Date: 08.10.2023
+ * Date: 25.11.2023
  ***/
 import React from 'react';
 import ReactDOM from 'react-dom/client';

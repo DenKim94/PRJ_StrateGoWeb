@@ -38,10 +38,16 @@ export const setProps4SingleField = (prefixSingleFieldID,index,fieldCoordinates,
 Input: xCoordArray [columns], yCoordArray [rows] 
 Output: coordinatesArray [column, row] 
 */
-export function getCoordinatesArray(xCoordArray,yCoordArray){
-    const coordinatesArray = yCoordArray.flatMap((yVal) => 
+export function getCoordinatesArray(xCoordArray,yCoordArray, isPlayer1){
+    console.log(">> xCoordArray: ", xCoordArray);
+    console.log(">> yCoordArray: ", yCoordArray);
+
+    let coordinatesArray = yCoordArray.flatMap((yVal) => 
         xCoordArray.map((xVal) => [xVal, Number(yVal)])
     );
+    if(!isPlayer1){
+        coordinatesArray = coordinatesArray.reverse(); 
+    }
     return coordinatesArray
 };
 

@@ -23,17 +23,13 @@ function moveFigureOnField(GameFieldState, gameSettings, draggableId, figureStor
     // Initialize a state of figure storage component
     const newFigureStorageState = figureStorageState ; 
     // Get a property parameter of a target field
-    const isPlayable = targetFieldProps.isPlayable; 
+    const isPlayableField = targetFieldProps.isPlayable; 
 
     // Identify properties of a dragged figure and corresponding field
     const sourceFieldProps = GameFieldState.find((obj) => {
-        return obj.figure && `${gameSettings.colorPlayer}_${obj.figure.id}` === draggableId;
+        return obj.figure && `${obj.figure.color}_${obj.figure.id}` === draggableId;
     });
     const draggedFigure = sourceFieldProps.figure;
-
-    /* TO-DO: Limiting the movements of figures depending on their properties after starting the game (31.10.2023) 
-            1) Only one field per turn is allowed except of a 'Scout' (current position as reference) 
-            2) Moving directions: Only vertical or horizontal  */
 
     // Maintain a correct moving of a dragged game figure after starting the game
     if(gameSettings.ready2Play){
@@ -49,7 +45,7 @@ function moveFigureOnField(GameFieldState, gameSettings, draggableId, figureStor
     let newGameFieldState = updateGameFieldStateProps(GameFieldState, indexSourceField, [true, null])       
 
     // Handle the action in case of an occupied field
-    if(!isPlayable){
+    if(!isPlayableField){
         const winner = handleOccupiedField(targetFieldProps, draggedFigure)
 
         // If the type of returned 'winner' is an object (not as 'null')
@@ -177,16 +173,17 @@ function handleOccupiedField(targetFieldProps, draggedFigure){
         console.log("**** function handleOccupiedField ****")
         console.log(">> placedFigure: ", placedFigure)
     }
-    // Return if the destination field is occupied by own figure
-    if (placedFigure.color === draggedFigure.color){ 
-        return null; 
+
+    // If 'placedFigure' does not exist, return null
+    if(!placedFigure){
+        return null;
     }
     // If the destination field is occupied by an opponent --> battle
-    else if(placedFigure.color !== draggedFigure.color){
+    if (placedFigure.color !== draggedFigure.color){
         const winner = battleFigures(draggedFigure, placedFigure);
-        return winner
+        return winner 
     }
-    // If the target field is just not playable, return the function
+    // If the target field is occupied by own figure or is just not playable, return null
     else{ 
         return null; 
     }   
@@ -227,7 +224,9 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
 {   
     // Extract the properties after the DnD action
     const { source, destination, type, draggableId } = results;
-    
+    console.log("results: ", results)
+    console.log("gameSettings: ", gameSettings)
+
     // If the game is paused, do nothing
     if(gameSettings.isPaused){
         return;
@@ -259,9 +258,20 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
         return;
     }
     // It's only allowed to place game figures on the own half (before starting the game) 
-    if (targetFieldProps.pos_y > 4 && !gameSettings.ready2Play)
-        return;
-
+    if (!gameSettings.ready2Play){
+        switch(gameSettings.isPlayer1){
+            case true:
+                // Limitation of moving area from perspective of player 1
+                if (targetFieldProps.pos_y > 4){
+                    return;
+                } 
+            case false:
+                // Limitation of moving area from perspective of player 2
+                if (targetFieldProps.pos_y < 7){
+                    return;
+                } 
+        }
+    } 
     /* *** Updating the States of figures and game field after dragging *** */
     if(type === "FIGURE" && source.droppableId !== destination.droppableId){
                         

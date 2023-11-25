@@ -3,6 +3,7 @@ import './App.css';
 import * as parameters from './game-logic/parameters';
 import GameField from './components/GameField';
 import GameLogo from './components/GameLogo';  
+import Cover from './components/Cover';
 import './components/Buttons.css'
 
 /* ******************************************************************* */ 
@@ -17,7 +18,7 @@ const App = () => {
     // Add general Game States by using default values
     const [gameStates, setGameStates] = useState({
         colorPlayer: 'red',    // placeholder: player color [string] --> Has to be set by player 1
-        isPlayer1: true,       // placeholder: variable [boolean] to identify player 1 
+        isPlayer1: false,       // placeholder: variable [boolean] to identify player 1 
         ready2Play: false,     // default value [boolean]
         isPaused: false,       // default value [boolean] 
         leavedGame: false,     // default value [boolean]        
@@ -101,6 +102,7 @@ const App = () => {
         <div className = "App"> 
             <GameLogo/> 
             <div className="ui-container">
+            {/* <Cover isReady2Play={gameStates.ready2Play} className={gameStates.ready2Play ? '' : 'Cover-FadeOut'} /> */}
                 <div className="btn-container">
                     <button type="button" className="btn btn-warning" onClick={startGame} disabled = {buttonStates.disabledStartButton} >
                         {'Start Game'}
