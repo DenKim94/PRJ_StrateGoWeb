@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import './GameField.css'
 import { genCfg } from '../game-logic/parameters.js';
 import SingleField from './SingleField';
 import FigureStorage from './FigureStorage';
+import DefeatedFigureStorage from './DefeatedFigureStorage';
 import { figProperties } from '../game-logic/parameters.js';
 import * as helperFcn from './functions/helperFunctions.js'
 import * as gameLogic from '../game-logic/gameLogic.js'
@@ -11,7 +12,7 @@ import YAxis from './yAxis';
 import XAxis from './xAxis';
 
 /* *********************** Game Field Component ************************ */ 
-function GameField({gameFieldSettings, gameSettings})
+function GameField({gameFieldSettings, gameSettings, buttonStates, setStartButtonState})
   {
      /* ********************************************************************* */
     const fieldWidth = gameFieldSettings.fieldWidth;
@@ -68,11 +69,14 @@ function GameField({gameFieldSettings, gameSettings})
 
     /* *** State as array to store and set game field properties *** */
     const [gameFieldState, setGameFieldState] = useState([...updatedStateArray]); 
+
     /* *** State as array to store and set game figure properties *** */
     const playerFigures = helperFcn.getFiguresOfPlayer(figProperties, playerColor)
     const [figureStorageState,setFigureStorageState] = useState([...playerFigures]); 
-  
-    
+
+    /* *** State as array to store defeated game figures *** */
+    const [defeatedFigureStorage,setDefeatedFigureStorage] = useState([]); 
+
     /* Checking values of parameters in 'debugMode' */
     if(genCfg.debugMode){
       console.log("################### Component: GameField #####################");
@@ -82,9 +86,25 @@ function GameField({gameFieldSettings, gameSettings})
       console.log(">> playerColor: ", playerColor);
       console.log(">> playerFigures: ", playerFigures);
       console.log(">> State 'gameFieldState': ", gameFieldState);
+      console.log(">> State 'figureStorageState': ", figureStorageState);
       console.log(">> Game Settings: ", gameSettings);
       console.log(" #############################################################");
     }
+    // Enable the Start Button to start the game, when the figure storage list is empty
+    useEffect(() => {
+      const updateStartButton = () => {
+        // Überprüfen, ob der Start-Button aktiviert werden soll
+        if (figureStorageState.length === 0 && buttonStates.counterUsedStartButton < 1) {
+          setStartButtonState((prevStates) => ({
+            ...prevStates,
+            disabledStartButton: false,
+          }));
+        }
+      }; 
+      
+      updateStartButton()
+    }, [figureStorageState, buttonStates.counterUsedStartButton])
+
     /* *************** Rendering the game components *************** */ 
     return(
       <DragDropContext onDragEnd={(result) => {
@@ -134,7 +154,9 @@ function GameField({gameFieldSettings, gameSettings})
                      singleFieldWidth = {sizeSingleField} 
                      gameStates = {gameSettings} />
           </div>
-            <FigureStorage figStateArray = {figureStorageState} />      
+            <FigureStorage figStateArray = {figureStorageState} />    
+            <DefeatedFigureStorage defFigStateArray = {defeatedFigureStorage}
+                                   figStorageState = {figureStorageState} />
         </div> 
       </DragDropContext>
       )     

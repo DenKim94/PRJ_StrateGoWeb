@@ -224,8 +224,6 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
 {   
     // Extract the properties after the DnD action
     const { source, destination, type, draggableId } = results;
-    console.log("results: ", results)
-    console.log("gameSettings: ", gameSettings)
 
     // If the game is paused, do nothing
     if(gameSettings.isPaused){
@@ -272,6 +270,7 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
                     return;
                 } 
                 break;
+            default:    
         }
     } 
     /* *** Updating the States of figures and game field after dragging *** */

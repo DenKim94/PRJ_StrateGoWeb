@@ -13,7 +13,8 @@ const App = () => {
     // Add Button States by using default values
     const [buttonStates, setButtonStates] = useState({
         pauseButtonText: "Pause Game", // default value [string]
-        disabledStartButton: false,             // default value [boolean]
+        disabledStartButton: true,     // default value [boolean]
+        counterUsedStartButton: 0,     // default value [integer]
     });  
     // Add general Game States by using default values
     const [gameStates, setGameStates] = useState({
@@ -34,16 +35,18 @@ const App = () => {
             ...prevStates,
             ready2Play: true,
         }));
-        // Disable the start button after first usage
+        // Disable the start button after first usage and increase counter
         setButtonStates((prevStates) => ({
             ...prevStates,
             disabledStartButton: true,
+            counterUsedStartButton: prevStates.counterUsedStartButton + 1,
         }));        
     }
     function pauseGame(){
         // To-Dos:
         if(!gameStates.isPaused){
-            // Change the button text of 'Pause Game' to 'Proceed Game'
+            /* After pausing the game, change the button text 
+            of 'Pause Game' to 'Proceed Game' */
             setButtonStates((prevStates) => ({
                 ...prevStates,
                 pauseButtonText: "Proceed Game",
@@ -60,7 +63,8 @@ const App = () => {
             }));              
         }
         else{
-            // Change the button text of 'Proceed Game' to 'Pause Game'
+            /* After proceeding the game, change the button text 
+            of 'Proceed Game' to 'Pause Game' */
             setButtonStates((prevStates) => ({
                 ...prevStates,
                 pauseButtonText: "Pause Game",
@@ -69,13 +73,22 @@ const App = () => {
             // Activate the timer (without resetting) to proceed
 
             // Enable the movements of figures (Drag-Drop-Events) to proceed
-            
-            // Set ready2Play = true to proceed
-            setGameStates((prevStates) => ({
-                ...prevStates,
-                ready2Play: true,
-                isPaused: false, 
-            }));  
+            if(buttonStates.counterUsedStartButton === 0){
+                // Set isPaused: false to proceed
+                setGameStates((prevStates) => ({
+                    ...prevStates,
+                    isPaused: false, 
+                })); 
+            }
+            else{
+                /* Set ready2Play = true and isPaused: false to proceed, 
+                when start button was used once */
+                setGameStates((prevStates) => ({
+                    ...prevStates,
+                    ready2Play: true,
+                    isPaused: false, 
+                })); 
+            } 
         }
     }
     function exitGame(){
@@ -104,7 +117,11 @@ const App = () => {
             <div className="ui-container">
             <Cover isReady2Play={gameStates.ready2Play} className={gameStates.ready2Play ? '' : 'Cover-FadeOut'} />
                 <div className="btn-container">
-                    <button type="button" className="btn btn-warning" onClick={startGame} disabled = {buttonStates.disabledStartButton} >
+                    <button type="button" 
+                            id={!buttonStates.disabledStartButton ? "highlighted-button": ''}
+                            className = "btn btn-warning"
+                            onClick={startGame} 
+                            disabled = {buttonStates.disabledStartButton} >
                         {'Start Game'}
                     </button> 
                     <button type="button" className="btn btn-warning" onClick={pauseGame}>
@@ -114,7 +131,10 @@ const App = () => {
                         {'Exit Game'}
                     </button>                                                            
                 </div>
-                <GameField gameFieldSettings = {parameters.gameFieldObj} gameSettings = {gameStates}/> 
+                <GameField gameFieldSettings = {parameters.gameFieldObj} 
+                           gameSettings = {gameStates} 
+                           buttonStates = {buttonStates}
+                           setStartButtonState = {setButtonStates} /> 
             </div>
         </div>       
     )

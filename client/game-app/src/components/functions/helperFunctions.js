@@ -39,8 +39,6 @@ Input: xCoordArray [columns], yCoordArray [rows]
 Output: coordinatesArray [column, row] 
 */
 export function getCoordinatesArray(xCoordArray,yCoordArray, isPlayer1){
-    console.log(">> xCoordArray: ", xCoordArray);
-    console.log(">> yCoordArray: ", yCoordArray);
 
     let coordinatesArray = yCoordArray.flatMap((yVal) => 
         xCoordArray.map((xVal) => [xVal, Number(yVal)])

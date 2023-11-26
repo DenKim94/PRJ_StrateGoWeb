@@ -16,7 +16,10 @@ const Cover = ({ isReady2Play }) => {
       transition: 'opacity 0.5s ease-out',  // Transition presets
       opacity: isReady2Play ? 0 : 1,  // Opacity of the component depending on the state of 'isReady2Play'
     };
-  
+    // Leave the function after starting the game --> component will not be rendered anymore
+    if(isReady2Play){
+      return;
+    }
     return <div style={coverStyle}></div>;
   };
   
