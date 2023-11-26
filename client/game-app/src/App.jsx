@@ -104,7 +104,7 @@ const App = () => {
     }
 
     if(parameters.genCfg.debugMode){
-        console.log("##########################################################")
+        console.log("######################### App #############################")
         console.log(">> gameStates: ", gameStates)
         console.log(">> buttonStates: ", buttonStates)
         console.log("##########################################################")

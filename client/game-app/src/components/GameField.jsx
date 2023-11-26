@@ -87,6 +87,7 @@ function GameField({gameFieldSettings, gameSettings, buttonStates, setStartButto
       console.log(">> playerFigures: ", playerFigures);
       console.log(">> State 'gameFieldState': ", gameFieldState);
       console.log(">> State 'figureStorageState': ", figureStorageState);
+      console.log(">> defeatedFigureStorage: ", defeatedFigureStorage)
       console.log(">> Game Settings: ", gameSettings);
       console.log(" #############################################################");
     }
@@ -101,7 +102,7 @@ function GameField({gameFieldSettings, gameSettings, buttonStates, setStartButto
           }));
         }
       }; 
-      
+
       updateStartButton()
     }, [figureStorageState, buttonStates.counterUsedStartButton])
 

@@ -2,7 +2,7 @@ import React from "react";
 import "./FigureStorage.css";
 
 const DefeatedFigureStorage = ({ defFigStateArray, figStorageState }) => {
-    console.log(">> defFigStateArray: ", defFigStateArray)
+    
     // *** Handle Early Return *** 
     if(figStorageState.length > 0){
         console.log(">> Early Return in 'DefeatedFigureStorage' ")
