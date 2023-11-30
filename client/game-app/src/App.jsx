@@ -135,7 +135,7 @@ const App = () => {
         <div className = "App"> 
             <GameLogo/> 
             <div className="ui-container">
-            <Cover isReady2Play={gameStates.ready2Play} className={gameStates.ready2Play ? '' : 'Cover-FadeOut'} />
+            <Cover GameStates={gameStates} className={gameStates.ready2Play ? '' : 'Cover-FadeOut'} />
                 <div className="btn-container">
                     <button type="button" 
                             id={!buttonStates.disabledStartButton ? "highlighted-button": ''}

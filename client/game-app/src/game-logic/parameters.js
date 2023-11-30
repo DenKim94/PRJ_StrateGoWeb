@@ -1,6 +1,6 @@
 /**** Main file for setting parameters [for developer] ****/
 /* This file is mandatory to run the application 
- * Date: 05.11.2023 */
+ * Date: 30.11.2023 */
 
 /**** General/Global Configurations ****/
 export const genCfg = {
@@ -46,12 +46,31 @@ const figNames = ["Marshal.png",    // index: 0
                 "Flag.png",         // index: 11
                 "FigureBack.png"];  // index: 12
 
+/*** Set style parameters for components ****/
+// Component: GameLogo
+
+
+// Component: FigureStorage
+
+
+// Component: FigureStorage
+
+
+// Component: GameFigure
+
+// Component: xAxis
+
+
+// Component: yAxis
+
+
+
 /***  Calculate size of a figure ***/
 const figWidth = (gameFieldObj.fieldWidth)*0.95/10 ;  // figure width in pixel
 const figHeight = (gameFieldObj.fieldWidth)*0.95/10 ; // figure height in pixel
 const figSize = [figWidth,figHeight];
 
-/* Figure properties -> {id, imgPath: [path_fig_active, path_fig_inactive], value, size, figName, color} */
+/*** Figure properties -> {id, imgPath: [path_fig_active, path_fig_inactive], value, size, figName, color} ***/
 export const figProperties = [
     {id: 1, imgPath: [path_redFig+figNames[9],path_deadFig+figNames[9]], value: 1, size: figSize, figName: figNames[9], color: "red"},
     {id: 2, imgPath: [path_redFig+figNames[8],path_deadFig+figNames[8]], value: 2, size: figSize, figName: figNames[8], color: "red"},
@@ -138,16 +157,19 @@ export const figProperties = [
     ];
 
 
-/* To-Do: Set default values of properties (if not defined) */
-/* gameFieldStruct.defaultProps = {
-    fieldWidth: 500,
-    fieldHeight: 500,
-    backgroundColor: 'lightgoldenrodyellow',
-    coordsNonPlayableFields:[                
-    ["C","5"],["C","6"],
-    ["D","5"],["D","6"],
-    ["G","5"],["G","6"],
-    ["H","5"],["H","6"],
+/*** Set default values of properties (if not defined) ***/
+gameFieldObj.defaultProps = {
+    fieldWidth: 550,                         /* Width of the game field in pixel */
+    fieldHeight: 550,                        /* Height of the game field in pixel */
+    backgroundColor: 'lightgoldenrodyellow', /* Background color of the game field */
+    coordsNonPlayableFields:[                /* Array with coordinates of non playable fields [col,row] */
+        ["C",5],["C",6],
+        ["D",5],["D",6],
+        ["G",5],["G",6],
+        ["H",5],["H",6],
     ],
-    colorNonPlayableFields: 'brown' 
-  }; */
+    prefixID: 'SingleField',                 /* Prefix for the id of a single field */   
+    colorNonPlayableFields: '#ADD8E6',       /* Color (Colorcode) of non playable fields [String] */
+    Letters2Numbers: { "A": 1, "B": 2, "C": 3, "D": 4, "E": 5, 
+                       "F": 6, "G": 7, "H": 8, "I": 9, "J": 10 }, 
+  }; 

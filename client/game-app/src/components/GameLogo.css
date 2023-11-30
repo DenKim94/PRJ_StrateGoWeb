@@ -1,11 +1,16 @@
 /* *** CSS-File of 'GameLogo' *** */
 .game-logo{
     font-family: 'Young Serif', serif;
-    color: black;
+    color: rgb(248, 202, 45);
     position: relative;
     text-align: center;
     justify-content: center;
     align-items: flex-start;
     margin-top: 10px;
     margin-bottom: 20px;
+    text-shadow:
+    -1px -1px 0 black,
+    1px -1px 0 black,
+    -1px 1px 0 black,
+    1px 1px 0 black;
 }
