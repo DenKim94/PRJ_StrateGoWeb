@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.css';
 import * as parameters from './game-logic/parameters';
 import GameField from './components/GameField';
@@ -12,10 +12,14 @@ const App = () => {
   
     // Add Button States by using default values
     const [buttonStates, setButtonStates] = useState({
+
         pauseButtonText: "Pause Game", // default value [string]
+        startButtonText: "Start Game", // default value [string]
         disabledStartButton: true,     // default value [boolean]
         counterUsedStartButton: 0,     // default value [integer]
+
     });  
+
     // Add general Game States by using default values
     const [gameStates, setGameStates] = useState({
         colorPlayer: 'red',    // placeholder: player color [string] --> Has to be set by player 1
@@ -38,10 +42,10 @@ const App = () => {
         // Disable the start button after first usage and increase counter
         setButtonStates((prevStates) => ({
             ...prevStates,
-            disabledStartButton: true,
             counterUsedStartButton: prevStates.counterUsedStartButton + 1,
         }));        
     }
+
     function pauseGame(){
         // To-Dos:
         if(!gameStates.isPaused){
@@ -91,6 +95,7 @@ const App = () => {
             } 
         }
     }
+
     function exitGame(){
         console.log(">> Exit Game: In Progress...")
         // Set ready2Play = false to exit game
@@ -100,8 +105,23 @@ const App = () => {
             isPaused: false, 
             leavedGame: true,       
         })); 
-        
+        // To-Do: Link to another (UI-) page
+
     }
+    // Change the functionality of the Start Button after starting the game
+    useEffect(() => {
+        const changeStartButton = () => {
+            if (buttonStates.counterUsedStartButton > 0) {
+                setButtonStates((prevStates) => ({
+                    ...prevStates,
+                    startButtonText: "End Turn",
+                }));
+            }
+        }; 
+    
+        changeStartButton()
+        }, [buttonStates.counterUsedStartButton])
+
 
     if(parameters.genCfg.debugMode){
         console.log("######################### App #############################")
@@ -122,7 +142,7 @@ const App = () => {
                             className = "btn btn-warning"
                             onClick={startGame} 
                             disabled = {buttonStates.disabledStartButton} >
-                        {'Start Game'}
+                        {buttonStates.startButtonText}
                     </button> 
                     <button type="button" className="btn btn-warning" onClick={pauseGame}>
                         {buttonStates.pauseButtonText}
