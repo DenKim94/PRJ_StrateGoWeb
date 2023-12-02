@@ -3,6 +3,7 @@ import * as parameters from '../game-logic/parameters.js';
 import "./FigureStorage.css";
 
 const DefeatedFigureStorage = ({ defFigStateArray, 
+                                 setDefState,
                                  figStorageState,
                                  styleStorageTopic = parameters.styleStorageTopic,}) => {
     

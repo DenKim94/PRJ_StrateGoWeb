@@ -159,6 +159,7 @@ function GameField({gameFieldSettings, gameSettings, buttonStates, setStartButto
           </div>
             <FigureStorage figStateArray = {figureStorageState} />    
             <DefeatedFigureStorage defFigStateArray = {defeatedFigureStorage}
+                                   setDefState = {setDefeatedFigureStorage}
                                    figStorageState = {figureStorageState} />
         </div> 
       </DragDropContext>
