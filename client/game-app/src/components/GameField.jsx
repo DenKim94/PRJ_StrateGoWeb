@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import './GameField.css'
-import { genCfg } from '../game-logic/parameters.js';
+import * as parameters from '../game-logic/parameters.js';
 import SingleField from './SingleField';
 import FigureStorage from './FigureStorage';
 import DefeatedFigureStorage from './DefeatedFigureStorage';
@@ -78,7 +78,7 @@ function GameField({gameFieldSettings, gameSettings, buttonStates, setStartButto
     const [defeatedFigureStorage,setDefeatedFigureStorage] = useState([]); 
 
     /* Checking values of parameters in 'debugMode' */
-    if(genCfg.debugMode){
+    if(parameters.genCfg.debugMode){
       console.log("################### Component: GameField #####################");
       console.log(">> Settings 'gameFieldStruct': ", gameFieldSettings);
       console.log(">> sizeSingleField [px]: ", sizeSingleField);
@@ -118,12 +118,13 @@ function GameField({gameFieldSettings, gameSettings, buttonStates, setStartButto
           setFigureStorageState(newFigureStorageState); // Update the State of the figure storage
         }        
       }}>
-         <div className = "dnd-container">
-          <div className="game-field-container">
+         <div className = "dnd-container" style={parameters.styleDnDContainer}>
+          <div className="game-field-container" style={parameters.styleGameFieldContainer}>
               {/* *** y-Axis *** */}
               <YAxis yAxisArray = {yAxisNumbers} 
                      axisHeight = {fieldHeight}
-                     gameStates = {gameSettings} />
+                     gameStates = {gameSettings} 
+                     axisStyle = {parameters.styleYAxis}/>
               {/* *** The game field *** */}
               <div className="game-field" style={fieldStyle}>
                 {/* Create single game fields */}
@@ -153,7 +154,8 @@ function GameField({gameFieldSettings, gameSettings, buttonStates, setStartButto
               {/* *** x-Axis *** */}                   
               <XAxis xAxisArray = {xAxisLetters} 
                      singleFieldWidth = {sizeSingleField} 
-                     gameStates = {gameSettings} />
+                     gameStates = {gameSettings} 
+                     axisStyle={parameters.styleXAxis}/>
           </div>
             <FigureStorage figStateArray = {figureStorageState} />    
             <DefeatedFigureStorage defFigStateArray = {defeatedFigureStorage}

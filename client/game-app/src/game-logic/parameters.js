@@ -1,10 +1,10 @@
 /**** Main file for setting parameters [for developer] ****/
 /* This file is mandatory to run the application 
- * Date: 30.11.2023 */
+ * Date: 02.12.2023 */
 
 /**** General/Global Configurations ****/
 export const genCfg = {
-    debugMode: true,       // Boolean for showing parameter values in the console (if true) 
+    debugMode: false,       // Boolean for showing parameter values in the console (if true) 
 };
 
 /**** Settings for Component: GameField ****/
@@ -21,9 +21,143 @@ export const gameFieldObj = {
     prefixID: 'SingleField',                 /* Prefix for the id of a single field */   
     colorNonPlayableFields: '#ADD8E6',       /* Color (Colorcode) of non playable fields [String] */
     Letters2Numbers: { "A": 1, "B": 2, "C": 3, "D": 4, "E": 5, 
-                       "F": 6, "G": 7, "H": 8, "I": 9, "J": 10 }, /* Array to translate letters to 
+                       "F": 6, "G": 7, "H": 8, "I": 9, "J": 10 }, /* Dictionary to translate letters to 
                                                                      corresponding numbers */ 
 };
+
+/***  Calculate size of a figure ***/
+const figWidth = (gameFieldObj.fieldWidth)*0.95/10 ;  // figure width in pixel
+const figHeight = (gameFieldObj.fieldWidth)*0.95/10 ; // figure height in pixel
+const figSize = [figWidth,figHeight];
+
+/*** Set and export style parameters [as stings] for components ****/
+// Component: App
+export const styleApp = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',    
+    height: '100vh',        // Relative height of the component
+    backgroundColor: 'rgb(136, 107, 107)',
+};
+
+export const styleUIContainer = {
+    display: 'flex',
+    position: 'relative',
+    flexDirection: 'row',
+    justifyContent: 'center',
+};
+
+// Component: GameLogo
+export const styleGameLogo = {
+    fontFamily: 'Young Serif, serif',
+    color: 'rgb(248, 202, 45)',
+    position: 'relative',
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    marginTop: '10px',
+    marginBottom: '20px',
+    textShadow: '-1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black'
+};
+
+// Component: GameField
+export const styleDnDContainer = {
+    display: 'flex',
+    margin: 'auto',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: '3vh',    
+};
+
+export const styleGameFieldContainer = {
+    display: 'flex',  
+    position: 'relative',   
+    width: '700px',
+    height: '700px',
+    backgroundColor: 'rgb(176, 175, 175)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    border: '1px solid black',
+    borderRadius: '5px',
+};
+
+// Component: FigureStorageTopic
+export const styleStorageTopic = {
+    fontFamily: 'Young Serif, serif',
+    display: 'flex',
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: '5px',
+};
+
+// Component: SingleField
+export const styleSingleField = {
+    alignItems: 'center', 
+    justifyContent: 'center', 
+  };
+
+// Component: GameFigure
+export const styleGameFigure = {
+    width: `${figSize[0]}px`, 
+    height: `${figSize[1]}px`,
+    margin: 'auto', 
+    display: 'flex',
+    alignItems: 'flex-start', 
+    justifyContent: 'flex-start', 
+    cursor: 'grab',
+    position: 'relative', 
+  };
+
+  export const valueStyleGameFigure = {
+    fontSize: '12px', // Passen Sie die Schriftgröße an
+    position: 'absolute',
+    color: 'white',
+    backgroundColor: 'black',
+    padding: '1px 1px',
+    borderRadius: '3px', 
+    top: '2px', // Passe den Abstand am unteren Rand an
+    left: '2px', // Passe den Abstand am rechten Rand an        
+  };
+
+// Component: xAxis
+export const styleXAxis = {
+    fontFamily: 'Young Serif, serif',
+    display: 'flex',
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row', 
+    top: '92%',
+    marginTop: '5px',
+};
+
+// Component: yAxis
+export const styleYAxis = {
+    fontFamily: 'Young Serif, serif',
+    position: 'relative',
+    left: '-25px',
+    height: `${gameFieldObj.fieldHeight}px`,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between'
+};
+
+// Component: Cover
+export const styleCover = {
+    position: 'absolute',
+    fontFamily: 'Young Serif, serif',
+    top: '0px',
+    left: '80px',
+    width: '700px',
+    height: '405px',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '5px',  
+    backgroundColor: 'rgba(0, 0, 0, 0.9)',  
+    zIndex: 2,                                  // Second layer to cover the GameField-Component
+    transition: 'opacity 0.5s ease-out',        // Transition presets   
+};  
 
 /**** Settings for Component: GameFigure ****/
 /* Default paths to images */
@@ -45,30 +179,6 @@ const figNames = ["Marshal.png",    // index: 0
                 "Bomb.png",         // index: 10
                 "Flag.png",         // index: 11
                 "FigureBack.png"];  // index: 12
-
-/*** Set style parameters for components ****/
-// Component: GameLogo
-
-
-// Component: FigureStorage
-
-
-// Component: FigureStorage
-
-
-// Component: GameFigure
-
-// Component: xAxis
-
-
-// Component: yAxis
-
-
-
-/***  Calculate size of a figure ***/
-const figWidth = (gameFieldObj.fieldWidth)*0.95/10 ;  // figure width in pixel
-const figHeight = (gameFieldObj.fieldWidth)*0.95/10 ; // figure height in pixel
-const figSize = [figWidth,figHeight];
 
 /*** Figure properties -> {id, imgPath: [path_fig_active, path_fig_inactive], value, size, figName, color} ***/
 export const figProperties = [

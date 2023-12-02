@@ -1,4 +1,4 @@
-/* *** Style of 'FigureStorage' *** */
+/* *** Responsive Design of 'FigureStorage' *** */
 .figure-storage {
     max-height: 150px;
     min-height: 50px;
@@ -11,7 +11,7 @@
     border: 1px solid black;
     background-color: lightgoldenrodyellow;
     border-radius: 5px;
-  }
+  } 
 
   .scrollspy-example{
     display: flex;
@@ -19,15 +19,8 @@
     justify-content: flex-start;
     gap: 5px;
     border-radius: 5px;
-  }
-  #storage-name{
-    font-family: 'Young Serif', serif;
-    display: 'flex';
-    position: relative;
-    align-items: center;
-    justify-content: center;
-    margin: 5px;
-  }
+  } 
+
   /* *** If the viewport height is equal or lower than 1000 px *** */
   @media (max-height: 1000px) {
     .figure-storage { 

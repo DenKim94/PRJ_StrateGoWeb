@@ -1,9 +1,12 @@
 import React from "react";
+import * as parameters from '../game-logic/parameters.js';
 import GameFigure from './GameFigure';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import "./FigureStorage.css";
 
-const FigureStorage = ({ figStateArray }) => {
+const FigureStorage = ({ figStateArray, 
+                         styleStorageTopic = parameters.styleStorageTopic,
+                        }) => {
 
     // *** Handle Early Return *** 
     if(!figStateArray || figStateArray.length === 0){
@@ -13,7 +16,7 @@ const FigureStorage = ({ figStateArray }) => {
 
     return(
         <div className="figure-storage">
-            <p id="storage-name">My Game Figures: </p>
+            <p id="storage-name" style={styleStorageTopic}> * My Game Figures * </p>
             <Droppable droppableId="storageZone" type = "FIGURE"> 
             {/* *** Storage of Game Figures *** */}
             {(provided) => (
@@ -21,7 +24,11 @@ const FigureStorage = ({ figStateArray }) => {
                 {...provided.droppableProps}
                 ref={provided.innerRef}
                 >
-                    <div data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" className="scrollspy-example" tabIndex="0">
+                    <div data-bs-spy="scroll" 
+                         data-bs-target="#navbar-example2" 
+                         data-bs-offset="0" 
+                         className="scrollspy-example" 
+                         tabIndex="0">
                             {/* Store the draggable Figure-Components */}
                             {figStateArray.map((figProps, idx) => (
                                 <Draggable draggableId={`${figProps.color}_${figProps.id}`} 

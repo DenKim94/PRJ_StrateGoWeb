@@ -1,25 +1,17 @@
 import React, {useState} from 'react';
+import * as parameters from '../game-logic/parameters.js';
 import './Cover.css'
 
-const Cover = ({ GameStates }) => {
-    // Predefined style of the cover component
+const Cover = ({ GameStates, styleCover = parameters.styleCover }) => {
+    
     const defaultCoverContent = "Placeholder: Set up you game figures and get ready for the battle!" ;
+    // Predefined style of the cover component
     const coverStyle = {
-      position: 'absolute',
-      fontFamily: 'Young Serif, serif',
-      top: '0px',
-      left: '80px',
-      width: '700px',
-      height: '405px',
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: '5px',  
-      backgroundColor: 'rgba(0, 0, 0, 0.9)',  
-      zIndex: 2,  // Second layer to cover the GameField-Component
-      transition: 'opacity 0.5s ease-out',  // Transition presets
+      ...styleCover,
       opacity: GameStates.ready2Play ? 0 : 1,  // Opacity of the component depending on the state of 'isReady2Play'
     };
-    const [coverContent, setCoverContent] = useState(defaultCoverContent )
+    const [coverContent, setCoverContent] = useState(defaultCoverContent)
+
     // Leave the function after starting the game --> component will not be rendered anymore
     if(GameStates.ready2Play){
       return;
