@@ -138,7 +138,7 @@ const App = () => {
     return(
         <div className = "App" style={parameters.styleApp}> 
             <GameLogo/> 
-            <div className="ui-container" style={parameters.styleUIContainer}>
+            <div className="ui-container" >
             <Cover GameStates={gameStates} className={gameStates.ready2Play ? '' : 'Cover-FadeOut'} />
                 <div className="btn-container" style = {parameters.styleButtonContainer}>
                     <button type="button" 

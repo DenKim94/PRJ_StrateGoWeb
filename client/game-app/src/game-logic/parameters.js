@@ -43,13 +43,6 @@ export const styleApp = {
     backgroundColor: 'rgb(136, 107, 107)',
 };
 
-export const styleUIContainer = {
-    display: 'flex',
-    position: 'relative',
-    flexDirection: 'row',
-    justifyContent: 'center',
-};
-
 // Component: GameLogo
 export const styleGameLogo = {
     fontFamily: 'Young Serif, serif',
@@ -59,7 +52,7 @@ export const styleGameLogo = {
     justifyContent: 'center',
     alignItems: 'flex-start',
     marginTop: '10px',
-    marginBottom: '20px',
+    marginBottom: '10px',
     textShadow: '-1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black'
 };
 
