@@ -4,13 +4,14 @@
 
 /**** General/Global Configurations ****/
 export const genCfg = {
-    debugMode: false,       // Boolean for showing parameter values in the console (if true) 
+    debugMode: true,       // Boolean for showing parameter values in the console (if true) 
 };
 
 /**** Settings for Component: GameField ****/
+
 export const gameFieldObj = {
-    fieldWidth: 550,                         /* Width of the game field in pixel */
-    fieldHeight: 550,                        /* Height of the game field in pixel */
+    fieldWidth: 550,                         /* Width of the game field in pixel (without distances to the y-axis) */
+    fieldHeight: 550,                        /* Height of the game field in pixel (without distances to the x-axis) */
     backgroundColor: 'lightgoldenrodyellow', /* Background color of the game field */
     coordsNonPlayableFields:[                /* Array with coordinates of non playable fields [col,row] */
         ["C",5],["C",6],
@@ -24,6 +25,8 @@ export const gameFieldObj = {
                        "F": 6, "G": 7, "H": 8, "I": 9, "J": 10 }, /* Dictionary to translate letters to 
                                                                      corresponding numbers */ 
 };
+
+const totalGameFieldSize = 700;  // Total width and height of the game field in pixel (including distances to the axes)
 
 /***  Calculate size of a figure ***/
 const figWidth = (gameFieldObj.fieldWidth)*0.95/10 ;  // figure width in pixel
@@ -72,8 +75,8 @@ export const styleDnDContainer = {
 export const styleGameFieldContainer = {
     display: 'flex',  
     position: 'relative',   
-    width: '700px',
-    height: '700px',
+    width: `${totalGameFieldSize}px`,
+    height: `${totalGameFieldSize}px`,
     backgroundColor: 'rgb(176, 175, 175)',
     alignItems: 'center',
     justifyContent: 'center',
@@ -143,14 +146,35 @@ export const styleYAxis = {
     justifyContent: 'space-between'
 };
 
+// Component: Button
+export const styleButtonContainer = {
+    fontFamily: 'Young Serif, serif',
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    maxHeight: '200px',
+    maxWidth: '80px',
+    right: '20px',
+    marginTop: '500px',    
+};
+
+export const styleButtonText = {
+    marginTop: '8px',
+    border: '1px solid black',
+    textAlign: 'center',
+    fontSize: '15px'    
+};
+
 // Component: Cover
 export const styleCover = {
     position: 'absolute',
     fontFamily: 'Young Serif, serif',
     top: '0px',
     left: '80px',
-    width: '700px',
-    height: '405px',
+    width: `${totalGameFieldSize}px`,
+    height: `${totalGameFieldSize/2 + (gameFieldObj.fieldWidth)/10}px`,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: '5px',  
@@ -158,6 +182,22 @@ export const styleCover = {
     zIndex: 2,                                  // Second layer to cover the GameField-Component
     transition: 'opacity 0.5s ease-out',        // Transition presets   
 };  
+
+/**** Settings for Component: CoverContent ****/
+export const coverContent = {
+    messageBeforeStart: "* Set up you game figures and press the button 'Start Game' to start the battle! *",
+    messageWhilePause: "* Paused Game! *",  
+    messageAtExit: "* Are you sure to leave the game? *",
+    styleCoverContent:{
+        display: 'flex',
+        position: 'relative',
+        fontFamily: 'Young Serif, serif', 
+        alignItems: 'center',
+        justifyContent: 'center', 
+        color: 'white',  
+        top: '25px',      
+    },                   
+};
 
 /**** Settings for Component: GameFigure ****/
 /* Default paths to images */

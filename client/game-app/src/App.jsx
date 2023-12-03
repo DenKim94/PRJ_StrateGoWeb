@@ -57,8 +57,8 @@ const App = () => {
             }));
             
             // Pause the timer of the game after triggering the event
+            // In Progress...
 
-            // Pause the movements of figures (Drag-Drop-Events)
             // Set ready2Play = false
             setGameStates((prevStates) => ({
                 ...prevStates,
@@ -75,8 +75,8 @@ const App = () => {
             }));            
 
             // Activate the timer (without resetting) to proceed
+            // In Progress...
 
-            // Enable the movements of figures (Drag-Drop-Events) to proceed
             if(buttonStates.counterUsedStartButton === 0){
                 // Set isPaused: false to proceed
                 setGameStates((prevStates) => ({
@@ -105,9 +105,13 @@ const App = () => {
             isPaused: false, 
             leavedGame: true,       
         })); 
-        // To-Do: Link to another (UI-) page
+
+        /* To-Do: 03.12.2023
+        1) Ask the user to confirm leaving the game
+        2) Open the exit-page after confirmation */
 
     }
+
     // Change the functionality of the Start Button after starting the game
     useEffect(() => {
         const changeStartButton = () => {
@@ -136,18 +140,26 @@ const App = () => {
             <GameLogo/> 
             <div className="ui-container" style={parameters.styleUIContainer}>
             <Cover GameStates={gameStates} className={gameStates.ready2Play ? '' : 'Cover-FadeOut'} />
-                <div className="btn-container">
+                <div className="btn-container" style = {parameters.styleButtonContainer}>
                     <button type="button" 
                             id={!buttonStates.disabledStartButton ? "highlighted-button": ''}
                             className = "btn btn-warning"
+                            style={parameters.styleButtonText}
                             onClick={startGame} 
-                            disabled = {buttonStates.disabledStartButton} >
+                            disabled = {gameStates.leavedGame ? true : buttonStates.disabledStartButton} >
                         {buttonStates.startButtonText}
                     </button> 
-                    <button type="button" className="btn btn-warning" onClick={pauseGame}>
+                    <button type="button" 
+                            className="btn btn-warning" 
+                            style={parameters.styleButtonText} 
+                            onClick={pauseGame}
+                            disabled = {gameStates.leavedGame ? true : false}>
                         {buttonStates.pauseButtonText}
                     </button>  
-                    <button type="button" className="btn btn-warning" onClick={exitGame}>
+                    <button type="button" 
+                            className="btn btn-warning" 
+                            style={parameters.styleButtonText} 
+                            onClick={exitGame}>
                         {'Exit Game'}
                     </button>                                                            
                 </div>

@@ -1,4 +1,4 @@
-.btn-container {
+/* .btn-container {
     font-family: 'Young Serif', serif;
     position: relative;
     display: flex;
@@ -16,7 +16,7 @@
     border: 1px solid black;
     text-align: center;
     font-size: 15px;    
-}
+} */
 
 #highlighted-button {
     background-color: rgb(248, 202, 45);
