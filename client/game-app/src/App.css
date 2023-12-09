@@ -1,3 +1,7 @@
+:root{
+  --left: 80px;
+  --right: 50px;
+}
 
 .ui-container{
   display: flex;
@@ -6,85 +10,13 @@
   justify-content: center;
 }
 
- @media (max-height: 1000px) {
-   .ui-container {
-      left: 7%;
-   }
-
-   @media (min-width: 1000px) {
-    .ui-container {
-      left: 6%;
-    }
-   } 
-   @media (min-width: 1200px) {
-    .ui-container {
-      left: 6%;
-    }
-   } 
-   @media (min-width: 1400px) {
-    .ui-container {
-      left: 6%;
-    }
-   } 
-
-   @media (min-width: 1600px) {
-     .ui-container {
-       left: 5%;
-     } 
-   } 
-
-   @media (min-width: 1800px) {
-    .ui-container {
-      left: 4.5%;
-    } 
-  } 
-
-   @media (min-width: 2000px) {
-     .ui-container {
-       left: 4.5%;
-     } 
-   } 
-
-   @media (min-width: 2200px) {
-      .ui-container {
-        right: 2%;
-        left: 4%;
-      }
-    } 
- } 
-
- @media (min-width: 1000px) {
+@media (min-height: 1000px) {
   .ui-container {
-    right: 4%;
+     right: var(--right);
   }
- } 
-
- @media (min-width: 1200px) {
-  .ui-container {
-    right: 3.5%;
-  }
- } 
-
- @media (min-width: 1400px) {
-  .ui-container {
-    right: 3.3%;
-  }
- } 
-
- @media (min-width: 1600px) {
-  .ui-container {
-    right: 3%;
-  } 
 }
-
- @media (min-width: 1800px) {
+@media (max-height: 1000px) {
   .ui-container {
-    right: 2.5%;
-  } 
-}
- 
- @media (min-width: 2000px) {
-  .ui-container {
-    right: 2.5%;
-  } 
+     left: var(--left);
+  }
 }

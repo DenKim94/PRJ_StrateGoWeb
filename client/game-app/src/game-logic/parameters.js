@@ -42,7 +42,11 @@ export const styleApp = {
     height: '100vh',        // Relative height of the component
     backgroundColor: 'rgb(136, 107, 107)',
 };
-
+export const styleUiContainer = {
+    maxHeight: '1000px',
+    right: '50px',
+    left: '80px',
+};
 // Component: GameLogo
 export const styleGameLogo = {
     fontFamily: 'Young Serif, serif',
@@ -148,7 +152,7 @@ export const styleButtonContainer = {
     justifyContent: 'center',
     alignItems: 'flex-end',
     maxHeight: '200px',
-    maxWidth: '80px',
+    width: '80px',
     right: '20px',
     marginTop: '500px',    
 };

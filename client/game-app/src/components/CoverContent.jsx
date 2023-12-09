@@ -16,7 +16,6 @@ const CoverContent  = ({gameStates, coverContentProps = parameters.coverContent}
             setCoverContent(coverContentProps.messageAtExit)
           }
           else if(!gameStates.isPaused && !gameStates.ready2Play){
-            console.log(">> here: ")
             setCoverContent(defaultCoverContent)
           }
           else return
