@@ -2,8 +2,9 @@ import React from 'react';
 import * as parameters from '../game-logic/parameters.js';
 import CoverContent from './CoverContent.jsx'
 import './Cover.css'
+import ExitBox from './ExitBox.jsx';
 
-const Cover = ({ GameStates, styleCover = parameters.styleCover, coverContentProps = parameters.coverContent}) => {
+const Cover = ({ GameStates, updateGameStates, styleCover = parameters.styleCover }) => {
     
     // Predefined style of the cover component
     const coverStyle = {
@@ -19,7 +20,9 @@ const Cover = ({ GameStates, styleCover = parameters.styleCover, coverContentPro
     return( 
         <div style = {coverStyle}>
           {/* Use an additional component to render and style the cover content  */}
-              <CoverContent gameStates = {GameStates}/>
+              <CoverContent gameStates = {GameStates} />
+              {GameStates.leavedGame && (<ExitBox gameStates = {GameStates} 
+                                                  updateGameStates = {updateGameStates}/>)}
         </div>
     
     );

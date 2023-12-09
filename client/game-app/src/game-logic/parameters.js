@@ -184,7 +184,7 @@ export const styleCover = {
 export const coverContent = {
     messageBeforeStart: "* Set up you game figures and press the button 'Start Game' to start the battle! *",
     messageWhilePause: "* Paused Game! *",  
-    messageAtExit: "* Are you sure to leave the game? *",
+    messageAtExit: "* You are leaving! *",
     styleCoverContent:{
         display: 'flex',
         position: 'relative',
@@ -194,6 +194,14 @@ export const coverContent = {
         color: 'white',  
         top: '25px',      
     },                   
+};
+
+/**** Settings for Component: ExitBox ****/
+export const exitBoxProps = {
+    message: "Are you sure to leave the game?",
+    styleParams:{
+
+    }
 };
 
 /**** Settings for Component: GameFigure ****/

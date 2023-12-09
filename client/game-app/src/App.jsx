@@ -26,7 +26,8 @@ const App = () => {
         isPlayer1: true,       // placeholder: variable [boolean] to identify player 1 
         ready2Play: false,     // default value [boolean]
         isPaused: false,       // default value [boolean] 
-        leavedGame: false,     // default value [boolean]        
+        leavedGame: false,     // default value [boolean]  
+        exitConfirmed: false,  // default value [boolean]        
     }); 
 
     /*** Functions after click the buttons ****/
@@ -139,7 +140,7 @@ const App = () => {
         <div className = "App" style={parameters.styleApp}> 
             <GameLogo/> 
             <div className="ui-container" >
-            <Cover GameStates={gameStates} className={gameStates.ready2Play ? '' : 'Cover-FadeOut'} />
+            <Cover GameStates={gameStates} updateGameStates = {setGameStates} className={gameStates.ready2Play ? '' : 'Cover-FadeOut'} />
                 <div className="btn-container" style = {parameters.styleButtonContainer}>
                     <button type="button" 
                             id={!buttonStates.disabledStartButton ? "highlighted-button": ''}
