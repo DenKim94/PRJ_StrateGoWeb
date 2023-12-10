@@ -182,7 +182,7 @@ export const styleCover = {
 
 /**** Settings for Component: CoverContent ****/
 export const coverContent = {
-    messageBeforeStart: "* Set up you game figures and press the button 'Start Game' to start the battle! *",
+    messageBeforeStart: "* Set up you game figures and get ready for the battle! *",
     messageWhilePause: "* Paused Game! *",  
     messageAtExit: "* You are leaving! *",
     styleCoverContent:{
