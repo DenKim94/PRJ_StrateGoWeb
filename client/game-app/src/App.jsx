@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import './App.css';
 import * as parameters from './game-logic/parameters';
-// import GameField from './components/gameSection/GameField';
 import GameLogo from './components/gameSection/GameLogo';  
+import HomeSection from './components/homeSection/HomeSection';
 import GameSection from './components/gameSection/GameSection'; 
-// import Cover from './components/gameSection/Cover';
-// import './components/gameSection/Buttons.css'
+import ExitSection from './components/exitSection/ExitSection';  
 
 /* ******************************************************************* */ 
 
@@ -109,8 +109,8 @@ const App = () => {
             leaveGame: true,       
         })); 
 
-        /* To-Do: 03.12.2023
-        1) Ask the user to confirm leaving the game
+        /* To-Do: 10.12.2023
+        1) Ask the user to confirm leaving the game [Done]
         2) Open the exit-page after confirmation */
 
     }
@@ -139,45 +139,31 @@ const App = () => {
 
     /*** Rendering the components ***/  
     return(
-        <div className = "App" style={parameters.styleApp}> 
-            <GameLogo/> 
-            <GameSection gameStates={gameStates} setGameStates={setGameStates}
-                         buttonStates={buttonStates} setButtonStates={setButtonStates}
-                         startGame={startGame} pauseGame={pauseGame} exitGame={exitGame}/>
-                         
-            {/* <div className="ui-container" >
-            {!gameStates.ready2Play && (<Cover GameStates={gameStates} updateGameStates = {setGameStates} 
-                                        ButtonStates = {buttonStates}
-                                        className={gameStates.ready2Play ? '' : 'Cover-FadeOut'} />)}
-                <div className="btn-container" style = {parameters.styleButtonContainer}>
-                    <button type="button" 
-                            id={!buttonStates.disabledStartButton ? "highlighted-button": ''}
-                            className = "btn btn-warning"
-                            style={parameters.styleButtonText}
-                            onClick={startGame} 
-                            disabled = {gameStates.leaveGame ? true : buttonStates.disabledStartButton} >
-                        {buttonStates.startButtonText}
-                    </button> 
-                    <button type="button" 
-                            className="btn btn-warning" 
-                            style={parameters.styleButtonText} 
-                            onClick={pauseGame}
-                            disabled = {gameStates.leaveGame ? true : false}>
-                        {buttonStates.pauseButtonText}
-                    </button>  
-                    <button type="button" 
-                            className="btn btn-warning" 
-                            style={parameters.styleButtonText} 
-                            onClick={exitGame}>
-                        {buttonStates.exitButtonText}
-                    </button>                                                            
-                </div>
-                <GameField gameFieldSettings = {parameters.gameFieldObj} 
-                           gameSettings = {gameStates} 
-                           buttonStates = {buttonStates}
-                           setStartButtonState = {setButtonStates} /> 
-            </div> */}
-        </div>       
+        <Router>
+            <div className = "App" style={parameters.styleApp}> 
+                <GameLogo/> 
+                <Routes>
+                    <Route path = "/" Component={(routeProps) => (
+                        <HomeSection 
+                        {...routeProps}
+                        GameStates = {gameStates} setGameStates={setGameStates}/>
+                        )
+                    }/>
+                    <Route path = "/game" Component={(routeProps) => (
+                        <GameSection 
+                        {...routeProps}
+                        gameStates={gameStates} setGameStates={setGameStates}
+                        buttonStates={buttonStates} setButtonStates={setButtonStates}
+                        startGame={startGame} pauseGame={pauseGame} exitGame={exitGame}/>                       
+                        )
+                    }/>
+                        {/* <GameSection gameStates={gameStates} setGameStates={setGameStates}
+                                    buttonStates={buttonStates} setButtonStates={setButtonStates}
+                                    startGame={startGame} pauseGame={pauseGame} exitGame={exitGame}/>    */}
+          
+                </Routes>                       
+            </div> 
+        </Router>      
     )
 };
  

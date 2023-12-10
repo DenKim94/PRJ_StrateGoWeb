@@ -1,13 +1,14 @@
 /**** Main file for setting parameters [for developer] ****/
-/* This file is mandatory to run the application 
- * Date: 02.12.2023 */
+/*  * This file is mandatory to run the application! 
+    * Author: D.Kim
+    * Date: 10.12.2023  */
 
 /**** General/Global Configurations ****/
 export const genCfg = {
     debugMode: true,       // Boolean for showing parameter values in the console (if true) 
 };
 
-/**** Settings for Component: GameField ****/
+/**** Settings for GameSection-Component: GameField ****/
 
 export const gameFieldObj = {
     fieldWidth: 550,                         /* Width of the game field in pixel (without distances to the y-axis) */
@@ -19,22 +20,24 @@ export const gameFieldObj = {
         ["G",5],["G",6],
         ["H",5],["H",6],
     ],
-    prefixID: 'SingleField',                 /* Prefix for the id of a single field */   
+    prefixID: 'SingleField',                 /* Prefix for the id of a single field [String] */   
     colorNonPlayableFields: '#ADD8E6',       /* Color (Colorcode) of non playable fields [String] */
     Letters2Numbers: { "A": 1, "B": 2, "C": 3, "D": 4, "E": 5, 
                        "F": 6, "G": 7, "H": 8, "I": 9, "J": 10 }, /* Dictionary to translate letters to 
                                                                      corresponding numbers */ 
 };
 
-const totalGameFieldSize = 700;  // Total width and height of the game field in pixel (including distances to the axes)
+// Total width and height of the game field in pixel (including distances to the axes)
+const totalGameFieldSize = 700;  
 
-/***  Calculate size of a figure ***/
+/***  Calculate size of a game figure ***/
 const figWidth = (gameFieldObj.fieldWidth)*0.95/10 ;  // figure width in pixel
 const figHeight = (gameFieldObj.fieldWidth)*0.95/10 ; // figure height in pixel
 const figSize = [figWidth,figHeight];
 
-/*** Set and export style parameters [as stings] for components ****/
-// Component: App
+/***************** Set and export style and property parameters for components *****************/
+
+// GameSection-Component: App
 export const styleApp = {
     display: 'flex',
     flexDirection: 'column',
@@ -47,7 +50,7 @@ export const styleUiContainer = {
     right: '50px',
     left: '80px',
 };
-// Component: GameLogo
+// Generic Component: GameLogo
 export const styleGameLogo = {
     fontFamily: 'Young Serif, serif',
     color: 'rgb(248, 202, 45)',
@@ -60,7 +63,7 @@ export const styleGameLogo = {
     textShadow: '-1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black'
 };
 
-// Component: GameField
+// GameSection-Component: GameField
 export const styleDnDContainer = {
     display: 'flex',
     margin: 'auto',
@@ -81,7 +84,7 @@ export const styleGameFieldContainer = {
     borderRadius: '5px',
 };
 
-// Component: FigureStorageTopic
+// GameSection-Component: FigureStorageTopic
 export const styleStorageTopic = {
     fontFamily: 'Young Serif, serif',
     display: 'flex',
@@ -91,13 +94,13 @@ export const styleStorageTopic = {
     margin: '5px',
 };
 
-// Component: SingleField
+// GameSection-Component: SingleField
 export const styleSingleField = {
     alignItems: 'center', 
     justifyContent: 'center', 
   };
 
-// Component: GameFigure
+// GameSection-Component: GameFigure
 export const styleGameFigure = {
     width: `${figSize[0]}px`, 
     height: `${figSize[1]}px`,
@@ -120,7 +123,7 @@ export const styleGameFigure = {
     left: '2px', // Passe den Abstand am rechten Rand an        
   };
 
-// Component: xAxis
+// GameSection-Component: xAxis
 export const styleXAxis = {
     fontFamily: 'Young Serif, serif',
     display: 'flex',
@@ -132,7 +135,7 @@ export const styleXAxis = {
     marginTop: '5px',
 };
 
-// Component: yAxis
+// GameSection-Component: yAxis
 export const styleYAxis = {
     fontFamily: 'Young Serif, serif',
     position: 'relative',
@@ -143,7 +146,7 @@ export const styleYAxis = {
     justifyContent: 'space-between'
 };
 
-// Component: Button
+// GameSection-Component: Button
 export const styleButtonContainer = {
     fontFamily: 'Young Serif, serif',
     position: 'relative',
@@ -164,7 +167,7 @@ export const styleButtonText = {
     fontSize: '15px'    
 };
 
-// Component: Cover
+// GameSection-Component: Cover
 export const styleCover = {
     position: 'absolute',
     fontFamily: 'Young Serif, serif',
@@ -180,7 +183,7 @@ export const styleCover = {
     transition: 'opacity 0.5s ease-out',        // Transition presets   
 };  
 
-/**** Settings for Component: CoverContent ****/
+// GameSection-Component: CoverContent
 export const coverContent = {
     messageBeforeStart: "* Set up you game figures and get ready for the battle! *",
     messageWhilePause: "* Paused Game! *",  
@@ -196,7 +199,7 @@ export const coverContent = {
     },                   
 };
 
-/**** Settings for Component: ExitBox ****/
+// GameSection-Component: ExitBox 
 export const exitBoxProps = {
     message: "Are you sure to leave the game?",
     styleParamsMessage:{
@@ -226,7 +229,31 @@ export const exitBoxProps = {
     }
 };
 
-/**** Settings for Component: GameFigure ****/
+/**** Settings for HomeSection-Component: HomeSection ****/
+export const homeSectionProps = {
+    message: "Welcome!",
+    style:{
+        fontFamily: 'Young Serif, serif',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: 'black',
+    },
+};
+
+/**** Settings for ExitSection-Component: ExitSection ****/
+export const exitSectionProps = {
+    message: "You have successfully left the game. See you next time.",
+    style:{
+        fontFamily: 'Young Serif, serif',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: 'black',
+    },
+};
+
+/**** Settings for GameSection-Component: GameFigure ****/
 /* Default paths to images */
 const path_redFig = "assets/images/redFigures/" ;
 const path_blueFig = "assets/images/blueFigures/" ;
