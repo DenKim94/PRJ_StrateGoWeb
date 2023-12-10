@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import './App.css';
 import * as parameters from './game-logic/parameters';
-import GameField from './components/gameSection/GameField';
+// import GameField from './components/gameSection/GameField';
 import GameLogo from './components/gameSection/GameLogo';  
-import Cover from './components/gameSection/Cover';
-import './components/gameSection/Buttons.css'
+import GameSection from './components/gameSection/GameSection'; 
+// import Cover from './components/gameSection/Cover';
+// import './components/gameSection/Buttons.css'
 
 /* ******************************************************************* */ 
 
@@ -140,7 +141,11 @@ const App = () => {
     return(
         <div className = "App" style={parameters.styleApp}> 
             <GameLogo/> 
-            <div className="ui-container" >
+            <GameSection gameStates={gameStates} setGameStates={setGameStates}
+                         buttonStates={buttonStates} setButtonStates={setButtonStates}
+                         startGame={startGame} pauseGame={pauseGame} exitGame={exitGame}/>
+                         
+            {/* <div className="ui-container" >
             {!gameStates.ready2Play && (<Cover GameStates={gameStates} updateGameStates = {setGameStates} 
                                         ButtonStates = {buttonStates}
                                         className={gameStates.ready2Play ? '' : 'Cover-FadeOut'} />)}
@@ -171,7 +176,7 @@ const App = () => {
                            gameSettings = {gameStates} 
                            buttonStates = {buttonStates}
                            setStartButtonState = {setButtonStates} /> 
-            </div>
+            </div> */}
         </div>       
     )
 };

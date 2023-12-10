@@ -102,11 +102,8 @@ function GameField({gameFieldSettings, gameSettings, buttonStates, setStartButto
           }));
         }
       }; 
-
       updateStartButton()
-    }, [figureStorageState, 
-       buttonStates.counterUsedStartButton,
-       setStartButtonState])
+    }, [figureStorageState, buttonStates.counterUsedStartButton, setStartButtonState]);
 
     /* *************** Rendering the game components *************** */ 
     return(
