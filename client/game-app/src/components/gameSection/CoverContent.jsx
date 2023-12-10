@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import * as parameters from '../game-logic/parameters.js';
+import * as parameters from '../../game-logic/parameters.js';
 
 const CoverContent  = ({gameStates, coverContentProps = parameters.coverContent}) => {
 
@@ -12,7 +12,7 @@ const CoverContent  = ({gameStates, coverContentProps = parameters.coverContent}
           if(gameStates.isPaused) {
             setCoverContent(coverContentProps.messageWhilePause)
           }
-          else if(gameStates.leavedGame){
+          else if(gameStates.leaveGame){
             setCoverContent(coverContentProps.messageAtExit)
           }
           else if(!gameStates.isPaused && !gameStates.ready2Play){
@@ -24,7 +24,7 @@ const CoverContent  = ({gameStates, coverContentProps = parameters.coverContent}
       updateCoverContent()
       }, [gameStates.ready2Play,
           gameStates.isPaused,
-          gameStates.leavedGame,
+          gameStates.leaveGame,
           defaultCoverContent,
           coverContentProps.messageAtExit, 
           coverContentProps.messageWhilePause]) 

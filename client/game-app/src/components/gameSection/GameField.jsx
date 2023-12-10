@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import './GameField.css'
-import * as parameters from '../game-logic/parameters.js';
+import * as parameters from '../../game-logic/parameters.js';
 import SingleField from './SingleField';
 import FigureStorage from './FigureStorage';
 import DefeatedFigureStorage from './DefeatedFigureStorage';
-import { figProperties } from '../game-logic/parameters.js';
-import * as helperFcn from './functions/helperFunctions.js'
-import * as gameLogic from '../game-logic/gameLogic.js'
+import { figProperties } from '../../game-logic/parameters.js';
+import * as helperFcn from '../functions/helperFunctions.js'
+import * as gameLogic from '../../game-logic/gameLogic.js'
 import YAxis from './yAxis';
 import XAxis from './xAxis';
 

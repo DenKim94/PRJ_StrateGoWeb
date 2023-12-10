@@ -1,5 +1,5 @@
 import React from "react";
-import * as parameters from '../game-logic/parameters.js';
+import * as parameters from '../../game-logic/parameters.js';
 
 /* *********************** Game Figure Component ************************ */ 
 

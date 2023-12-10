@@ -1,5 +1,5 @@
 import React from "react";
-import * as parameters from '../game-logic/parameters.js';
+import * as parameters from '../../game-logic/parameters.js';
 import GameFigure from './GameFigure';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import "./FigureStorage.css";

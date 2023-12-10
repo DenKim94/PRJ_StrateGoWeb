@@ -1,5 +1,5 @@
 import React from 'react';
-import { styleGameLogo } from '../game-logic/parameters.js';
+import { styleGameLogo } from '../../game-logic/parameters.js';
 
 const GameLogo = () => {
   return (

@@ -1,8 +1,8 @@
 import React from 'react';
-import * as parameters from '../game-logic/parameters.js';
+import * as parameters from '../../game-logic/parameters.js';
 
 const ExitBox = ({gameStates, updateGameStates, exitBoxProps = parameters.exitBoxProps}) => {
-    if(!gameStates.leavedGame){
+    if(!gameStates.leaveGame){
         return
     }
     // Functions after click on buttons

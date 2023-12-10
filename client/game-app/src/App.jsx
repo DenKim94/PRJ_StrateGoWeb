@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import './App.css';
 import * as parameters from './game-logic/parameters';
-import GameField from './components/GameField';
-import GameLogo from './components/GameLogo';  
-import Cover from './components/Cover';
-import './components/Buttons.css'
+import GameField from './components/gameSection/GameField';
+import GameLogo from './components/gameSection/GameLogo';  
+import Cover from './components/gameSection/Cover';
+import './components/gameSection/Buttons.css'
 
 /* ******************************************************************* */ 
 
@@ -26,7 +26,7 @@ const App = () => {
         isPlayer1: true,       // placeholder: variable [boolean] to identify player 1 
         ready2Play: false,     // default value [boolean]
         isPaused: false,       // default value [boolean] 
-        leavedGame: false,     // default value [boolean]  
+        leaveGame: false,      // default value [boolean]  
         exitConfirmed: false,  // default value [boolean]        
     }); 
 
@@ -104,7 +104,7 @@ const App = () => {
             ...prevStates,
             ready2Play: false,
             isPaused: false, 
-            leavedGame: true,       
+            leaveGame: true,       
         })); 
 
         /* To-Do: 03.12.2023
@@ -147,14 +147,14 @@ const App = () => {
                             className = "btn btn-warning"
                             style={parameters.styleButtonText}
                             onClick={startGame} 
-                            disabled = {gameStates.leavedGame ? true : buttonStates.disabledStartButton} >
+                            disabled = {gameStates.leaveGame ? true : buttonStates.disabledStartButton} >
                         {buttonStates.startButtonText}
                     </button> 
                     <button type="button" 
                             className="btn btn-warning" 
                             style={parameters.styleButtonText} 
                             onClick={pauseGame}
-                            disabled = {gameStates.leavedGame ? true : false}>
+                            disabled = {gameStates.leaveGame ? true : false}>
                         {buttonStates.pauseButtonText}
                     </button>  
                     <button type="button" 
