@@ -15,6 +15,7 @@ const App = () => {
 
         pauseButtonText: "Pause Game", // default value [string]
         startButtonText: "Start Game", // default value [string]
+        exitButtonText: "Exit Game",  // default value [string]
         disabledStartButton: true,     // default value [boolean]
         counterUsedStartButton: 0,     // default value [integer]
 
@@ -27,7 +28,8 @@ const App = () => {
         ready2Play: false,     // default value [boolean]
         isPaused: false,       // default value [boolean] 
         leaveGame: false,      // default value [boolean]  
-        exitConfirmed: false,  // default value [boolean]        
+        exitConfirmed: false,  // default value [boolean]   
+        exitCanceled: false,   // default value [boolean]   
     }); 
 
     /*** Functions after click the buttons ****/
@@ -98,7 +100,6 @@ const App = () => {
     }
 
     function exitGame(){
-        console.log(">> Exit Game: In Progress...")
         // Set ready2Play = false to exit game
         setGameStates((prevStates) => ({
             ...prevStates,
@@ -140,7 +141,9 @@ const App = () => {
         <div className = "App" style={parameters.styleApp}> 
             <GameLogo/> 
             <div className="ui-container" >
-            <Cover GameStates={gameStates} updateGameStates = {setGameStates} className={gameStates.ready2Play ? '' : 'Cover-FadeOut'} />
+            {!gameStates.ready2Play && (<Cover GameStates={gameStates} updateGameStates = {setGameStates} 
+                                        ButtonStates = {buttonStates}
+                                        className={gameStates.ready2Play ? '' : 'Cover-FadeOut'} />)}
                 <div className="btn-container" style = {parameters.styleButtonContainer}>
                     <button type="button" 
                             id={!buttonStates.disabledStartButton ? "highlighted-button": ''}
@@ -161,7 +164,7 @@ const App = () => {
                             className="btn btn-warning" 
                             style={parameters.styleButtonText} 
                             onClick={exitGame}>
-                        {'Exit Game'}
+                        {buttonStates.exitButtonText}
                     </button>                                                            
                 </div>
                 <GameField gameFieldSettings = {parameters.gameFieldObj} 

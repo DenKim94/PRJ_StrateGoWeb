@@ -199,8 +199,30 @@ export const coverContent = {
 /**** Settings for Component: ExitBox ****/
 export const exitBoxProps = {
     message: "Are you sure to leave the game?",
-    styleParams:{
-
+    styleParamsMessage:{
+        margin: 'auto',
+        colorText: 'black', 
+    },    
+    styleParamsBox:{
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'relative',
+        fontFamily: 'Young Serif, serif', 
+        margin: 'auto',
+        backgroundColor: 'rgb(248, 202, 45)',
+        borderRadius: '5px',         
+        width: `${totalGameFieldSize/2}px`,
+        top: `${(totalGameFieldSize/2 + (gameFieldObj.fieldWidth)/10)/2}px`,
+    },
+    styleParamsButtons:{
+        fontFamily: 'Young Serif, serif',
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',  
+        marginTop: '10px',
+        marginBottom: '10px',
+        gap: '10px',     
     }
 };
 

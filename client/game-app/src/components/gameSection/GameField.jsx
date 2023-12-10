@@ -121,7 +121,7 @@ function GameField({gameFieldSettings, gameSettings, buttonStates, setStartButto
         }        
       }}>
          <div className = "dnd-container" style={parameters.styleDnDContainer}>
-          <div className="game-field-container" style={parameters.styleGameFieldContainer}>
+          <div className = "game-field-container" style={parameters.styleGameFieldContainer}>
               {/* *** y-Axis *** */}
               <YAxis yAxisArray = {yAxisNumbers} 
                      axisHeight = {fieldHeight}
