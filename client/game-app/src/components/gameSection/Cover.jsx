@@ -18,14 +18,20 @@ const Cover = ({ GameStates, updateGameStates, ButtonStates, styleCover = parame
           if(ButtonStates.counterUsedStartButton > 0){
             updateGameStates((prevStates) => ({
                 ...prevStates,
-                ready2Play: true,
+                ready2Play: !GameStates.isPaused,
             }));
+            //   if(GameStates.isPaused){
+            //     updateGameStates((prevStates) => ({
+            //       ...prevStates,
+            //       isPaused: false,
+            //   }));           
+            // }            
           }
         }
     }; 
 
     updateCoverState()
-    }, [GameStates.exitCanceled, updateGameStates, ButtonStates]) 
+    }, [GameStates.exitCanceled, GameStates.isPaused, updateGameStates, ButtonStates]) 
 
     // Predefined style of the cover component
     const coverStyle = {

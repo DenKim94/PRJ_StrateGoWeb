@@ -88,7 +88,7 @@ function GameField({gameFieldSettings, gameSettings, buttonStates, setStartButto
       console.log(">> State 'gameFieldState': ", gameFieldState);
       console.log(">> State 'figureStorageState': ", figureStorageState);
       console.log(">> defeatedFigureStorage: ", defeatedFigureStorage)
-      console.log(">> Game Settings: ", gameSettings);
+      console.log(">> Game states: ", gameSettings);
       console.log(" #############################################################");
     }
     // Enable the Start Button to start the game, when the figure storage list is empty

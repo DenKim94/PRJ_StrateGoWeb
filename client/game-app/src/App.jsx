@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import * as parameters from './game-logic/parameters';
 import GameLogo from './components/gameSection/GameLogo';  
@@ -105,14 +105,8 @@ const App = () => {
         setGameStates((prevStates) => ({
             ...prevStates,
             ready2Play: false,
-            isPaused: false, 
             leaveGame: true,       
         })); 
-
-        /* To-Do: 10.12.2023
-        1) Ask the user to confirm leaving the game [Done]
-        2) Open the exit-page after confirmation */
-
     }
 
     // Change the functionality of the Start Button after starting the game
@@ -129,11 +123,6 @@ const App = () => {
         changeStartButton()
         }, [buttonStates.counterUsedStartButton])
 
-
-    useEffect(() => {
-
-    })
-
     if(parameters.genCfg.debugMode){
         console.log("######################### App #############################")
         console.log(">> gameStates: ", gameStates)
@@ -147,21 +136,15 @@ const App = () => {
             <div className = "App" style={parameters.styleApp}> 
                 <GameLogo/> 
                 <Routes>
-                    <Route exact path = "/home" Component={(routeProps) => (
-                        <HomeSection 
-                        {...routeProps}
-                        GameStates = {gameStates} setGameStates={setGameStates}/>
-                        )
+                    <Route path = "/home" element={ <HomeSection 
+                        GameStates = {gameStates} setGameStates={setGameStates}/>                       
                     }/>
-                    <Route exact path = "/" Component={(routeProps) => (
-                        <GameSection 
-                        {...routeProps}
+                    <Route path = "/" element={ <GameSection 
                         gameStates={gameStates} setGameStates={setGameStates}
                         buttonStates={buttonStates} setButtonStates={setButtonStates}
-                        startGame={startGame} pauseGame={pauseGame} exitGame={exitGame}/>                       
-                        )
+                        startGame={startGame} pauseGame={pauseGame} exitGame={exitGame}/>                                              
                     }/>
-                    <Route exact path = "/exitSection" Component={ ExitSection } />                    
+                    <Route path = "/exitSection" element={ <ExitSection />} />                    
                 </Routes>                       
             </div> 
         </Router>      

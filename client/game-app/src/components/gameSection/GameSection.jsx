@@ -19,7 +19,7 @@ const GameSection = ({gameStates, setGameStates,
                         className = "btn btn-warning"
                         style={parameters.styleButtonText}
                         onClick={startGame} 
-                        disabled = {gameStates.leaveGame ? true : buttonStates.disabledStartButton} >
+                        disabled = {gameStates.leaveGame || gameStates.isPaused ? true : buttonStates.disabledStartButton} >
                     {buttonStates.startButtonText}
                 </button> 
                 <button type="button" 

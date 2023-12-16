@@ -226,7 +226,7 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
     const { source, destination, type, draggableId } = results;
 
     // If the game is paused, do nothing
-    if(gameSettings.isPaused){
+    if(gameSettings.isPaused || gameSettings.leaveGame){
         return null;
     }
     // If destination doesn't exist, do nothing 
@@ -280,7 +280,7 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
         if(newFigureList.length > 0 && source.droppableId === "storageZone"){
 
             // Return if target field is not playable or occupied by own figure
-            if(!newGameFieldState[indexTargetField].isPlayable){ return; } 
+            if(!newGameFieldState[indexTargetField].isPlayable){ return null; } 
             // Identify dragged figure
             draggedFigure = newFigureList.find((figProps) => `${figProps.color}_${figProps.id}` === draggableId);
             // Remove dropped figure from the origin figure list (if not empty)
