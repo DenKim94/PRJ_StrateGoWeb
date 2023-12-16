@@ -1,10 +1,12 @@
 import React, {useState, useEffect}  from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as parameters from '../../game-logic/parameters.js';
 
 const ExitBox = ({gameStates, updateGameStates, exitBoxProps = parameters.exitBoxProps}) => {
 
     const [confirmedState, setConfirmedState] = useState(gameStates.exitConfirmed)
     const [canceledState, setCanceledState] = useState(gameStates.exitCanceled)
+    const navigate = useNavigate();
 
     // Update game states after using the buttons
     function handleConfirm(){
@@ -23,6 +25,7 @@ const ExitBox = ({gameStates, updateGameStates, exitBoxProps = parameters.exitBo
                     ...prevStates,
                     exitConfirmed: true,
                 }));
+                navigate("/exitSection")
             }
             if(canceledState){
                 updateGameStates((prevStates) => ({
@@ -33,7 +36,7 @@ const ExitBox = ({gameStates, updateGameStates, exitBoxProps = parameters.exitBo
         }; 
     
         handleExit()
-        }, [confirmedState, canceledState, updateGameStates])    
+        }, [confirmedState, canceledState, updateGameStates, navigate])    
 
     return(
         <div className="exit-box" style={exitBoxProps.styleParamsBox}>

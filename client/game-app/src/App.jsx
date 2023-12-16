@@ -16,7 +16,7 @@ const App = () => {
 
         pauseButtonText: "Pause Game", // default value [string]
         startButtonText: "Start Game", // default value [string]
-        exitButtonText: "Exit Game",  // default value [string]
+        exitButtonText: "Exit Game",   // default value [string]
         disabledStartButton: true,     // default value [boolean]
         counterUsedStartButton: 0,     // default value [integer]
 
@@ -130,6 +130,10 @@ const App = () => {
         }, [buttonStates.counterUsedStartButton])
 
 
+    useEffect(() => {
+
+    })
+
     if(parameters.genCfg.debugMode){
         console.log("######################### App #############################")
         console.log(">> gameStates: ", gameStates)
@@ -143,13 +147,13 @@ const App = () => {
             <div className = "App" style={parameters.styleApp}> 
                 <GameLogo/> 
                 <Routes>
-                    <Route path = "/" Component={(routeProps) => (
+                    <Route exact path = "/home" Component={(routeProps) => (
                         <HomeSection 
                         {...routeProps}
                         GameStates = {gameStates} setGameStates={setGameStates}/>
                         )
                     }/>
-                    <Route path = "/game" Component={(routeProps) => (
+                    <Route exact path = "/" Component={(routeProps) => (
                         <GameSection 
                         {...routeProps}
                         gameStates={gameStates} setGameStates={setGameStates}
@@ -157,10 +161,7 @@ const App = () => {
                         startGame={startGame} pauseGame={pauseGame} exitGame={exitGame}/>                       
                         )
                     }/>
-                        {/* <GameSection gameStates={gameStates} setGameStates={setGameStates}
-                                    buttonStates={buttonStates} setButtonStates={setButtonStates}
-                                    startGame={startGame} pauseGame={pauseGame} exitGame={exitGame}/>    */}
-          
+                    <Route exact path = "/exitSection" Component={ ExitSection } />                    
                 </Routes>                       
             </div> 
         </Router>      

@@ -227,14 +227,14 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
 
     // If the game is paused, do nothing
     if(gameSettings.isPaused){
-        return;
+        return null;
     }
     // If destination doesn't exist, do nothing 
     if(!destination) 
-        return;
+        return null;
     // If source and destination are equal, do nothing 
     if(source.droppableId === destination.droppableId && source.index === destination.index) 
-        return; 
+        return null; 
 
     /**********************************************/
     // Setting default values
@@ -253,7 +253,7 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
     /****** Logic for moving game figures in different use-cases ******/
     // If properties of 'targetFieldProps' Object don't exist, do nothing
     if(!targetFieldProps){
-        return;
+        return null;
     }
     // It's only allowed to place game figures on the own half (before starting the game) 
     if (!gameSettings.ready2Play){
@@ -261,13 +261,13 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
             case true:
                 // Limitation of moving area from perspective of player 1
                 if (targetFieldProps.pos_y > 4){
-                    return;
+                    return null;
                 } 
                 break;
             case false:
                 // Limitation of moving area from perspective of player 2
                 if (targetFieldProps.pos_y < 7){
-                    return;
+                    return null;
                 } 
                 break;
             default:    

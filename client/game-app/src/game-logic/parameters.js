@@ -234,6 +234,7 @@ export const homeSectionProps = {
     message: "Welcome!",
     style:{
         fontFamily: 'Young Serif, serif',
+        margin: 'auto', 
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -246,6 +247,7 @@ export const exitSectionProps = {
     message: "You have successfully left the game. See you next time.",
     style:{
         fontFamily: 'Young Serif, serif',
+        margin: 'auto', 
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
