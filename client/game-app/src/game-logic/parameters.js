@@ -1,11 +1,11 @@
 /**** Main file for setting parameters [for developer] ****/
 /*  * This file is mandatory to run the application! 
     * Author: D.Kim
-    * Date: 10.12.2023  */
+    * Date: 16.12.2023  */
 
 /**** General/Global Configurations ****/
 export const genCfg = {
-    debugMode: true,       // Boolean for showing parameter values in the console (if true) 
+    debugMode: false,       // Boolean for showing parameter values in the console (if true) 
 };
 
 /**** Settings for GameSection-Component: GameField ****/

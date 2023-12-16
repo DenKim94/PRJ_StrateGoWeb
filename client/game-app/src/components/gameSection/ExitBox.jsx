@@ -10,11 +10,9 @@ const ExitBox = ({gameStates, updateGameStates, exitBoxProps = parameters.exitBo
 
     // Update game states after using the buttons
     function handleConfirm(){
-        console.log(">> User confirmed.")
         setConfirmedState(true) 
     }   
     function handleCancel(){
-        console.log(">> User canceled.")
         setCanceledState(true)   
     }
 
