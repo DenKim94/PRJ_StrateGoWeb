@@ -19,13 +19,7 @@ const Cover = ({ GameStates, updateGameStates, ButtonStates, styleCover = parame
             updateGameStates((prevStates) => ({
                 ...prevStates,
                 ready2Play: !GameStates.isPaused,
-            }));
-            //   if(GameStates.isPaused){
-            //     updateGameStates((prevStates) => ({
-            //       ...prevStates,
-            //       isPaused: false,
-            //   }));           
-            // }            
+            }));         
           }
         }
     }; 

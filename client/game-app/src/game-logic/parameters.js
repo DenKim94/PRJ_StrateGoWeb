@@ -53,6 +53,7 @@ export const styleUiContainer = {
 // Generic Component: GameLogo
 export const styleGameLogo = {
     fontFamily: 'Young Serif, serif',
+    fontSize: '40px',
     color: 'rgb(248, 202, 45)',
     position: 'relative',
     textAlign: 'center',
@@ -234,6 +235,7 @@ export const homeSectionProps = {
     message: "Welcome!",
     style:{
         fontFamily: 'Young Serif, serif',
+        fontSize: '20px',
         margin: 'auto', 
         display: 'flex',
         justifyContent: 'center',
@@ -247,6 +249,7 @@ export const exitSectionProps = {
     message: "You have successfully left the game. See you next time.",
     style:{
         fontFamily: 'Young Serif, serif',
+        fontSize: '20px',
         margin: 'auto', 
         display: 'flex',
         justifyContent: 'center',
@@ -255,6 +258,18 @@ export const exitSectionProps = {
     },
 };
 
+export const pageNotFoundProps = {
+    message: "Error: Page not found.",
+    style:{
+        fontFamily: 'Young Serif, serif',
+        fontSize: '25px',
+        margin: 'auto', 
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: '#8b0000',
+    },        
+};
 /**** Settings for GameSection-Component: GameFigure ****/
 /* Default paths to images */
 const path_redFig = "assets/images/redFigures/" ;

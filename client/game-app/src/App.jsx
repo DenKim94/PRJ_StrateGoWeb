@@ -6,6 +6,7 @@ import GameLogo from './components/gameSection/GameLogo';
 import HomeSection from './components/homeSection/HomeSection';
 import GameSection from './components/gameSection/GameSection'; 
 import ExitSection from './components/exitSection/ExitSection';  
+import PageNotFound from './components/PageNotFound';
 
 /* ******************************************************************* */ 
 
@@ -136,7 +137,7 @@ const App = () => {
             <div className = "App" style={parameters.styleApp}> 
                 <GameLogo/> 
                 <Routes>
-                    <Route path = "/home" element={ <HomeSection 
+                    <Route path = "/homeSection" element={ <HomeSection 
                         GameStates = {gameStates} setGameStates={setGameStates}/>                       
                     }/>
                     <Route path = "/" element={ <GameSection 
@@ -144,7 +145,9 @@ const App = () => {
                         buttonStates={buttonStates} setButtonStates={setButtonStates}
                         startGame={startGame} pauseGame={pauseGame} exitGame={exitGame}/>                                              
                     }/>
-                    <Route path = "/exitSection" element={ <ExitSection />} />                    
+                    <Route path = "/exitSection" element={ <ExitSection />} /> 
+
+                    <Route path = "*" element={ <PageNotFound />} />                    
                 </Routes>                       
             </div> 
         </Router>      
