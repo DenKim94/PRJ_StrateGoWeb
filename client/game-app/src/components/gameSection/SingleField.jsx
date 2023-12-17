@@ -46,7 +46,7 @@ const SingleField = ({fieldState, idx}) => {
                                       {...provided.dragHandleProps}
                                       style={getStyle(provided.draggableProps.style, snapshot)}
                                       >                           
-                                      <GameFigure propsObj={figProps}/>
+                                      <GameFigure propsObj={figProps} snapshot = {snapshot}/>
                                   </div>
                             )} 
               </Draggable>

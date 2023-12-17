@@ -42,7 +42,7 @@ const FigureStorage = ({ figStateArray,
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
                                             >
-                                                <GameFigure propsObj={figProps}/>
+                                                <GameFigure propsObj={figProps} snapshot = {snapshot}/>
                                         </div>
                                     )} 
                                 </Draggable>  
