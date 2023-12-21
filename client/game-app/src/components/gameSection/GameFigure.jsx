@@ -12,13 +12,18 @@ const GameFigure = ({propsObj, snapshot, figureStyle = parameters.styleGameFigur
     /* Extract figure properties for each ID  */
     const { imgPath, value, figName } = propsObj;
     
+    if(snapshot.draggingOver){
+      console.log('snapshot: ', snapshot);
+      console.log('draggingOver: ', snapshot.draggingOver);
+    }
+
     const imgStyle = {
       width: '100%', 
       height: '100%', 
       borderRadius: '10%',
       border: snapshot.isDragging ? '2px solid yellow' : 'none' ,
     };
-    
+
    /* Return to render the component */
     return (
       <div style={figureStyle}>

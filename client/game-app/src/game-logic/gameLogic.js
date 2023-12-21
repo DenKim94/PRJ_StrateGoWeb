@@ -316,3 +316,8 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
       };
         
 }
+
+export function handleDragOver(provided, snapshot){
+    console.log('provided: ', provided);
+    console.log('snapshot: ', snapshot);
+  };

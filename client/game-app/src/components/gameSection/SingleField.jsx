@@ -2,11 +2,11 @@ import React from 'react';
 import GameFigure from './GameFigure';
 import { Draggable } from 'react-beautiful-dnd';
 
-const SingleField = ({fieldState, idx}) => {
+const SingleField = ({fieldState, idx, snapshot}) => {
 
   const figProps = fieldState.figure; 
   const emptyFigProps = !figProps; 
-
+  
   // Set style of the component 
   const fieldStyle = {
     alignItems: 'center', 
@@ -44,7 +44,7 @@ const SingleField = ({fieldState, idx}) => {
                                       ref={provided.innerRef} 
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
-                                      style={getStyle(provided.draggableProps.style, snapshot)}
+                                      style={getStyle(provided.draggableProps.style, snapshot, provided)}
                                       >                           
                                       <GameFigure propsObj={figProps} snapshot = {snapshot}/>
                                   </div>

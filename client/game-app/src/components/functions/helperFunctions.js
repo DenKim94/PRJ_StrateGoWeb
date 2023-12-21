@@ -125,3 +125,4 @@ export function getColorOfPlayer(gameStates){
     return colorPlayer 
 }
 
+
