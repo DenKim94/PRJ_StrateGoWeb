@@ -1,8 +1,8 @@
-/*** Project-File of the web game 'StrateGo' 
- * Author: Denis Kim
- * Version: 1.0.0 
- * Date: 25.11.2023
- ***/
+/* 
+ * Project-File of the web game 'StrateGo' 
+ * - Author: Denis Kim
+ * - Version: 1.0.0 
+ */
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';

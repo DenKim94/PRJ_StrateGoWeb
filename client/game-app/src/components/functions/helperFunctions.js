@@ -49,7 +49,9 @@ export function getCoordinatesArray(xCoordArray,yCoordArray, isPlayer1){
     return coordinatesArray
 };
 
-/**** Helper function to set properties of non playable fields ****/
+/**
+ * Helper function to set properties of non playable fields 
+*/
 export function setNonPlayableFields(singleFieldProps,
                                      currentCoordinates,
                                      coordsNonPlayableFields,
@@ -66,7 +68,9 @@ export function setNonPlayableFields(singleFieldProps,
       }
     return singleFieldProps  
 }
-/**** Helper function to check if the coordinates are equal ****/
+/**
+ *  Helper function to check if the coordinates are equal
+*/
 function arraysAreEqual(arr1, arr2) {
     if (arr1.length !== arr2.length) {
         return false;
@@ -79,7 +83,9 @@ function arraysAreEqual(arr1, arr2) {
     return true;
 }
 
-/**** Helper function to get stored keys of an Object-Array ****/
+/** 
+ * Helper function to get stored keys of an Object-Array
+*/
 export function getObjArrayKeys(objArray){
     const keysArray = [];
     objArray.forEach(obj => {
@@ -89,7 +95,9 @@ export function getObjArrayKeys(objArray){
     return keysArray    
 }
 
-/**** Helper function to sort and return game figures of each player ****/
+/**
+ * Helper function to sort and return game figures of each player 
+*/
 export function getFiguresOfPlayer(figList, colorPlayer){
     
     // Filter the list to get figures with corrresponding color and without 'FigureBack.png'
@@ -99,7 +107,9 @@ export function getFiguresOfPlayer(figList, colorPlayer){
     return playerFigures || null
 }
 
-/**** Helper function to return the color of current player ****/
+/**
+ * Helper function to get the color of the player 
+ */
 export function getColorOfPlayer(gameStates){
     // Returned variable as string
     let colorPlayer  

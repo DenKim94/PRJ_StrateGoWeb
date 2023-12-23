@@ -2,19 +2,25 @@
 import { genCfg } from './parameters';
 import { gameFieldObj } from './parameters';
 
-/**** Helper function to get the index of the game-field-array ****/
+/**
+ * Helper function to get the index of the game-field-array
+*/
 function getIndexOfGameField(stateArray, fieldObj){
     const indexField = stateArray.findIndex((fieldProps) => fieldProps.id === fieldObj.droppableId);
     return indexField || null;
 }
 
-/**** Helper function to get the properties of a single field element ****/
+/**
+ * Helper function to get the properties of a single field element
+*/
 function getPropsOfGameField(stateArray, index){
     const fieldProps = stateArray[index];
     return fieldProps || null
 }
 
-/**** Helper function to move game figures inside the game field ****/
+/**
+ * Helper function to move game figures inside the game field 
+*/
 function moveFigureOnField(GameFieldState, gameSettings, draggableId, figureStorageState, 
                            indexSourceField, indexTargetField)
 {
@@ -88,7 +94,9 @@ function moveFigureOnField(GameFieldState, gameSettings, draggableId, figureStor
     return [newGameFieldState, newFigureStorageState]   
 }
 
-/**** Helper function to maintain a correct moving of a game figure ****/
+/**
+ * Helper function to maintain a correct moving of a game figure 
+*/
 function checkCorrectMoving(sourceFieldProps, targetFieldProps, figureProps){
     // Start position of dragged figure: [x,y]
     const startPos = [sourceFieldProps.pos_x, sourceFieldProps.pos_y];  
@@ -116,7 +124,9 @@ function checkCorrectMoving(sourceFieldProps, targetFieldProps, figureProps){
     else{ return true; }   
 }
 
-/**** Helper function to check if the direction of a movement is allowed ****/
+/**
+ * Helper function to check if the direction of a movement is allowed 
+*/
 function checkMovingDirection(startPos, endPos){
     // Initialized parameter, which will be returned as boolean [true or false]
     let isAllowed   
@@ -145,7 +155,9 @@ function checkMovingDirection(startPos, endPos){
     return isAllowed
 }
 
-/**** Helper function to maintain a correct number of movement steps of dragged figure ****/
+/**
+ * Helper function to maintain a correct number of movement steps of dragged figure 
+*/
 function getMovingSteps(startPos, endPos){
     // Array to translate a letter to corresponding number as defined in 'parameters/gameFieldObj'
     const let2num = gameFieldObj.Letters2Numbers;
@@ -164,7 +176,9 @@ function getMovingSteps(startPos, endPos){
     return steps
 }    
 
-/**** Helper function to handle the interaction in case of an occupied game field ****/
+/**
+ * Helper function to handle the interaction in case of an occupied game field 
+*/
 function handleOccupiedField(targetFieldProps, draggedFigure){ 
     // Get properties of placed figure [object]
     const placedFigure = targetFieldProps.figure;
@@ -188,7 +202,9 @@ function handleOccupiedField(targetFieldProps, draggedFigure){
         return null; 
     }   
 }
-/**** Helper function to handle the battle between figures ****/
+/**
+ * Helper function to handle the battle between figures
+*/
 function battleFigures(figObj_1, figObj_2){
     let winner = "drawn"; 
     if(figObj_1.value > figObj_2.value){
@@ -219,7 +235,9 @@ function updateGameFieldStateProps(FieldState, indexField, props){
     return FieldState;
 }
 
-/**** Function to handle the drag and drop action ****/
+/**
+ * Function to handle the drag and drop action 
+*/
 export function handleDragDrop(results, gameFieldState, figureStorageState, prefixSingleFieldID, gameSettings) 
 {   
     // Extract the properties after the DnD action

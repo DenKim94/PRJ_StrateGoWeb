@@ -4,9 +4,17 @@ import GameField from './GameField';
 import Cover from './Cover';
 import './Buttons.css'
 
+/** 
+ * - This Component manages the game interactions 
+ * - This Component will be rendered after the user is checked in successfully 
+ * 
+*/
+
 const GameSection = ({gameStates, setGameStates, 
                     buttonStates, setButtonStates,
                     startGame, pauseGame, exitGame}) => {
+
+// TO-DO: Auslagern der Inputparameter über 'useContext' [23.12.2023]
 
     return(
         <div className="ui-container" >

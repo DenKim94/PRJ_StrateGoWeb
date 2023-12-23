@@ -9,7 +9,14 @@ import ExitSection from './components/exitSection/ExitSection';
 import PageNotFound from './components/PageNotFound';
 
 /* ******************************************************************* */ 
-
+/** 
+ * Main Component of the Application "StrateGo" 
+ * 
+ * - Author: D.Kim 
+ * - Version: 1.0.0 
+ * - Date of last changes: 23.12.2023
+*/
+/* ******************************************************************* */ 
 const App = () => {
   
     // Add Button States by using default values
@@ -130,6 +137,8 @@ const App = () => {
         console.log(">> buttonStates: ", buttonStates)
         console.log("##########################################################")
     }
+
+    // TO-DO: Auslagern der Inputparameter über 'useContext' [23.12.2023]
 
     /*** Rendering the components ***/  
     return(

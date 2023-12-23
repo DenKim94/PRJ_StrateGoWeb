@@ -2,6 +2,11 @@ import React from 'react';
 import GameFigure from './GameFigure';
 import { Draggable } from 'react-beautiful-dnd';
 
+/**
+ * This Component renders a single field with a game figure depending on the game state
+ * @param {Object} fieldState - Object contains specific configuration parameters of the component (e.g. figure properties)
+ */
+
 const SingleField = ({fieldState, idx, snapshot}) => {
 
   const figProps = fieldState.figure; 

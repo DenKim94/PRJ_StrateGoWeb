@@ -3,8 +3,13 @@ import * as parameters from '../../game-logic/parameters.js';
 import CoverContent from './CoverContent.jsx'
 import './Cover.css'
 import ExitBox from './ExitBox.jsx';
-
+/**
+ * This Component informs the user about changed game states
+ * @param {Object} styleCover - Object contains specific style parameters of the component (see 'parameters.js')
+ */
 const Cover = ({ GameStates, updateGameStates, ButtonStates, styleCover = parameters.styleCover }) => {
+  
+// TO-DO: Auslagern der Inputparameter über 'useContext' [23.12.2023]
 
   useEffect(() => {
     const updateCoverState = () => {

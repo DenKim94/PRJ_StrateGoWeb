@@ -11,9 +11,17 @@ import * as gameLogic from '../../game-logic/gameLogic.js'
 import YAxis from './yAxis';
 import XAxis from './xAxis';
 
-/* *********************** Game Field Component ************************ */ 
+/**
+ * This Component renders the game field with figures on corresponding positions
+ * depending on the game state
+ * @param {Object} gameFieldSettings - Object contains specific configuration parameters of the component (see 'parameters.js')
+ */
+
 function GameField({gameFieldSettings, gameSettings, buttonStates, setStartButtonState})
   {
+
+    // TO-DO: Auslagern der Inputparameter über 'useContext' [23.12.2023]
+
      /* ********************************************************************* */
     const fieldWidth = gameFieldSettings.fieldWidth;
     const fieldHeight = gameFieldSettings.fieldHeight;
@@ -50,6 +58,7 @@ function GameField({gameFieldSettings, gameSettings, buttonStates, setStartButto
     /* ********************************************************************* */
     /* Set properties of a single field and store them in an array */
     const updatedStateArray = [];
+
     Array.from({ length: 100 }).map((_, index) => {
       const singleFieldProps = helperFcn.setProps4SingleField(
         prefixSingleFieldID,
