@@ -10,11 +10,11 @@ import PageNotFound from './components/PageNotFound';
 
 /* ******************************************************************* */ 
 /** 
- * Main Component of the Application "StrateGo" 
+ * Main Component of the application "StrateGo" 
  * 
  * - Author: D.Kim 
  * - Version: 1.0.0 
- * - Date of last changes: 23.12.2023
+ * - Date of last changes: 28.12.2023
 */
 /* ******************************************************************* */ 
 const App = () => {

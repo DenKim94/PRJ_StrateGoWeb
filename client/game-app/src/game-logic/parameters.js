@@ -1,7 +1,8 @@
-/**** Main file for setting parameters [for developer] ****/
-/*  * This file is mandatory to run the application! 
-    * Author: D.Kim
-    * Date: 16.12.2023  */
+/** Main file for setting parameters [for developer]
+ * This file is mandatory to run the application! 
+ * - Author: D.Kim
+ * - Date: 28.12.2023  
+*/
 
 /**** General/Global Configurations ****/
 export const genCfg = {

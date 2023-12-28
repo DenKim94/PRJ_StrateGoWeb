@@ -12,9 +12,15 @@ import YAxis from './yAxis';
 import XAxis from './xAxis';
 
 /**
- * This Component renders the game field with figures on corresponding positions
- * depending on the game state
- * @param {Object} gameFieldSettings - Object contains specific configuration parameters of the component (see 'parameters.js')
+ * React component representing the game field and associated game components.
+ * 
+ * @component
+ * @param {Object} props - The component's properties.
+ * @param {Object} props.gameFieldSettings - Settings for the game field, including dimensions, colors, and non-playable field coordinates.
+ * @param {Object} props.gameSettings - Settings for the overall game.
+ * @param {Object} props.buttonStates - States related to game buttons.
+ * @param {Function} props.setStartButtonState - Function to set the state of the Start Button.
+ * @returns {JSX.Element} Returns the JSX element representing the game field and its components.
  */
 
 function GameField({gameFieldSettings, gameSettings, buttonStates, setStartButtonState})

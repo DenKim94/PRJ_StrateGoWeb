@@ -1,23 +1,20 @@
-/**** Helper function to create a single field with defined properties ****/
-/*  
-Input: fieldCoordinates [column, row],
-       sizeSingleField [fieldWidth = fieldHeight],
-       backgroundColor [background color of a single field]
-Output: 
-    singleFieldProps = {
-        ID: ID-Number
-        pos_x: xCoord [column],
-        pos_y: yCoord [row],
-        style: {
-            width: sizeSingleField,
-            height: sizeSingleField,
-            backgroundColor: backgroundColor, 
-            border: '1px solid black'         
-        }
-    }; 
-*/
+/**
+ * Helper function to create properties for a single game field.
+ * 
+ * @function
+ * @param {string} prefixSingleFieldID - Prefix for the unique identifier of the single field.
+ * @param {number} index - Index of the single field.
+ * @param {Array} fieldCoordinates - Coordinates of the single field [column, row].
+ * @param {number} sizeSingleField - Size of the single field (width and height).
+ * @param {string} backgroundColor - Background color of the single field.
+ * @returns {Object} singleFieldProps: Properties for a single game field.
+ * @property {string} singleFieldProps.id - Unique identifier for the single field.
+ * @property {number} singleFieldProps.pos_x - X-coordinate of the single field (column).
+ * @property {number} singleFieldProps.pos_y - Y-coordinate of the single field (row).
+ * @property {boolean} singleFieldProps.isPlayable - Indicates whether the field is playable.
+ */
 export const setProps4SingleField = (prefixSingleFieldID,index,fieldCoordinates,sizeSingleField,backgroundColor) => {
-    let singleFieldProps = {
+    const singleFieldProps = {
         id: `${prefixSingleFieldID}_${index}`,
         pos_x: fieldCoordinates[0],
         pos_y: fieldCoordinates[1],
@@ -33,11 +30,15 @@ export const setProps4SingleField = (prefixSingleFieldID,index,fieldCoordinates,
     return singleFieldProps
 };
 
-/**** Helper function to get coordinates for each field ****/
-/*
-Input: xCoordArray [columns], yCoordArray [rows] 
-Output: coordinatesArray [column, row] 
-*/
+/**
+ * Helper function to get coordinates for each field based on column and row arrays.
+ * 
+ * @function
+ * @param {Array} xCoordArray - Array representing columns.
+ * @param {Array} yCoordArray - Array representing rows.
+ * @param {boolean} isPlayer1 - Indicates whether the coordinates are for Player 1.
+ * @returns {Array} coordinatesArray: Array of coordinates [column, row].
+ */
 export function getCoordinatesArray(xCoordArray,yCoordArray, isPlayer1){
 
     let coordinatesArray = yCoordArray.flatMap((yVal) => 
@@ -50,14 +51,24 @@ export function getCoordinatesArray(xCoordArray,yCoordArray, isPlayer1){
 };
 
 /**
- * Helper function to set properties of non playable fields 
-*/
+ * Helper function to set properties of non-playable fields based on specified coordinates.
+ * 
+ * @function
+ * @param {Object} singleFieldProps - Properties of a single game field.
+ * @param {Array} currentCoordinates - Coordinates of the current field [column, row].
+ * @param {Array} coordsNonPlayableFields - Array of coordinates for non-playable fields.
+ * @param {string} color - Color to be set for non-playable fields.
+ * @returns {Object} singleFieldProps: Modified properties of the single game field.
+ * @property {boolean} singleFieldProps.isPlayable - Indicates whether the field is playable.
+ * @property {string} singleFieldProps.style.border - Border style of the single field.
+ * @property {string} singleFieldProps.style.backgroundColor - Background color of the single field.
+ */
 export function setNonPlayableFields(singleFieldProps,
                                      currentCoordinates,
                                      coordsNonPlayableFields,
                                      color){
-    /**** Check for coordinates of non playable fields 
-          and modify the properties if neccessary ****/ 
+    /* Check for coordinates of non playable fields 
+          and modify the properties if neccessary */ 
     const containsCoordinates = coordsNonPlayableFields.some(coords =>
         arraysAreEqual(coords, currentCoordinates)
     );
@@ -84,10 +95,10 @@ function arraysAreEqual(arr1, arr2) {
 }
 
 /** 
- * Helper function to get stored keys of an Object-Array
+ * Helper function to get stored keys of a map
 */
 export function getObjArrayKeys(objArray){
-    const keysArray = [];
+    let keysArray = [];
     objArray.forEach(obj => {
         const keys = Object.keys(obj);
         keysArray.push(keys)
@@ -96,8 +107,13 @@ export function getObjArrayKeys(objArray){
 }
 
 /**
- * Helper function to sort and return game figures of each player 
-*/
+ * Helper function to sort and return game figures of a specific player based on color.
+ * 
+ * @function
+ * @param {Array} figList - List of game figure properties.
+ * @param {string} colorPlayer - Color of the player for whom to retrieve the figures.
+ * @returns {Array|null} playerFigures: Array of game figures for the specified player or null if none found.
+ */
 export function getFiguresOfPlayer(figList, colorPlayer){
     
     // Filter the list to get figures with corrresponding color and without 'FigureBack.png'
@@ -108,7 +124,13 @@ export function getFiguresOfPlayer(figList, colorPlayer){
 }
 
 /**
- * Helper function to get the color of the player 
+ * Helper function to get the color of the player based on game states.
+ * 
+ * @function
+ * @param {Object} gameStates - Object containing game-related states.
+ * @property {boolean} gameStates.isPlayer1 - Indicates whether the current player is Player 1.
+ * @property {string} gameStates.colorPlayer - Color chosen by Player 1.
+ * @returns {string|null} colorPlayer: Color of the current player or null if not determined.
  */
 export function getColorOfPlayer(gameStates){
     // Returned variable as string

@@ -1,7 +1,17 @@
 import React from "react";
 import * as parameters from '../../game-logic/parameters.js';
 
-/* *********************** Game Figure Component ************************ */ 
+/**
+ * React component representing a game figure.
+ * 
+ * @component
+ * @param {Object} props - The component's properties.
+ * @param {Object} props.propsObj - Object containing properties of the game figure.
+ * @param {Object} props.snapshot - The snapshot object provided by the React DnD library.
+ * @param {Object} props.figureStyle - Custom style for the game figure container.
+ * @param {Object} props.valueStyle - Custom style for the value displayed on the game figure.
+ * @returns {JSX.Element|null} Returns the JSX element representing the game figure or null if propsObj is empty.
+ */
 
 const GameFigure = ({propsObj, snapshot, figureStyle = parameters.styleGameFigure, valueStyle = parameters.valueStyleGameFigure}) => {
     

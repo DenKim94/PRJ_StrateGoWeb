@@ -5,6 +5,7 @@ import { Draggable } from 'react-beautiful-dnd';
 /**
  * This Component renders a single field with a game figure depending on the game state
  * @param {Object} fieldState - Object contains specific configuration parameters of the component (e.g. figure properties)
+ * @returns {JSX.Element|null} Returns the JSX element representing a single field or null if figure properties are empty.
  */
 
 const SingleField = ({fieldState, idx, snapshot}) => {

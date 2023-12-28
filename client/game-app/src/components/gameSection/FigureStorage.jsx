@@ -4,6 +4,16 @@ import GameFigure from './GameFigure';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import "./FigureStorage.css";
 
+/**
+ * React component representing a storage container for game figures.
+ *
+ * @component
+ * @param {Object} props - The component's properties.
+ * @param {Array} props.figStateArray - An array containing the state of game figures to be displayed in the storage.
+ * @param {Object} props.styleStorageTopic - Custom style for the storage topic.
+ * @returns {JSX.Element|null} Returns the JSX element representing the figure storage or null if figStateArray is empty.
+ */
+
 const FigureStorage = ({ figStateArray, 
                          styleStorageTopic = parameters.styleStorageTopic,
                         }) => {

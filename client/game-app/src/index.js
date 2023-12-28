@@ -1,5 +1,5 @@
 /* 
- * Project-File of the web game 'StrateGo' 
+ * Project-File of the application 'StrateGo' 
  * - Author: Denis Kim
  * - Version: 1.0.0 
  */
