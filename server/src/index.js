@@ -1,4 +1,6 @@
-/****  Create a backend logic by using websocket 
-Datum: 11.11.2023
-Author: D.Kim
-****/
+/*
+* Backend logic by using stream-chat API
+* Date: 06.01.2024
+* Author: D.Kim
+*/
+
