@@ -1,0 +1,22 @@
+:root{
+  --left: 80px;
+  --right: 50px;
+}
+
+.ui-container{
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  justify-content: center;
+}
+
+@media (min-height: 1000px) {
+  .ui-container {
+     right: var(--right);
+  }
+}
+@media (max-height: 1000px) {
+  .ui-container {
+     left: var(--left);
+  }
+}
