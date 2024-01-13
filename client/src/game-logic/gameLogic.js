@@ -254,8 +254,10 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
         return null;
     }
     // If destination doesn't exist, do nothing 
-    if(!destination) 
-        return null;
+    if(!destination){
+        alert(" Invalid drop: Please drop the figure inside the game field!")
+        return null;        
+    } 
     // If source and destination are equal, do nothing 
     if(source.droppableId === destination.droppableId && source.index === destination.index) 
         return null; 
@@ -340,7 +342,9 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
         
 }
 
-export function handleDragOver(provided, snapshot){
-    console.log('provided: ', provided);
-    console.log('snapshot: ', snapshot);
+export function handleDragUpdate(update, gameFieldState){
+    const { source, destination } = update;
+    console.log('update: ', update);
+    console.log('gameFieldState: ', gameFieldState);
+
   };

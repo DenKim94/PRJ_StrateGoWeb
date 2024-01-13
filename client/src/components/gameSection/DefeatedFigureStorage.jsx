@@ -9,7 +9,7 @@ const DefeatedFigureStorage = ({ defFigStateArray,
     
     // *** Handle Early Return *** 
     if(figStorageState.length > 0){
-        console.log(">> Early Return in 'DefeatedFigureStorage' ")
+        // console.log(">> Early Return in 'DefeatedFigureStorage' ")
         return null;
     }
 

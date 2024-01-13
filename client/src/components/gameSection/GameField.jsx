@@ -7,6 +7,7 @@ import FigureStorage from './FigureStorage';
 import DefeatedFigureStorage from './DefeatedFigureStorage';
 import { useButtonStates } from '../context/ButtonStatesContext.js';
 import { useGameStates } from '../context/GameStatesContext.js';
+import { useScoutStates } from '../context/ScoutStatesContext.js';
 import { figProperties } from '../../game-logic/parameters.js';
 import * as helperFcn from '../functions/helperFunctions.js'
 import * as gameLogic from '../../game-logic/gameLogic.js'
@@ -25,6 +26,7 @@ import XAxis from './xAxis';
 function GameField({ gameFieldSettings = parameters.gameFieldObj })
   {
     const { buttonStates, setButtonStates } = useButtonStates();
+    const { scoutStates, setScoutStates } = useScoutStates();
     const { gameStates } = useGameStates();
 
      /* ********************************************************************* */
@@ -123,18 +125,30 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
       updateStartButton()
     }, [figureStorageState, buttonStates.counterUsedStartButton, setButtonStates]);
 
+    const handleDragUpdate = ( update, fieldState ) => {
+      const { source, destination } = update;
+      console.log('update: ', update);
+      console.log('gameFieldState: ', fieldState);
+      const isScoutFigure = helperFcn.identifyScoutFigure(source, fieldState);
+      console.log("isScoutFigure: ", isScoutFigure)
+      const draggedOverFigure = helperFcn.getDraggedOverFigure(destination, fieldState); 
+      console.log("draggedOverFigure: ", draggedOverFigure)
+    }
+
     /* *************** Rendering the game components *************** */ 
     return(
-      <DragDropContext onDragEnd={(result) => {
-        const updatedStates = gameLogic.handleDragDrop(result, gameFieldState, figureStorageState, prefixSingleFieldID, gameStates);
-        if (updatedStates) {
-          // Get updated states from 'updatedStates'
-          const { gameFieldState: newGameFieldState, figureStorageState: newFigureStorageState} = updatedStates;
-  
-          setGameFieldState(newGameFieldState);         // Update the State of the game field 
-          setFigureStorageState(newFigureStorageState); // Update the State of the figure storage
-        }        
-      }}>
+      <DragDropContext onDragUpdate = { (update) => {
+                                    handleDragUpdate(update, gameFieldState)}} 
+                       onDragEnd = {(result) => {
+                                const updatedStates = gameLogic.handleDragDrop(result, gameFieldState, figureStorageState, prefixSingleFieldID, gameStates);
+                                if (updatedStates) {
+                                  // Get updated states from 'updatedStates'
+                                  const { gameFieldState: newGameFieldState, figureStorageState: newFigureStorageState} = updatedStates;
+                          
+                                  setGameFieldState(newGameFieldState);         // Update the State of the game field 
+                                  setFigureStorageState(newFigureStorageState); // Update the State of the figure storage
+                                } }}>
+
          <div className = "dnd-container" style={parameters.styleDnDContainer}>
           <div className = "game-field-container" style={parameters.styleGameFieldContainer}>
               {/* *** y-Axis *** */}

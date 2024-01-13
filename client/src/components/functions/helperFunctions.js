@@ -169,4 +169,37 @@ export function getColorOfPlayer(gameStates){
     return colorPlayer 
 }
 
+export function getDraggedOverFigure(targetFieldProps, fieldProps){
+    let figureProps = {
+        fieldID: null,
+        figure: null,
+    }
+    if(targetFieldProps && fieldProps){
+        const foundFieldProps = fieldProps.filter((props) => {
+            return targetFieldProps.droppableId === props.id && props.figure
+        });      
+        console.log("foundFieldProps: ", foundFieldProps[0])
+        if(foundFieldProps[0]){
+            figureProps.fieldID = foundFieldProps[0].id;
+            figureProps.figure = foundFieldProps[0].figure;
+        }
+    }
 
+    return figureProps
+}
+
+export function identifyScoutFigure(sourceFieldProps, fieldProps){
+    let isScoutFigure = false;
+
+    if(sourceFieldProps && fieldProps){
+        const foundScoutProps = fieldProps.filter((props) => {
+            return props.id === sourceFieldProps.droppableId && props.figure && props.figure.figName.includes('Scout')
+        });      
+        console.log("foundScoutProps: ", foundScoutProps)
+        if(foundScoutProps[0]){
+            isScoutFigure = true;
+        }
+    }
+
+    return isScoutFigure   
+}
