@@ -10,7 +10,6 @@ export const genCfg = {
 };
 
 /**** Settings for GameSection-Component: GameField ****/
-
 export const gameFieldObj = {
     fieldWidth: 550,                         /* Width of the game field in pixel (without distances to the y-axis) */
     fieldHeight: 550,                        /* Height of the game field in pixel (without distances to the x-axis) */

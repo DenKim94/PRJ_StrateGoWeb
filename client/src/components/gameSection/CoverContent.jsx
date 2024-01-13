@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react';
+import { useGameStates } from '../context/GameStatesContext.js';
 import * as parameters from '../../game-logic/parameters.js';
 
-const CoverContent  = ({gameStates, coverContentProps = parameters.coverContent}) => {
+const CoverContent  = ({ coverContentProps = parameters.coverContent}) => {
 
     const defaultCoverContent = coverContentProps.messageBeforeStart ;
     const [coverContent, setCoverContent] = useState(defaultCoverContent)
-    
+    const { gameStates } = useGameStates();
+
     // Update content/message of the cover depending on the game state 
     useEffect(() => {
       const updateCoverContent = () => {

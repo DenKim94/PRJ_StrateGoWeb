@@ -5,6 +5,8 @@ import * as parameters from '../../game-logic/parameters.js';
 import SingleField from './SingleField';
 import FigureStorage from './FigureStorage';
 import DefeatedFigureStorage from './DefeatedFigureStorage';
+import { useButtonStates } from '../context/ButtonStatesContext.js';
+import { useGameStates } from '../context/GameStatesContext.js';
 import { figProperties } from '../../game-logic/parameters.js';
 import * as helperFcn from '../functions/helperFunctions.js'
 import * as gameLogic from '../../game-logic/gameLogic.js'
@@ -15,18 +17,15 @@ import XAxis from './xAxis';
  * React component representing the game field and associated game components.
  * 
  * @component
- * @param {Object} props - The component's properties.
- * @param {Object} props.gameFieldSettings - Settings for the game field, including dimensions, colors, and non-playable field coordinates.
- * @param {Object} props.gameSettings - Settings for the overall game.
- * @param {Object} props.buttonStates - States related to game buttons.
- * @param {Function} props.setStartButtonState - Function to set the state of the Start Button.
+ * @param {Object} parameters - Object with specific parameters for the component
+ * @param {Object} gameFieldSettings - Settings for the game field, including dimensions, colors, and non-playable field coordinates.
  * @returns {JSX.Element} Returns the JSX element representing the game field and its components.
  */
 
-function GameField({gameFieldSettings, gameSettings, buttonStates, setStartButtonState})
+function GameField({ gameFieldSettings = parameters.gameFieldObj })
   {
-
-    // TO-DO: Auslagern der Inputparameter über 'useContext' [23.12.2023]
+    const { buttonStates, setButtonStates } = useButtonStates();
+    const { gameStates } = useGameStates();
 
      /* ********************************************************************* */
     const fieldWidth = gameFieldSettings.fieldWidth;
@@ -41,7 +40,8 @@ function GameField({gameFieldSettings, gameSettings, buttonStates, setStartButto
       width: fieldWidth,
       height: fieldHeight,
       display: 'grid',
-      /* Separate the game field into single patterns */
+
+      // Separate the game field into single patterns 
       gridTemplateColumns: `repeat(10, ${sizeSingleField}px)`,
       gridTemplateRows: `repeat(10, ${sizeSingleField}px)`
     };
@@ -56,10 +56,10 @@ function GameField({gameFieldSettings, gameSettings, buttonStates, setStartButto
     (10 - index)));
     
     // Merging the axis arrays into a new array of coordinates 
-    let fieldCoordinates = helperFcn.getCoordinatesArray(xAxisLetters,yAxisNumbers, gameSettings.isPlayer1);
+    let fieldCoordinates = helperFcn.getCoordinatesArray(xAxisLetters,yAxisNumbers, gameStates.isPlayer1);
     
     // Get color of the player
-    const playerColor = helperFcn.getColorOfPlayer(gameSettings);
+    const playerColor = helperFcn.getColorOfPlayer(gameStates);
 
     /* ********************************************************************* */
     /* Set properties of a single field and store them in an array */
@@ -103,7 +103,7 @@ function GameField({gameFieldSettings, gameSettings, buttonStates, setStartButto
       console.log(">> State 'gameFieldState': ", gameFieldState);
       console.log(">> State 'figureStorageState': ", figureStorageState);
       console.log(">> defeatedFigureStorage: ", defeatedFigureStorage)
-      console.log(">> Game states: ", gameSettings);
+      console.log(">> Game states: ", gameStates);
       console.log(" #############################################################");
     }
     // Enable the Start Button to start the game, when the figure storage list is empty
@@ -111,19 +111,19 @@ function GameField({gameFieldSettings, gameSettings, buttonStates, setStartButto
       const updateStartButton = () => {
         // Überprüfen, ob der Start-Button aktiviert werden soll
         if (figureStorageState.length === 0 && buttonStates.counterUsedStartButton < 1) {
-          setStartButtonState((prevStates) => ({
+          setButtonStates((prevStates) => ({
             ...prevStates,
             disabledStartButton: false,
           }));
         }
       }; 
       updateStartButton()
-    }, [figureStorageState, buttonStates.counterUsedStartButton, setStartButtonState]);
+    }, [figureStorageState, buttonStates.counterUsedStartButton, setButtonStates]);
 
     /* *************** Rendering the game components *************** */ 
     return(
       <DragDropContext onDragEnd={(result) => {
-        const updatedStates = gameLogic.handleDragDrop(result, gameFieldState, figureStorageState,prefixSingleFieldID,gameSettings);
+        const updatedStates = gameLogic.handleDragDrop(result, gameFieldState, figureStorageState,prefixSingleFieldID,gameStates);
         if (updatedStates) {
           // Get updated states from 'updatedStates'
           const { gameFieldState: newGameFieldState, figureStorageState: newFigureStorageState} = updatedStates;
@@ -137,7 +137,7 @@ function GameField({gameFieldSettings, gameSettings, buttonStates, setStartButto
               {/* *** y-Axis *** */}
               <YAxis yAxisArray = {yAxisNumbers} 
                      axisHeight = {fieldHeight}
-                     gameStates = {gameSettings} 
+                     gameStates = {gameStates} 
                      axisStyle = {parameters.styleYAxis}/>
               {/* *** The game field *** */}
               <div className="game-field" style={fieldStyle}>
@@ -168,7 +168,7 @@ function GameField({gameFieldSettings, gameSettings, buttonStates, setStartButto
               {/* *** x-Axis *** */}                   
               <XAxis xAxisArray = {xAxisLetters} 
                      singleFieldWidth = {sizeSingleField} 
-                     gameStates = {gameSettings} 
+                     gameStates = {gameStates} 
                      axisStyle={parameters.styleXAxis}/>
           </div>
             <FigureStorage figStateArray = {figureStorageState} />    

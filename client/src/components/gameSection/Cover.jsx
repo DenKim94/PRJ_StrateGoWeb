@@ -1,50 +1,52 @@
 import React, {useEffect} from 'react';
 import * as parameters from '../../game-logic/parameters.js';
 import CoverContent from './CoverContent.jsx'
+import { useButtonStates } from '../context/ButtonStatesContext.js';
+import { useGameStates } from '../context/GameStatesContext.js';
 import './Cover.css'
 import ExitBox from './ExitBox.jsx';
 /**
  * This Component informs the user about changed game states
  * @param {Object} styleCover - Object contains specific style parameters of the component (see 'parameters.js')
  */
-const Cover = ({ GameStates, updateGameStates, ButtonStates, styleCover = parameters.styleCover }) => {
+const Cover = ({ styleCover = parameters.styleCover }) => {
   
-// TO-DO: Auslagern der Inputparameter über 'useContext' [23.12.2023]
+const { buttonStates } = useButtonStates();
+const { gameStates, setGameStates } = useGameStates();
 
   useEffect(() => {
     const updateCoverState = () => {
-        if(GameStates.exitCanceled) {
-          updateGameStates((prevStates) => ({
+        if(gameStates.exitCanceled) {
+          setGameStates((prevStates) => ({
             ...prevStates,
             exitConfirmed: false,
             exitCanceled: false,
             leaveGame: false,
         }));          
-          if(ButtonStates.counterUsedStartButton > 0){
-            updateGameStates((prevStates) => ({
+          if(buttonStates.counterUsedStartButton > 0){
+            setGameStates((prevStates) => ({
                 ...prevStates,
-                ready2Play: !GameStates.isPaused,
+                ready2Play: !gameStates.isPaused,
             }));         
           }
         }
     }; 
 
     updateCoverState()
-    }, [GameStates.exitCanceled, GameStates.isPaused, updateGameStates, ButtonStates]) 
+    }, [gameStates.exitCanceled, gameStates.isPaused, setGameStates, buttonStates]) 
 
     // Predefined style of the cover component
     const coverStyle = {
       ...styleCover,
-      opacity: GameStates.ready2Play ? 0 : 1,  // Opacity of the component depending on the state of 'isReady2Play'
+      opacity: gameStates.ready2Play ? 0 : 1,  // Opacity of the component depending on the state of 'isReady2Play'
     };
 
     return( 
         <div style = {coverStyle}>
           {/* Use an additional component to render and style the cover content  */}
-              <CoverContent gameStates = {GameStates} />
-              {GameStates.leaveGame && !GameStates.exitCanceled && !GameStates.exitConfirmed && 
-              (<ExitBox gameStates = {GameStates} 
-                        updateGameStates = {updateGameStates}/>)}
+              <CoverContent />
+              {gameStates.leaveGame && !gameStates.exitCanceled && !gameStates.exitConfirmed && 
+              (<ExitBox />)}
         </div>
     
     );

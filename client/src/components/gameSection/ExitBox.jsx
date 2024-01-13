@@ -1,5 +1,6 @@
-import React, {useState, useEffect}  from 'react';
+import React, { useState, useEffect }  from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useGameStates } from '../context/GameStatesContext.js';
 import * as parameters from '../../game-logic/parameters.js';
 
 /**
@@ -17,31 +18,33 @@ import * as parameters from '../../game-logic/parameters.js';
  * @property {string} exitBoxProps.message - Message displayed in the exit box.
  * @returns {JSX.Element} Returns the JSX element representing the exit box.
  */
-const ExitBox = ({gameStates, updateGameStates, exitBoxProps = parameters.exitBoxProps}) => {
+const ExitBox = ({ exitBoxProps = parameters.exitBoxProps }) => {
 
+    const { gameStates, setGameStates } = useGameStates();
     const [confirmedState, setConfirmedState] = useState(gameStates.exitConfirmed)
     const [canceledState, setCanceledState] = useState(gameStates.exitCanceled)
+    
     const navigate = useNavigate();
 
     // Update game states after using the buttons
     function handleConfirm(){
-        setConfirmedState(true) 
+        setConfirmedState(true)
     }   
     function handleCancel(){
-        setCanceledState(true)   
+        setCanceledState(true)  
     }
 
     useEffect(() => {
         const handleExit = () => {
             if(confirmedState) {
-                updateGameStates((prevStates) => ({
+                setGameStates((prevStates) => ({
                     ...prevStates,
                     exitConfirmed: true,
                 }));
                 navigate("/exitSection")
             }
             if(canceledState){
-                updateGameStates((prevStates) => ({
+                setGameStates((prevStates) => ({
                     ...prevStates,
                     exitCanceled: true, 
                 }));                
@@ -49,7 +52,7 @@ const ExitBox = ({gameStates, updateGameStates, exitBoxProps = parameters.exitBo
         }; 
     
         handleExit()
-        }, [confirmedState, canceledState, updateGameStates, navigate])    
+        }, [canceledState, confirmedState, setGameStates , navigate])    
 
     return(
         <div className="exit-box" style={exitBoxProps.styleParamsBox}>
