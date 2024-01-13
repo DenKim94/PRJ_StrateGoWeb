@@ -1,4 +1,5 @@
 import React from 'react';
+import { useGameStates } from '../context/GameStatesContext.js';
 import GameFigure from './GameFigure';
 import { Draggable } from 'react-beautiful-dnd';
 
@@ -12,6 +13,7 @@ const SingleField = ({fieldState, idx, snapshot}) => {
 
   const figProps = fieldState.figure; 
   const emptyFigProps = !figProps; 
+  const { gameStates } = useGameStates();
   
   // Set style of the component 
   const fieldStyle = {

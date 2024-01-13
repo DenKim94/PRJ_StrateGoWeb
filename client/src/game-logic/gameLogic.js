@@ -243,6 +243,12 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
     // Extract the properties after the DnD action
     const { source, destination, type, draggableId } = results;
 
+    if(genCfg.debugMode){
+        console.log("**** function handleDragDrop ****")
+        console.log(">> results: ",results)
+        console.log(">> gameFieldState: ",gameFieldState)
+    }
+
     // If the game is paused, do nothing
     if(gameSettings.isPaused || gameSettings.leaveGame){
         return null;
@@ -312,7 +318,6 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
             // Show values of parameters in a console when 'debugMode' is active
             if(genCfg.debugMode){
                 console.log("**** function handleDragDrop ****")
-                console.log(">> results: ",results)
                 console.log(">> figureStorageState: ", figureStorageState)
                 console.log(">> newFigureStorageState: ", newFigureStorageState)
                 console.log(">> gameFieldState: ", gameFieldState)

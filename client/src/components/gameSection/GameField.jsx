@@ -34,6 +34,8 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     const coordsNonPlayableFields = gameFieldSettings.coordsNonPlayableFields; 
     const colorNonPlayableFields = gameFieldSettings.colorNonPlayableFields;
     const prefixSingleFieldID = gameFieldSettings.prefixID;
+    const arrayLengthAxis = gameFieldSettings.arrayLengthAxis;
+    const arrayLengthGameFields = gameFieldSettings.arrayLengthGameFields;
     /* ********************************************************************* */
     const sizeSingleField = Math.abs(fieldWidth)/10;
     const fieldStyle = {
@@ -47,12 +49,12 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     };
   
     // Create an array (Strings) for the x-Axis 
-    const xAxisLetters = Array.from({ length: 10 }, (_, index) =>
+    const xAxisLetters = Array.from({ length: arrayLengthAxis }, (_, index) =>
       String.fromCharCode(65 + index)
     );
 
     // Create an array (Numbers) for the y-Axis 
-    const yAxisNumbers = (Array.from({ length: 10 }, (_, index) => 
+    const yAxisNumbers = (Array.from({ length: arrayLengthAxis }, (_, index) => 
     (10 - index)));
     
     // Merging the axis arrays into a new array of coordinates 
@@ -63,27 +65,28 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
 
     /* ********************************************************************* */
     /* Set properties of a single field and store them in an array */
-    const updatedStateArray = [];
+    
+    let defaultFieldState = Array.from({ length: arrayLengthGameFields }).map((_, index) => {
+      let singleFieldProps = helperFcn.setProps4SingleField(
+                                          gameStates.isPlayer1,
+                                          arrayLengthGameFields,
+                                          prefixSingleFieldID,
+                                          index,
+                                          fieldCoordinates[index],
+                                          sizeSingleField,
+                                          backgroundColor );
 
-    Array.from({ length: 100 }).map((_, index) => {
-      const singleFieldProps = helperFcn.setProps4SingleField(
-        prefixSingleFieldID,
-        index,
-        fieldCoordinates[index],
-        sizeSingleField,
-        backgroundColor
-      );
       /* Define non playable fields and modify the properties */
       helperFcn.setNonPlayableFields(singleFieldProps,
         fieldCoordinates[index],
         coordsNonPlayableFields,
         colorNonPlayableFields);
       
-        return(updatedStateArray.push(singleFieldProps))
+        return singleFieldProps
     })
 
     /* *** State as array to store and set game field properties *** */
-    const [gameFieldState, setGameFieldState] = useState([...updatedStateArray]); 
+    const [gameFieldState, setGameFieldState] = useState(defaultFieldState); 
 
     /* *** State as array to store and set game figure properties *** */
     const playerFigures = helperFcn.getFiguresOfPlayer(figProperties, playerColor)
@@ -123,7 +126,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     /* *************** Rendering the game components *************** */ 
     return(
       <DragDropContext onDragEnd={(result) => {
-        const updatedStates = gameLogic.handleDragDrop(result, gameFieldState, figureStorageState,prefixSingleFieldID,gameStates);
+        const updatedStates = gameLogic.handleDragDrop(result, gameFieldState, figureStorageState, prefixSingleFieldID, gameStates);
         if (updatedStates) {
           // Get updated states from 'updatedStates'
           const { gameFieldState: newGameFieldState, figureStorageState: newFigureStorageState} = updatedStates;
@@ -145,7 +148,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                 {gameFieldState.map((fieldProps, index) => {
                   /* Create and render single field elements with specific coordinates */    
                   return (
-                    <Droppable droppableId={`${prefixSingleFieldID}_${index}`} 
+                    <Droppable droppableId={defaultFieldState[index].id} 
                     key={`${prefixSingleFieldID}_${index}`}
                     type = "FIGURE"
                     > 

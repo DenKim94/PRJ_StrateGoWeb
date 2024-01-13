@@ -2,6 +2,8 @@
  * Helper function to create properties for a single game field.
  * 
  * @function
+ * @param {boolean} isPlayer1 - Boolean for player 1
+ * @param {number} arrayLengthGameFields - Length of the array
  * @param {string} prefixSingleFieldID - Prefix for the unique identifier of the single field.
  * @param {number} index - Index of the single field.
  * @param {Array} fieldCoordinates - Coordinates of the single field [column, row].
@@ -11,11 +13,21 @@
  * @property {string} singleFieldProps.id - Unique identifier for the single field.
  * @property {number} singleFieldProps.pos_x - X-coordinate of the single field (column).
  * @property {number} singleFieldProps.pos_y - Y-coordinate of the single field (row).
- * @property {boolean} singleFieldProps.isPlayable - Indicates whether the field is playable.
+ * @property {boolean} singleFieldProps.isPlayable - Boolean for a playable field
  */
-export const setProps4SingleField = (prefixSingleFieldID,index,fieldCoordinates,sizeSingleField,backgroundColor) => {
+export const setProps4SingleField = (isPlayer1, arrayLengthGameFields, 
+                                    prefixSingleFieldID, index, fieldCoordinates, 
+                                    sizeSingleField, backgroundColor) => {
+    let ID = null; 
+    if(isPlayer1){
+        ID = `${prefixSingleFieldID}_${index}`;
+    }else
+    // Reverse game field IDs for player 2
+    {
+        ID = `${prefixSingleFieldID}_${arrayLengthGameFields - 1 - index}`;  
+    }
     const singleFieldProps = {
-        id: `${prefixSingleFieldID}_${index}`,
+        id: ID,
         pos_x: fieldCoordinates[0],
         pos_y: fieldCoordinates[1],
         isPlayable: true,

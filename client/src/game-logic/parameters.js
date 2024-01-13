@@ -6,25 +6,26 @@
 
 /**** General/Global Configurations ****/
 export const genCfg = {
-    debugMode: false,       // Boolean for showing parameter values in the console (if true) 
+    debugMode: true,       // Boolean for showing parameter values in the console (if true) 
 };
 
 /**** Settings for GameSection-Component: GameField ****/
 export const gameFieldObj = {
-    fieldWidth: 550,                         /* Width of the game field in pixel (without distances to the y-axis) */
-    fieldHeight: 550,                        /* Height of the game field in pixel (without distances to the x-axis) */
-    backgroundColor: 'lightgoldenrodyellow', /* Background color of the game field */
-    coordsNonPlayableFields:[                /* Array with coordinates of non playable fields [col,row] */
+    fieldWidth: 550,                         // Width of the game field in pixel (without distances to the y-axis) 
+    fieldHeight: 550,                        // Height of the game field in pixel (without distances to the x-axis) 
+    backgroundColor: 'lightgoldenrodyellow', // Background color of the game field 
+    coordsNonPlayableFields:[                // Array with coordinates of non playable fields [col,row] 
         ["C",5],["C",6],
         ["D",5],["D",6],
         ["G",5],["G",6],
         ["H",5],["H",6],
     ],
-    prefixID: 'SingleField',                 /* Prefix for the id of a single field [String] */   
-    colorNonPlayableFields: '#ADD8E6',       /* Color (Colorcode) of non playable fields [String] */
+    arrayLengthAxis: 10,                     // Length of the array to set axis properties
+    arrayLengthGameFields: 100,              // Length of the array to set game field properties
+    prefixID: 'SingleField',                 // Prefix for the id of a single field [String]   
+    colorNonPlayableFields: '#ADD8E6',       // Color (Colorcode) of non playable fields [String]
     Letters2Numbers: { "A": 1, "B": 2, "C": 3, "D": 4, "E": 5, 
-                       "F": 6, "G": 7, "H": 8, "I": 9, "J": 10 }, /* Dictionary to translate letters to 
-                                                                     corresponding numbers */ 
+                       "F": 6, "G": 7, "H": 8, "I": 9, "J": 10 }, // Dictionary to translate letters to corresponding numbers 
 };
 
 // Total width and height of the game field in pixel (including distances to the axes)
@@ -380,17 +381,20 @@ export const figProperties = [
 
 /*** Set default values of properties (if not defined) ***/
 gameFieldObj.defaultProps = {
-    fieldWidth: 550,                         /* Width of the game field in pixel */
-    fieldHeight: 550,                        /* Height of the game field in pixel */
-    backgroundColor: 'lightgoldenrodyellow', /* Background color of the game field */
-    coordsNonPlayableFields:[                /* Array with coordinates of non playable fields [col,row] */
+    fieldWidth: 550,                         // Width of the game field in pixel (without distances to the y-axis) 
+    fieldHeight: 550,                        // Height of the game field in pixel (without distances to the x-axis) 
+    backgroundColor: 'lightgoldenrodyellow', // Background color of the game field 
+    coordsNonPlayableFields:[                // Array with coordinates of non playable fields [col,row] 
         ["C",5],["C",6],
         ["D",5],["D",6],
         ["G",5],["G",6],
         ["H",5],["H",6],
     ],
-    prefixID: 'SingleField',                 /* Prefix for the id of a single field */   
-    colorNonPlayableFields: '#ADD8E6',       /* Color (Colorcode) of non playable fields [String] */
+    arrayLengthAxis: 10,
+    arrayLengthGameFields: 100,             
+    prefixID: 'SingleField',                 // Prefix for the id of a single field [String]   
+    colorNonPlayableFields: '#ADD8E6',       // Color (Colorcode) of non playable fields [String]
     Letters2Numbers: { "A": 1, "B": 2, "C": 3, "D": 4, "E": 5, 
-                       "F": 6, "G": 7, "H": 8, "I": 9, "J": 10 }, 
-  }; 
+                       "F": 6, "G": 7, "H": 8, "I": 9, "J": 10 }, // Dictionary to translate letters to corresponding numbers 
+
+};
