@@ -29,10 +29,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     const { scoutStates, setScoutStates } = useScoutStates();
     const { gameStates } = useGameStates();
 
-    console.log("scoutStates: ", scoutStates)
-
-
-     /* ********************************************************************* */
+    /* ********************************************************************* */
     const fieldWidth = gameFieldSettings.fieldWidth;
     const fieldHeight = gameFieldSettings.fieldHeight;
     const backgroundColor = gameFieldSettings.backgroundColor;
@@ -42,6 +39,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     const arrayLengthAxis = gameFieldSettings.arrayLengthAxis;
     const arrayLengthGameFields = gameFieldSettings.arrayLengthGameFields;
     /* ********************************************************************* */
+    
     const sizeSingleField = Math.abs(fieldWidth)/10;
     const fieldStyle = {
       width: fieldWidth,
@@ -139,7 +137,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
       const targetFieldPosition = helperFcn.getFieldPosition(destination, fieldState);
       
       // Update states in case of a found figure which was dragged over by the figure 'Scout'
-      if(figureProps.isScoutFigure && draggedOverFigure.figure && gameStates.ready2Play){ 
+      if(figureProps.isScoutFigure && draggedOverFigure.figure && gameStates.ready2Play){  
         setScoutStates((prevStates) => ({
           ...prevStates,
           isDraggedOverFigure: true,  
@@ -185,8 +183,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                     }))  
                                   
                                   return null                           
-                                }   
-                                // Update game related states                     
+                                }                      
                                 // Update game related states                     
                                 const updatedStates = gameLogic.handleDragDrop(result, gameFieldState, figureStorageState, prefixSingleFieldID, gameStates);
 

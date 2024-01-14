@@ -169,6 +169,22 @@ export function getColorOfPlayer(gameStates){
     return colorPlayer 
 }
 
+/**
+ * Retrieves information about the figure that is being dragged over a target field.
+ *
+ * @param {Object} targetFieldProps - Properties of the target field where the figure is being dragged.
+ * @param {Object} fieldStates - Object-Array of field states containing information about different fields.
+ * @param {string} targetFieldProps.droppableId - The unique identifier of the target field.
+ * @param {number} fieldStates.id - The unique identifier of a field in the fieldStates array.
+ * @param {number} fieldStates.pos_x - The x-coordinate position of the field.
+ * @param {number} fieldStates.pos_y - The y-coordinate position of the field.
+ * @param {Object} fieldStates.figure - The figure object associated with the field.
+ *
+ * @returns {Object} figureProps - Information about the dragged-over figure.
+ * @returns {string} figureProps.fieldID - The unique identifier of the field over which the figure is dragged.
+ * @returns {number} figureProps.position - The x and y coordinate position of the field.
+ * @returns {Object} figureProps.figure - The figure object associated with the dragged-over field.
+ */
 export function getDraggedOverFigure(targetFieldProps, fieldStates){
     let figureProps = {
         fieldID: null,
@@ -176,11 +192,13 @@ export function getDraggedOverFigure(targetFieldProps, fieldStates){
         figure: null,
     }
     if(targetFieldProps && fieldStates){
+        // Filter fieldStates to find the target field with a non-null figure
         const foundFieldProps = fieldStates.filter((props) => {
             return targetFieldProps.droppableId === props.id && props.figure
         });      
-        console.log("foundFieldProps: ", foundFieldProps[0])
+        
         if(foundFieldProps[0]){
+            // Fill figureProps with information from the found field
             figureProps.fieldID = foundFieldProps[0].id;
             figureProps.position = [foundFieldProps[0].pos_x, foundFieldProps[0].pos_y];
             figureProps.figure = foundFieldProps[0].figure;
@@ -190,6 +208,22 @@ export function getDraggedOverFigure(targetFieldProps, fieldStates){
     return figureProps
 }
 
+/**
+ * Identifies whether the figure on the source field is a scout figure and provides related information.
+ *
+ * @param {Object} sourceFieldProps - Properties of the source field containing the figure to be identified.
+ * @param {Object} fieldStates - Array of field states containing information about different fields.
+ * @param {string} sourceFieldProps.droppableId - The unique identifier of the source field.
+ * @param {number} fieldStates.id - The unique identifier of a field in the fieldStates array.
+ * @param {number} fieldStates.pos_x - The x-coordinate position of the field.
+ * @param {number} fieldStates.pos_y - The y-coordinate position of the field.
+ * @param {Object} fieldStates.figure - The figure object associated with the field.
+ * @param {string} fieldStates.figure.figName - The name of the figure, used for identification.
+ *
+ * @returns {Object} scoutFigureProps - Information about the identified scout figure.
+ * @returns {boolean} scoutFigureProps.isScoutFigure - Indicates whether the figure is a scout figure (true/false).
+ * @returns {number} scoutFigureProps.sourcePosition - The x and y coordinate position of the source field.
+ */
 export function identifyScoutFigure(sourceFieldProps, fieldStates){
     let scoutFigureProps = {
         isScoutFigure: false,
@@ -197,11 +231,13 @@ export function identifyScoutFigure(sourceFieldProps, fieldStates){
     };
 
     if(sourceFieldProps && fieldStates){
+        // Filter fieldStates to find the source field with a scout figure
         const foundScoutProps = fieldStates.filter((props) => {
             return props.id === sourceFieldProps.droppableId && props.figure && props.figure.figName.includes('Scout')
         });      
-        console.log("foundScoutProps: ", foundScoutProps)
+
         if(foundScoutProps[0]){
+            // Fill scoutFigureProps with information from the found scout figure
             scoutFigureProps.isScoutFigure = true;
             scoutFigureProps.sourcePosition = [foundScoutProps[0].pos_x, foundScoutProps[0].pos_y];
         }
@@ -210,12 +246,20 @@ export function identifyScoutFigure(sourceFieldProps, fieldStates){
     return scoutFigureProps  
 }
 
+/**
+ * Checks the validity of a move for a scout figure on a game board.
+ *
+ * @param {number} startPos - The starting position (x, y) of the scout figure.
+ * @param {number} endPos - The ending position (x, y) where the scout figure is being moved.
+ * @param {number} draggedOverFigurePosition - The position (x, y) of the figure over which the scout is dragged.
+ *
+ * @returns {boolean} isValidMove - Indicates whether the move is valid for the scout figure.
+ *   - Returns true if the move is valid.
+ *   - Returns false if the move is not valid based on scout movement rules.
+ */
 export function checkValidScoutMove(startPos, endPos, draggedOverFigurePosition){
 
     let isValidMove = true;
-    console.log("startPos: ", startPos)
-    console.log("endPos: ", endPos)
-    console.log("draggedOverFigurePosition: ", draggedOverFigurePosition)
 
     if(draggedOverFigurePosition && endPos && startPos){
 
@@ -238,20 +282,36 @@ export function checkValidScoutMove(startPos, endPos, draggedOverFigurePosition)
     return isValidMove
 }   
 
+/**
+ * Retrieves the position of a field on the game board based on its unique identifier.
+ *
+ * @param {Object} targetFieldProps - Properties of the target field for which the position is to be retrieved.
+ * @param {Object} fieldStates - Array of field states containing information about different fields.
+ * @param {string} targetFieldProps.droppableId - The unique identifier of the target field.
+ * @param {number} fieldStates.id - The unique identifier of a field in the fieldStates array.
+ * @param {number} fieldStates.pos_x - The x-coordinate position of the field.
+ * @param {number} fieldStates.pos_y - The y-coordinate position of the field.
+ *
+ * @returns {number} fieldPosition - The x and y coordinate position of the target field.
+ *   - Returns null if the target field or its properties are not found.
+ */
 export function getFieldPosition(targetFieldProps, fieldStates){
     let fieldPosition = null;
 
     if(targetFieldProps && fieldStates){
+        // Extract the unique identifier of the target field
         const fieldID = targetFieldProps.droppableId;
+
+        // Filter fieldStates to find the target field properties based on its unique identifier
         const fieldProps = fieldStates.filter((props) => {
             return props.id === fieldID 
         });  
-
+        
+        // If the target field properties are found, retrieve and set its position in fieldPosition
         if(fieldProps[0]){
             fieldPosition = [fieldProps[0].pos_x, fieldProps[0].pos_y]
         }
     }
-    console.log("fieldPosition: ", fieldPosition)
 
     return fieldPosition
 }
