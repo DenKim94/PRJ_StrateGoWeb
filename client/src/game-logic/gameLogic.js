@@ -235,9 +235,7 @@ function updateGameFieldStateProps(FieldState, indexField, props){
     return FieldState;
 }
 
-/**
- * Function to handle the drag and drop action 
-*/
+/** *** Function to handle the drag and drop process and ensure a correct game logic *** */
 export function handleDragDrop(results, gameFieldState, figureStorageState, prefixSingleFieldID, gameSettings) 
 {   
     // Extract the properties after the DnD action
@@ -341,10 +339,3 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
       };
         
 }
-
-export function handleDragUpdate(update, gameFieldState){
-    const { source, destination } = update;
-    console.log('update: ', update);
-    console.log('gameFieldState: ', gameFieldState);
-
-  };

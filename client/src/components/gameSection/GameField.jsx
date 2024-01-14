@@ -126,7 +126,8 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
       }; 
       updateStartButton()
     }, [figureStorageState, buttonStates.counterUsedStartButton, setButtonStates]);
-
+    
+    /** *** Function to handle changes while dragging and ensure valid movement of the scout *** */
     const handleDragUpdate = ( update, fieldState ) => {
       const { source, destination } = update;
       // Indentify 'Scout' and get figure properties
