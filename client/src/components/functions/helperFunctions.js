@@ -169,18 +169,20 @@ export function getColorOfPlayer(gameStates){
     return colorPlayer 
 }
 
-export function getDraggedOverFigure(targetFieldProps, fieldProps){
+export function getDraggedOverFigure(targetFieldProps, fieldStates){
     let figureProps = {
         fieldID: null,
+        position: null,
         figure: null,
     }
-    if(targetFieldProps && fieldProps){
-        const foundFieldProps = fieldProps.filter((props) => {
+    if(targetFieldProps && fieldStates){
+        const foundFieldProps = fieldStates.filter((props) => {
             return targetFieldProps.droppableId === props.id && props.figure
         });      
         console.log("foundFieldProps: ", foundFieldProps[0])
         if(foundFieldProps[0]){
             figureProps.fieldID = foundFieldProps[0].id;
+            figureProps.position = [foundFieldProps[0].pos_x, foundFieldProps[0].pos_y];
             figureProps.figure = foundFieldProps[0].figure;
         }
     }
@@ -188,18 +190,68 @@ export function getDraggedOverFigure(targetFieldProps, fieldProps){
     return figureProps
 }
 
-export function identifyScoutFigure(sourceFieldProps, fieldProps){
-    let isScoutFigure = false;
+export function identifyScoutFigure(sourceFieldProps, fieldStates){
+    let scoutFigureProps = {
+        isScoutFigure: false,
+        sourcePosition: null,
+    };
 
-    if(sourceFieldProps && fieldProps){
-        const foundScoutProps = fieldProps.filter((props) => {
+    if(sourceFieldProps && fieldStates){
+        const foundScoutProps = fieldStates.filter((props) => {
             return props.id === sourceFieldProps.droppableId && props.figure && props.figure.figName.includes('Scout')
         });      
         console.log("foundScoutProps: ", foundScoutProps)
         if(foundScoutProps[0]){
-            isScoutFigure = true;
+            scoutFigureProps.isScoutFigure = true;
+            scoutFigureProps.sourcePosition = [foundScoutProps[0].pos_x, foundScoutProps[0].pos_y];
         }
     }
 
-    return isScoutFigure   
+    return scoutFigureProps  
+}
+
+export function checkValidScoutMove(startPos, endPos, draggedOverFigurePosition){
+
+    let isValidMove = true;
+    console.log("startPos: ", startPos)
+    console.log("endPos: ", endPos)
+    console.log("draggedOverFigurePosition: ", draggedOverFigurePosition)
+
+    if(draggedOverFigurePosition && endPos && startPos){
+
+        if(startPos[1] > draggedOverFigurePosition[1]){
+
+            if(endPos[1] < draggedOverFigurePosition[1] && 
+                draggedOverFigurePosition[0] === endPos[0]){
+                    isValidMove = false;
+            }
+        }
+        else if(startPos[1] < draggedOverFigurePosition[1]){
+            
+            if(endPos[1] > draggedOverFigurePosition[1] && 
+                draggedOverFigurePosition[0] === endPos[0]){
+                    isValidMove = false;
+            }
+        }
+    }
+    
+    return isValidMove
+}   
+
+export function getFieldPosition(targetFieldProps, fieldStates){
+    let fieldPosition = null;
+
+    if(targetFieldProps && fieldStates){
+        const fieldID = targetFieldProps.droppableId;
+        const fieldProps = fieldStates.filter((props) => {
+            return props.id === fieldID 
+        });  
+
+        if(fieldProps[0]){
+            fieldPosition = [fieldProps[0].pos_x, fieldProps[0].pos_y]
+        }
+    }
+    console.log("fieldPosition: ", fieldPosition)
+
+    return fieldPosition
 }
