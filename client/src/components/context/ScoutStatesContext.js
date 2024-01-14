@@ -5,6 +5,8 @@ const ScoutStatesContext = createContext();
 export const ScoutStatesProvider = ({ children }) => {
   const [scoutStates, setScoutStates] = useState({
     isDraggedOverFigure: false,
+    sourcePosition: null,
+    draggedOverFigurePosition: null,
     isValidMove: true,
   });
 
