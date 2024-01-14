@@ -39,7 +39,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     const arrayLengthAxis = gameFieldSettings.arrayLengthAxis;
     const arrayLengthGameFields = gameFieldSettings.arrayLengthGameFields;
     /* ********************************************************************* */
-    
+
     const sizeSingleField = Math.abs(fieldWidth)/10;
     const fieldStyle = {
       width: fieldWidth,
