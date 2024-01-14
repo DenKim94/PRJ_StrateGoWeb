@@ -31,6 +31,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
 
     console.log("scoutStates: ", scoutStates)
 
+
      /* ********************************************************************* */
     const fieldWidth = gameFieldSettings.fieldWidth;
     const fieldHeight = gameFieldSettings.fieldHeight;
@@ -173,6 +174,19 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
       <DragDropContext onDragUpdate = { (update) => {
                                     handleDragUpdate(update, gameFieldState)}}
                        onDragEnd = {(result) => {
+                                  // Don't execute if specific scout move is not allowed and reset states
+                                  if(!scoutStates.isValidMove){
+                                    setScoutStates((prevStates) => ({
+                                      ...prevStates,
+                                      isDraggedOverFigure: false,  
+                                      sourcePosition: null,
+                                      draggedOverFigurePosition: null,       
+                                      isValidMove: true,
+                                    }))  
+                                  
+                                  return null                           
+                                }   
+                                // Update game related states                     
                                 // Update game related states                     
                                 const updatedStates = gameLogic.handleDragDrop(result, gameFieldState, figureStorageState, prefixSingleFieldID, gameStates);
 
