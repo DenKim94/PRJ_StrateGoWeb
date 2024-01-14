@@ -7,6 +7,7 @@ import FigureStorage from './FigureStorage';
 import DefeatedFigureStorage from './DefeatedFigureStorage';
 import { useButtonStates } from '../context/ButtonStatesContext.js';
 import { useGameStates } from '../context/GameStatesContext.js';
+import { useScoutStates } from '../context/ScoutStatesContext.js';
 import { figProperties } from '../../game-logic/parameters.js';
 import * as helperFcn from '../functions/helperFunctions.js'
 import * as gameLogic from '../../game-logic/gameLogic.js'
@@ -25,7 +26,10 @@ import XAxis from './xAxis';
 function GameField({ gameFieldSettings = parameters.gameFieldObj })
   {
     const { buttonStates, setButtonStates } = useButtonStates();
+    const { scoutStates, setScoutStates } = useScoutStates();
     const { gameStates } = useGameStates();
+
+    console.log("scoutStates: ", scoutStates)
 
      /* ********************************************************************* */
     const fieldWidth = gameFieldSettings.fieldWidth;
@@ -109,32 +113,90 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
       console.log(">> Game states: ", gameStates);
       console.log(" #############################################################");
     }
+
     // Enable the Start Button to start the game, when the figure storage list is empty
     useEffect(() => {
       const updateStartButton = () => {
         // Überprüfen, ob der Start-Button aktiviert werden soll
         if (figureStorageState.length === 0 && buttonStates.counterUsedStartButton < 1) {
-          setButtonStates((prevStates) => ({
-            ...prevStates,
-            disabledStartButton: false,
-          }));
+            setButtonStates((prevStates) => ({
+              ...prevStates,
+              disabledStartButton: false,
+            }));
         }
       }; 
       updateStartButton()
     }, [figureStorageState, buttonStates.counterUsedStartButton, setButtonStates]);
 
-    /* *************** Rendering the game components *************** */ 
+    const handleDragUpdate = ( update, fieldState ) => {
+      const { source, destination } = update;
+      // Indentify 'Scout' and get figure properties
+      const figureProps = helperFcn.identifyScoutFigure(source, fieldState); 
+      // Indentify a figure which has been dragged over and get properties
+      const draggedOverFigure = helperFcn.getDraggedOverFigure(destination, fieldState);
+      // Get position of destination field 
+      const targetFieldPosition = helperFcn.getFieldPosition(destination, fieldState);
+      
+      // Update states in case of a found figure which was dragged over by the figure 'Scout'
+      if(figureProps.isScoutFigure && draggedOverFigure.figure && gameStates.ready2Play){ 
+        setScoutStates((prevStates) => ({
+          ...prevStates,
+          isDraggedOverFigure: true,  
+          sourcePosition: figureProps.sourcePosition,
+          draggedOverFigurePosition: draggedOverFigure.position,       
+        }))
+      }
+
+      // Check if the move made by the figure 'Scout' is valid and update state
+      if(scoutStates.isDraggedOverFigure && targetFieldPosition){
+        const isValidMove = helperFcn.checkValidScoutMove(scoutStates.sourcePosition, 
+                                                          targetFieldPosition, 
+                                                          scoutStates.draggedOverFigurePosition)
+        setScoutStates((prevStates) => ({
+          ...prevStates,
+          isValidMove: isValidMove,
+        }))        
+      }
+
+      // Checking values of parameters in 'debugMode' 
+      if(parameters.genCfg.debugMode){
+        console.log('update: ', update);
+        console.log('gameFieldState: ', fieldState);
+        console.log("isScoutFigure: ", figureProps.isScoutFigure)
+        console.log("draggedOverFigure: ", draggedOverFigure)
+        console.log("scoutStates_onDragUpdate: ", scoutStates)
+        }   
+    }
+
+    /* *************** Managing the behaviour of game related components *************** */ 
     return(
-      <DragDropContext onDragEnd={(result) => {
-        const updatedStates = gameLogic.handleDragDrop(result, gameFieldState, figureStorageState, prefixSingleFieldID, gameStates);
-        if (updatedStates) {
-          // Get updated states from 'updatedStates'
-          const { gameFieldState: newGameFieldState, figureStorageState: newFigureStorageState} = updatedStates;
-  
-          setGameFieldState(newGameFieldState);         // Update the State of the game field 
-          setFigureStorageState(newFigureStorageState); // Update the State of the figure storage
-        }        
-      }}>
+      <DragDropContext onDragUpdate = { (update) => {
+                                    handleDragUpdate(update, gameFieldState)}}
+
+                       onDragEnd = {(result) => {
+                                  // Don't execute if specific scout move is not allowed and reset states
+                                  if(!scoutStates.isValidMove){
+                                    setScoutStates((prevStates) => ({
+                                      ...prevStates,
+                                      isDraggedOverFigure: false,  
+                                      sourcePosition: null,
+                                      draggedOverFigurePosition: null,       
+                                      isValidMove: true,
+                                    }))  
+                                  
+                                  return null                           
+                                }   
+                                // Update game related states                     
+                                const updatedStates = gameLogic.handleDragDrop(result, gameFieldState, figureStorageState, prefixSingleFieldID, gameStates);
+                                if (updatedStates) {
+                                  // Get updated states from 'updatedStates'
+                                  const { gameFieldState: newGameFieldState, figureStorageState: newFigureStorageState} = updatedStates;
+                          
+                                  setGameFieldState(newGameFieldState);         // Update the State of the game field 
+                                  setFigureStorageState(newFigureStorageState); // Update the State of the figure storage
+                                } }}>
+
+         {/* *** Rendering Components *** */}                         
          <div className = "dnd-container" style={parameters.styleDnDContainer}>
           <div className = "game-field-container" style={parameters.styleGameFieldContainer}>
               {/* *** y-Axis *** */}
@@ -142,11 +204,10 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                      axisHeight = {fieldHeight}
                      gameStates = {gameStates} 
                      axisStyle = {parameters.styleYAxis}/>
-              {/* *** The game field *** */}
+              {/* *** Game Field *** */}
               <div className="game-field" style={fieldStyle}>
-                {/* Create single game fields */}
-                {gameFieldState.map((fieldProps, index) => {
-                  /* Create and render single field elements with specific coordinates */    
+                {/* Create and render single field elements with specific coordinates */ }
+                {gameFieldState.map((fieldProps, index) => {   
                   return (
                     <Droppable droppableId={defaultFieldState[index].id} 
                     key={`${prefixSingleFieldID}_${index}`}

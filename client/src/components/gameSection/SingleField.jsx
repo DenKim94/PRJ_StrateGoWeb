@@ -14,7 +14,8 @@ const SingleField = ({fieldState, idx, snapshot}) => {
   const figProps = fieldState.figure; 
   const emptyFigProps = !figProps; 
   const { gameStates } = useGameStates();
-  
+
+ 
   // Set style of the component 
   const fieldStyle = {
     alignItems: 'center', 

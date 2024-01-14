@@ -3,6 +3,7 @@ import * as parameters from '../../game-logic/parameters.js';
 import GameField from './GameField';  
 import { useButtonStates } from '../context/ButtonStatesContext.js';
 import { useGameStates } from '../context/GameStatesContext.js';
+import { ScoutStatesProvider } from '../context/ScoutStatesContext';
 import Cover from './Cover';
 import './Buttons.css'
 
@@ -35,10 +36,8 @@ const GameSection = () => {
     }
 
     function pauseGame(){
-        // To-Dos:
         if(!gameStates.isPaused){
-            /* After pausing the game, change the button text 
-            of 'Pause Game' to 'Proceed Game' */
+            // After pausing the game, change the button text of 'Pause Game' to 'Proceed Game'
             setButtonStates((prevStates) => ({
                 ...prevStates,
                 pauseButtonText: "Proceed Game",
@@ -55,8 +54,7 @@ const GameSection = () => {
             }));              
         }
         else{
-            /* After proceeding the game, change the button text 
-            of 'Proceed Game' to 'Pause Game' */
+            // After proceeding the game, change the button text of 'Proceed Game' to 'Pause Game'
             setButtonStates((prevStates) => ({
                 ...prevStates,
                 pauseButtonText: "Pause Game",
@@ -73,8 +71,7 @@ const GameSection = () => {
                 })); 
             }
             else{
-                /* Set ready2Play = true and isPaused: false to proceed, 
-                when start button was used once */
+                // Set ready2Play = true and isPaused: false to proceed, when start button was used once
                 setGameStates((prevStates) => ({
                     ...prevStates,
                     ready2Play: true,
@@ -140,7 +137,9 @@ const GameSection = () => {
                     {buttonStates.exitButtonText}
                 </button>                                                            
             </div>
-            <GameField /> 
+            <ScoutStatesProvider> 
+                <GameField /> 
+            </ScoutStatesProvider> 
         </div>         
     )
 };
