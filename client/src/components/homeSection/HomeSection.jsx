@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useGameStates } from '../context/GameStatesContext.js';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Cookies from 'universal-cookie'
 import * as parameters from '../../game-logic/parameters.js';
 import Button from '../gameSection/Button.jsx'
 import '../gameSection/Buttons.css'
@@ -35,17 +37,20 @@ const HomeSection = ({ homeSectionProps = parameters.homeSectionProps }) => {
                 }
             }
         };
-        ensureValidInputLength()
 
+        ensureValidInputLength()
+        
     }, [gameStates, homeSectionProps]);
 
+    
     // Handle user input
     const handleChangedPlayerName = (event) => {
         const inputValue = event.target.value
         setGameStates((prevStates) => ({
             ...prevStates,
             playerName: inputValue.trim(),
-        }))        
+        })) 
+               
     };
 
     const createNewGame = () => {
@@ -53,6 +58,7 @@ const HomeSection = ({ homeSectionProps = parameters.homeSectionProps }) => {
             ...prevStates,
             playerNumber: 1,
             isPlayer1: true,
+            isCheckedIn: true,
         })) 
         navigate(pathToNextPage)
     }
@@ -63,6 +69,7 @@ const HomeSection = ({ homeSectionProps = parameters.homeSectionProps }) => {
             ...prevStates,
             playerNumber: 2,
             isPlayer1: false,
+            isCheckedIn: true,
         }))
         navigate(pathToNextPage)
     }

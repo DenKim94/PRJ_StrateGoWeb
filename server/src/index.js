@@ -28,8 +28,9 @@ const serverClient = stream.connect(apiKey, apiSecret);
 // Create/Use Routes
 app.post("/setup", async (req, res) => {
     try{
-        const gameSets = req.body.gameSets;
+        const gameSets = req.body.gameStates;
         const {playerName, playerNumber} = gameSets;  // Parameters should be adapted to requirements
+        // console.log(">> gameSets: ", gameSets);
         if(!playerName || !playerNumber){
             console.log("Error: Incomplete request body!")
             throw("Error: Incomplete request body!")
