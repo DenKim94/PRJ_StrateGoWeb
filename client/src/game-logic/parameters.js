@@ -38,7 +38,7 @@ const figSize = [figWidth,figHeight];
 
 /***************** Set and export style and property parameters for components *****************/
 
-// GameSection-Component: App
+// Main Component: App
 export const styleApp = {
     display: 'flex',
     flexDirection: 'column',
@@ -51,6 +51,7 @@ export const styleUiContainer = {
     right: '50px',
     left: '80px',
 };
+
 // Generic Component: GameLogo
 export const styleGameLogo = {
     fontFamily: 'Young Serif, serif',
@@ -65,7 +66,38 @@ export const styleGameLogo = {
     textShadow: '-1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black'
 };
 
-// GameSection-Component: GameField
+/**** Settings for HomeSection-Component: HomeSection ****/
+export const homeSectionProps = {
+    inputPlaceHolder: "Player Name", // Placeholder for the user input
+    minInputLength: 2,                   // Minimum length of user input (> 0)
+    maxInputLength: 20,                  // Maximum length of user input 
+    style:{
+        fontFamily: 'Young Serif, serif',
+        fontSize: '20px',
+        marginTop: '60px', 
+        display: 'flex',
+        flexDirection: 'column', 
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+};
+
+// HomeSection-Component: SetUp
+export const setUpProps = {
+    style:{
+        fontFamily: 'Young Serif, serif',
+        marginTop: '20px',
+        marginBottom: '20px',
+        alignItems: 'center',
+        justifyContent: 'center', 
+        display: 'flex',
+        flexDirection: 'column', 
+        gap: "10px",
+    }
+
+};
+
+/**** Settings for GameSection-Component: GameField ****/
 export const styleDnDContainer = {
     display: 'flex',
     margin: 'auto',
@@ -229,20 +261,6 @@ export const exitBoxProps = {
         marginBottom: '10px',
         gap: '10px',     
     }
-};
-
-/**** Settings for HomeSection-Component: HomeSection ****/
-export const homeSectionProps = {
-    message: "Welcome!",
-    style:{
-        fontFamily: 'Young Serif, serif',
-        fontSize: '20px',
-        margin: 'auto', 
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        color: 'black',
-    },
 };
 
 /**** Settings for ExitSection-Component: ExitSection ****/

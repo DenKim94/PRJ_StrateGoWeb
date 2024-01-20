@@ -1,16 +1,23 @@
 import React from 'react';
-import './Button.css'
+import './Buttons.css'
 
-function Button({buttonName, onCklickFunction}){
-    // To-Do: Add style and set position of the Button  
+function Button({buttonName, isDisabled, onCklickFunction}){
+
     const buttonStyle = {
         marginTop: '8px',
         border: '1px solid black',
         textAlign: 'center',
         fontSize:'15px',
       };
+
     return ( 
-        <button style = {buttonStyle} type="button" className="btn btn-warning" onClick={onCklickFunction}>
+        <button style = {buttonStyle} 
+                type="button" 
+                id = "#highlighted-button" 
+                className="btn btn-warning" 
+                onClick={onCklickFunction}
+                disabled = {isDisabled}>
+
             {buttonName}
         </button> 
     );

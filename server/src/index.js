@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid"
 
 /*
 * Backend logic for running an express-server with the stream-chat API
-* Date: 06.01.2024
+* Date of last changes: 20.01.2024
 * Author: D.Kim
 */
 
@@ -29,10 +29,10 @@ const serverClient = stream.connect(apiKey, apiSecret);
 app.post("/setup", async (req, res) => {
     try{
         const gameSets = req.body.gameSets;
-        const {playerName, playerNumber} = gameSets;  // TO-DO: Parameters should be adapted to requirements
-        if(!playerName){
-            console.log("Error: Empty request body!")
-            throw("Error: Empty request body!")
+        const {playerName, playerNumber} = gameSets;  // Parameters should be adapted to requirements
+        if(!playerName || !playerNumber){
+            console.log("Error: Incomplete request body!")
+            throw("Error: Incomplete request body!")
         }
         const userID = uuidv4();    // Generate a unique user ID
         const token = serverClient.createUserToken(userID); // Create a specific token for authentication

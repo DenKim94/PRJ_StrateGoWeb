@@ -1,5 +1,10 @@
-import React from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Chat } from 'stream-chat-react'
+import { ButtonStatesProvider } from './components/context/ButtonStatesContext';
+import { GameStatesProvider } from './components/context/GameStatesContext';
+import { StreamChat } from 'stream-chat' 
+import Cookies from 'universal-cookie'
 import './App.css';
 import * as parameters from './game-logic/parameters';
 import GameLogo from './components/gameSection/GameLogo';  
@@ -7,8 +12,7 @@ import HomeSection from './components/homeSection/HomeSection';
 import GameSection from './components/gameSection/GameSection'; 
 import ExitSection from './components/exitSection/ExitSection';  
 import PageNotFound from './components/PageNotFound';
-import { ButtonStatesProvider } from './components/context/ButtonStatesContext';
-import { GameStatesProvider } from './components/context/GameStatesContext';
+import SetUp from './components/homeSection/SetUp';
 
 /* ******************************************************************* */ 
 /** 
@@ -16,7 +20,7 @@ import { GameStatesProvider } from './components/context/GameStatesContext';
  * 
  * - Author: D.Kim 
  * - Version: 1.0.0 
- * - Date of last changes: 13.01.2024
+ * - Date of last changes: 20.01.2024
 */
 /* ******************************************************************* */ 
 const App = () => {
@@ -29,8 +33,9 @@ const App = () => {
                 <ButtonStatesProvider>
                     <GameStatesProvider>                
                         <Routes>
-                            <Route path = "/homeSection" element={ <HomeSection /> }/>
-                            <Route path = "/" element={ <GameSection /> }/>
+                            <Route path = "/" element={ <HomeSection /> }/>
+                            <Route path = "/setUp" element={ <SetUp /> }/>
+                            <Route path = "/gameSection" element={ <GameSection /> }/>
                             <Route path = "/exitSection" element={ <ExitSection /> }/> 
 
                             <Route path = "*" element={ <PageNotFound />} />                    
