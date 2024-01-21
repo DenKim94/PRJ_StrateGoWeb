@@ -315,3 +315,23 @@ export function getFieldPosition(targetFieldProps, fieldStates){
 
     return fieldPosition
 }
+
+/** 
+ * Function to disconnect a user and delete all saved cookies 
+ * 
+*/
+export async function disconnectUser(clientObj, cookieObj) {
+    
+    try {
+        await clientObj.disconnectUser();
+        const savedCookies = cookieObj.getAll();
+
+        for (let key in savedCookies){
+            cookieObj.remove(key);
+        }
+
+    } catch (error) {
+        console.error(error);
+    }
+    return [clientObj, cookieObj]
+}

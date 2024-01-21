@@ -1,5 +1,4 @@
 import React from 'react';
-import { useGameStates } from '../context/GameStatesContext.js';
 import GameFigure from './GameFigure';
 import { Draggable } from 'react-beautiful-dnd';
 
@@ -13,9 +12,7 @@ const SingleField = ({fieldState, idx, snapshot}) => {
 
   const figProps = fieldState.figure; 
   const emptyFigProps = !figProps; 
-  const { gameStates } = useGameStates();
-
- 
+  
   // Set style of the component 
   const fieldStyle = {
     alignItems: 'center', 
@@ -26,6 +23,7 @@ const SingleField = ({fieldState, idx, snapshot}) => {
   if(emptyFigProps){
     return null;
   }
+
   // Disable animation translate except element is dragging
   function getStyle(style, snapshot) {
     if (!snapshot.isDragging) return {};

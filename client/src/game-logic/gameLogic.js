@@ -339,3 +339,5 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
       };
         
 }
+
+

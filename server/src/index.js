@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid"
 
 /*
 * Backend logic for running an express-server with the stream-chat API
-* Date: 06.01.2024
+* Date of last changes: 20.01.2024
 * Author: D.Kim
 */
 
@@ -23,21 +23,21 @@ app.use(express.json());
 
 // Create an instance to connect the account to the stream platform 
 const serverClient = stream.connect(apiKey, apiSecret);
-// console.log("serverClient: ", serverClient)
 
-// Create/Use Routes
+// Get data from the frontend and provide specific User-ID and token
 app.post("/setup", async (req, res) => {
     try{
-        const gameSets = req.body.gameSets;
-        const {playerName, playerNumber} = gameSets;  // TO-DO: Parameters should be adapted to requirements
-        if(!playerName){
-            console.log("Error: Empty request body!")
-            throw("Error: Empty request body!")
+        const gameSets = req.body.gameStates;
+        const {playerName, playerNumber} = gameSets;  // Parameters should be adapted to requirements
+
+        if(!playerName || !playerNumber){
+            console.log("Error: Incomplete request body!")
+            throw("Incomplete request body!")
         }
-        const userID = uuidv4();    // Generate a unique user ID
+        const userID = uuidv4();                            // Generate a unique user ID
         const token = serverClient.createUserToken(userID); // Create a specific token for authentication
-        const userProps = {userID: userID, playerName: playerName, playerNumber: playerNumber}; // TO-DO: Parameters should be adapted to requirements
-        res.json({userProps, token})  // Provide response data in json format
+        const userProps = {userID: userID, playerName: playerName, playerNumber: playerNumber}; // Parameters should be adapted to requirements
+        res.json({userProps, token})                        // Provide response data in json format
     }
     catch(e){
         console.log(e)
