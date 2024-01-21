@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGameStates } from '../context/GameStatesContext.js';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Cookies from 'universal-cookie'
 import * as parameters from '../../game-logic/parameters.js';
 import Button from '../gameSection/Button.jsx'
 import '../gameSection/Buttons.css'
@@ -73,8 +71,6 @@ const HomeSection = ({ homeSectionProps = parameters.homeSectionProps }) => {
         }))
         navigate(pathToNextPage)
     }
-
-    console.log(">> gameStates: ", gameStates)
 
     return(
         <div style={homeSectionProps.style}>

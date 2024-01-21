@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Chat } from 'stream-chat-react'
 import { ButtonStatesProvider } from './components/context/ButtonStatesContext';
@@ -7,6 +7,7 @@ import { StreamChat } from 'stream-chat'
 import Cookies from 'universal-cookie'
 import './App.css';
 import * as parameters from './game-logic/parameters';
+import * as helperFcn from './components/functions/helperFunctions.js'
 import GameLogo from './components/gameSection/GameLogo';  
 import HomeSection from './components/homeSection/HomeSection';
 import GameSection from './components/gameSection/GameSection'; 
@@ -26,91 +27,87 @@ import SetUp from './components/homeSection/SetUp';
 const App = () => {
     const cookies = useMemo(() => new Cookies(), []);
     const apiKey = process.env.REACT_APP_API_KEY; 
-    const client = StreamChat.getInstance(apiKey);
-    const token = cookies.get("token");
-
+    // Client side authentication to the Chat-API with a valid key
+    const client = StreamChat.getInstance(apiKey); 
     const [userConnected, setUserConnected] = useState(false);
     const [userCreated, setUserCreated] = useState(false);
+    const [tokenRef, setTokenRef] = useState(null);
 
-    // useEffect(() => {
-    //     const maxConnectionAttempts = 3;
-    //     let connectionAttemptsCount = 0;
+ 
+    useEffect(() => {
+        const maxConnectionAttempts = parameters.genCfg.maxConnectionAttempts;
+        let connectionAttemptsCounter = 0;
 
-    //     console.log(">> token: ", token);
+        if(userCreated && tokenRef){
+            // Connect the user to the Chat-API/Platform with a valid token
+            const connectUser = async () => {
+                try {
+                    const user = await client.connectUser({
+                    id: cookies.get("userID"),
+                    name: cookies.get("playerName"),
+                    playerNumber: cookies.get("playerNumber"),
+                    }, tokenRef);
+            
+                    if (!userConnected) {
+                    setUserConnected(true);
+                    console.log(">> Connected user: ", user);
+                    }
+                    connectionAttemptsCounter = 0;
 
-    //     if(userCreated && token){
+                } catch (error) {
+                    console.error(">> Connection failed:", error);
+                    // Try to reconnect the user if maximum attempts currently not exceeded
+                    if (connectionAttemptsCounter <= maxConnectionAttempts) {
+                        connectionAttemptsCounter += 1;
+                        connectUser();
+                    } else {
+                        console.error(">> Connect user: Maximum number of attempts exceeded.");
+                    }
+                }
+            };
         
-    //         const connectUser = async () => {
-    //         try {
-    //             const user = await client.connectUser({
-    //             id: cookies.get("userID"),
-    //             name: cookies.get("playerName"),
-    //             playerNumber: cookies.get("playerNumber"),
-    //             }, token);
-        
-    //             if (!userConnected) {
-    //             setUserConnected(true);
-    //             console.log(">> connected user: ", user);
-    //             }
-        
-    //             connectionAttemptsCount = 0;
-    //         } catch (error) {
-    //             console.error("Verbindung fehlgeschlagen:", error);
-        
-    //             if (connectionAttemptsCount < maxConnectionAttempts) {
-    //             connectionAttemptsCount += 1;
-    //             connectUser();
-    //             } else {
-    //             console.error("Maximale Anzahl der Verbindungsversuche erreicht.");
-    //             }
-    //         }
-    //         };
-        
-    //         if (!userConnected) {
-    //             connectUser();
-    //         }
-    //     }
-    //   }, [client, userConnected, cookies, userCreated, token]);
-      
-    const getConnection = useCallback(() => {
-        // Connect each user to the stream platform
-        client.connectUser({
-          id: cookies.get("userID"),
-          name: cookies.get("playerName"),
-          playerNumber: cookies.get("playerNumber"),
-        }, token ).then((user) => {
-          if(!userConnected){
-            setUserConnected(true)
-            console.log(">> connected user: ", user) 
-          }
-        }); 
-      }, [client, userConnected, cookies, token]);
-    
-      if(token && !userConnected){
-        // Connect each user to the stream platform
-        getConnection() 
-      }  
+            if (!userConnected) {
+                connectUser();
+            }
+        }
 
-    /*** Rendering the components ***/  
-    return(
-        <Router>
-            <div className = "App" style={parameters.styleApp}> 
-                <GameLogo/> 
-                <ButtonStatesProvider>
-                    <GameStatesProvider>                
-                        <Routes>
-                            <Route path = "/" element={ <HomeSection /> }/>
-                            <Route path = "/setUp" element={ <SetUp setUserCreated = {setUserCreated} /> }/>
-                            <Route path = "/gameSection" element={ <GameSection /> }/>
-                            <Route path = "/exitSection" element={ <ExitSection /> }/> 
+        // Clean-up function
+        return () => {
+            if(!tokenRef && !userCreated){
+                console.log('>> Clean-Up...');
+                helperFcn.disconnectUser(client, cookies)
+            }
 
-                            <Route path = "*" element={ <PageNotFound />} />                    
-                        </Routes>  
-                    </GameStatesProvider>
-                </ButtonStatesProvider>                                             
-            </div> 
-        </Router>      
-    )
+        };
+        }, [client, userConnected, cookies, userCreated, tokenRef]);
+
+        if(parameters.genCfg.debugMode){
+            console.log(">> App: tokenRef: ", tokenRef);
+            console.log(">> App: cookies: ", cookies);
+            console.log("> App: userConnected: ", userConnected)
+            console.log("> App: userCreated: ", userCreated)
+        }
+
+        /*** Rendering the components ***/  
+        return(
+            <Router>
+                <div className = "App" style={parameters.styleApp}> 
+                    <GameLogo/> 
+                    <ButtonStatesProvider>
+                        <GameStatesProvider>                
+                            <Routes>
+                                <Route path = "/" element={ <HomeSection /> }/>
+                                <Route path = "/setUp" element={ <SetUp setToken = {setTokenRef} userCreated = {userCreated} setUserCreated = {setUserCreated} /> }/>
+                                <Route path = "/gameSection" element={ <GameSection /> }/>
+                                <Route path = "/exitSection" element={ <ExitSection /> }/> 
+
+                                <Route path = "*" element={ <PageNotFound />} />                    
+                            </Routes>  
+                        </GameStatesProvider>
+                    </ButtonStatesProvider>                                             
+                </div> 
+            </Router>      
+        )
 };
  
 export default App;

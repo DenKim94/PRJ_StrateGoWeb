@@ -6,7 +6,8 @@
 
 /**** General/Global Configurations ****/
 export const genCfg = {
-    debugMode: false,       // Boolean for showing parameter values in the console (if true) 
+    debugMode: false,               // Boolean for showing parameter values in the console (if true) 
+    maxConnectionAttempts: 3,       // Maximum number of attempts to reconnect the user in case of failed connection
 };
 
 /**** Settings for GameSection-Component: GameField ****/
