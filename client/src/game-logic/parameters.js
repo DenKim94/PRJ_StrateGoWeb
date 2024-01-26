@@ -1,7 +1,7 @@
 /** Main file for setting parameters [for developer]
  * This file is mandatory to run the application! 
  * - Author: D.Kim
- * - Date: 28.12.2023  
+ * - Date: 26.01.2024  
 */
 
 /**** General/Global Configurations ****/
@@ -309,7 +309,8 @@ export const pageNotFoundProps = {
         color: '#8b0000',
     },        
 };
-/**** Settings for GameSection-Component: GameFigure ****/
+
+/**** Presets for GameSection-Component: GameFigure ****/
 /* Default paths to images */
 const path_redFig = "assets/images/redFigures/" ;
 const path_blueFig = "assets/images/blueFigures/" ;
