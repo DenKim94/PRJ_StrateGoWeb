@@ -2,7 +2,8 @@ import React from 'react';
 import './Buttons.css'
 
 function Button({buttonName, isDisabled, onCklickFunction}){
-
+    
+    // Default style properties
     const buttonStyle = {
         marginTop: '10px',
         border: '1px solid black',
