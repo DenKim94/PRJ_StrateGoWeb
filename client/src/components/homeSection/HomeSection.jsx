@@ -74,15 +74,15 @@ const HomeSection = ({ homeSectionProps = parameters.homeSectionProps }) => {
 
     return(
         <div style={homeSectionProps.style}>
-            
-            <input style = {{border: isInfoVisible ? '2px solid yellow' : '1px solid black', 
-                            marginBottom: '10px', 
-                            borderRadius: '5px',
-                            fontWeight: "lighter",
-                            textAlign: 'center'}} 
-
+            <input  
+                style = {{
+                    border: isInfoVisible ? '2px solid yellow' : '1px solid black',
+                    ...homeSectionProps.inputStyle,
+                    }}
+                    
                    type='string' 
                    placeholder = {homeSectionProps.inputPlaceHolder} 
+                   value={gameStates.playerName}
                    onChange = {handleChangedPlayerName}/>
 
             {isInfoVisible && (

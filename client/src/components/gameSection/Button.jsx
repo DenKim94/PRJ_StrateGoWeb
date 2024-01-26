@@ -4,7 +4,7 @@ import './Buttons.css'
 function Button({buttonName, isDisabled, onCklickFunction}){
 
     const buttonStyle = {
-        marginTop: '8px',
+        marginTop: '10px',
         border: '1px solid black',
         textAlign: 'center',
         fontSize:'15px',

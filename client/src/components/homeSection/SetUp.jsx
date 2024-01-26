@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from '../gameSection/Button.jsx'
 import axios from 'axios';
 import Cookies from 'universal-cookie'
+import DropDownButton from './DropDownButton.jsx'
 import * as parameters from '../../game-logic/parameters.js';
 import { useGameStates } from '../context/GameStatesContext.js';
 
@@ -23,7 +25,7 @@ const SetUp = ({ setToken,
             axios.post(SETUPURL, {gameStates}).then((res) => {
     
                 const {userProps, token} = res.data; 
-                // console.log(">> res.data: ", res.data )
+                console.log(">> res.data: ", res.data )
 
                 // Setting coockies
                 cookies.set("token", token);
@@ -45,8 +47,16 @@ const SetUp = ({ setToken,
 
     const handleChangedName = (event) => {
         const inputValue = event.target.value
-        setOpponentName(inputValue.trim())
+        setOpponentName(inputValue.trim())      // Update the state with opponent name
     };
+
+    const startGame = () => {
+        console.log(">> Start Game in progress...")
+    }
+
+    const joinGame = () => {
+        console.log(">> Join Game in progress...")
+    }
 
     if(parameters.genCfg.debugMode){
         console.log("> cookies_SetUp:", cookies)
@@ -61,9 +71,25 @@ const SetUp = ({ setToken,
                         textAlign: 'center',
                         marginBottom: "20px"}}>
 
-                Welcome {gameStates.playerName}! <br/> Please enter the game settings to create a new game.
+                Welcome {gameStates.playerName}! 
+                <br/> {gameStates.isPlayer1 ? (setUpProps.messages.player1) : (setUpProps.messages.player2)}
             </p>
-            <input type='string' placeholder = "Name of opponent" onChange = {handleChangedName} />   
+            <div className='game-settings' style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
+                <input style = {setUpProps.inputStyle} 
+                    type='string' 
+                    placeholder = "Name of opponent" 
+                    value={opponentName}
+                    onChange = {handleChangedName} />
+
+                {gameStates.isPlayer1 ? (
+                 <>
+                  <DropDownButton />  
+                  <Button buttonName = {"Start Game"} isDisabled = {opponentName.length > 0 ? false : true} onCklickFunction = {startGame}/>                 
+                 </>   
+                ) : 
+                <Button buttonName = {"Join Game"} isDisabled = {opponentName.length > 0 ? false : true} onCklickFunction = {joinGame}/> } 
+            </div>
+                      
         </div> 
     );
 }

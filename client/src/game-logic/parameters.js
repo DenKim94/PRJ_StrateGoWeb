@@ -81,10 +81,22 @@ export const homeSectionProps = {
         justifyContent: 'center',
         alignItems: 'center',
     },
+    inputStyle:{
+        marginBottom: '10px', 
+        height: '35px',
+        width: '250px',
+        borderRadius: '5px',
+        fontWeight: "lighter",
+        textAlign: 'center'       
+    }
 };
 
 // HomeSection-Component: SetUp
 export const setUpProps = {
+    messages:{
+        player1: "Please enter the game settings to create a new game.",
+        player2: "Please enter the name of your opponent to join the game."
+    },
     style:{
         fontFamily: 'Young Serif, serif',
         marginTop: '20px',
@@ -94,8 +106,15 @@ export const setUpProps = {
         display: 'flex',
         flexDirection: 'column', 
         gap: "10px",
+    },
+    inputStyle:{
+        border:'1px solid black', 
+        borderRadius: '5px',
+        height: '35px',
+        width: '250px',
+        fontWeight: "lighter",
+        textAlign: 'center'
     }
-
 };
 
 /**** Settings for GameSection-Component: GameField ****/
