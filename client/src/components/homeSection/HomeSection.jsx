@@ -25,7 +25,7 @@ const HomeSection = ({ homeSectionProps = parameters.homeSectionProps }) => {
         const ensureValidInputLength = () => {
             const userName = gameStates.playerName; 
             if(userName){
-                if(userName.length < homeSectionProps.minInputLength || userName.length > homeSectionProps.maxInputLength){
+                if(userName.length < parameters.genCfg.minInputLength || userName.length > parameters.genCfg.maxInputLength){
                     setInfoVisible(true)
                     setIsValid(false)
                 }
@@ -74,15 +74,15 @@ const HomeSection = ({ homeSectionProps = parameters.homeSectionProps }) => {
 
     return(
         <div style={homeSectionProps.style}>
-            
-            <input style = {{border: isInfoVisible ? '2px solid yellow' : '1px solid black', 
-                            marginBottom: '10px', 
-                            borderRadius: '5px',
-                            fontWeight: "lighter",
-                            textAlign: 'center'}} 
-
+            <input  
+                style = {{
+                    border: isInfoVisible ? '2px solid yellow' : '1px solid black',
+                    ...homeSectionProps.inputStyle,
+                    }}
+                    
                    type='string' 
                    placeholder = {homeSectionProps.inputPlaceHolder} 
+                   value={gameStates.playerName}
                    onChange = {handleChangedPlayerName}/>
 
             {isInfoVisible && (
