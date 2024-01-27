@@ -4,16 +4,16 @@ const GameStatesContext = createContext();
 
 export const GameStatesProvider = ({ children }) => {
   const [gameStates, setGameStates] = useState({
-    playerName: '',
-    isCheckedIn: false,
-    opponentName: '',
+    playerName: '',           
+    isCheckedIn: false,       
+    opponentName: '',         
     colorPlayer: '',
     ready2Play: false,
     isPaused: false,
     leaveGame: false,
     exitConfirmed: false,
     exitCanceled: false,
-    time4Turn: null,
+    timePerTurn_ms: null,  // Time limit per turn for each player in ms
   });
 
   return (
