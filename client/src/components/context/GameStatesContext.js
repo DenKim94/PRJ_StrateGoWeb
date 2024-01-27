@@ -7,12 +7,13 @@ export const GameStatesProvider = ({ children }) => {
     playerName: '',
     isCheckedIn: false,
     opponentName: '',
-    colorPlayer1: '',
+    colorPlayer: '',
     ready2Play: false,
     isPaused: false,
     leaveGame: false,
     exitConfirmed: false,
     exitCanceled: false,
+    time4Turn: null,
   });
 
   return (

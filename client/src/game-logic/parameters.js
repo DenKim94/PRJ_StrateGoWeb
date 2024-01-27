@@ -1,13 +1,17 @@
 /** Main file for setting parameters [for developer]
  * This file is mandatory to run the application! 
  * - Author: D.Kim
- * - Date: 26.01.2024  
+ * - Date: 27.01.2024  
 */
 
 /**** General/Global Configurations ****/
 export const genCfg = {
     debugMode: false,               // Boolean for showing parameter values in the console (if true) 
     maxConnectionAttempts: 3,       // Maximum number of attempts to reconnect the user in case of failed connection
+    minInputLength: 2,              // Minimal length of user input (> 1 e.g. user name)
+    maxInputLength: 20,             // Maximal length of user input 
+    timeOutAutoClose_ms: 3000,      // Time value in ms for auto close (e.g. Pop-Ups)  
+    timeOutFunction_ms: 3500,       // Time value in ms for time-out function
 };
 
 /**** Settings for GameSection-Component: GameField ****/
@@ -70,8 +74,6 @@ export const styleGameLogo = {
 /**** Settings for HomeSection-Component: HomeSection ****/
 export const homeSectionProps = {
     inputPlaceHolder: "Player Name", // Placeholder for the user input
-    minInputLength: 2,                   // Minimum length of user input (> 0)
-    maxInputLength: 20,                  // Maximum length of user input 
     style:{
         fontFamily: 'Young Serif, serif',
         fontSize: '20px',

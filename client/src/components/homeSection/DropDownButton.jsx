@@ -11,7 +11,7 @@ const DropDownButton = () => {
     const handleColorSelection = (selectedColor) => {
         setGameStates((prevStates) => ({        // Update state to provide chosen color 
           ...prevStates,
-          colorPlayer1: selectedColor,
+          colorPlayer: selectedColor,
         }));
       };
 

@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import Button from '../gameSection/Button.jsx'
 import axios from 'axios';
@@ -14,40 +16,67 @@ const SetUp = ({ setToken,
 
     const cookies = useMemo(() => new Cookies(), []);
     const { gameStates, setGameStates } = useGameStates();
-    const [opponentName, setOpponentName] = useState("");
-    // const navigate = useNavigate();
+    const [isReadyToStart, setReadyToStart] = useState(false);
+
+    const navigate = useNavigate();
     const SETUPURL = process.env.REACT_APP_SETUP_URL;
     
     useEffect(() => {
+        const setUserProps = async () => {
+            let toastId = null;
 
-        const setUserProps = () => {
-            // Get data from backend server
-            axios.post(SETUPURL, {gameStates}).then((res) => {
-    
-                const {userProps, token} = res.data; 
-                console.log(">> res.data: ", res.data )
-
-                // Setting coockies
+            try {
+                // Get data from backend server
+                const res = await axios.post(SETUPURL, { gameStates });
+                const { userProps, token } = res.data;
+          
+                console.log(">> res.data: ", res.data);
+          
+                // Setting cookies
                 cookies.set("token", token);
                 cookies.set("userID", userProps.userID);
                 cookies.set("playerName", userProps.playerName);
                 cookies.set("playerNumber", userProps.playerNumber);
+          
+                setToken(token);
 
-                setToken(token)
-            });
-            
+            } catch(error) {
+                const errorPath = "/";
+                console.error(">> Error: ", error.message);
+                // Error Handling
+                toastId = toast.error("User-ID not found, please try again!", {
+                    autoClose: parameters.genCfg.timeOutAutoClose_ms, // Optional: Timeout for closing the pop-up
+                  });
+                // Timeout for closing navigate back to the home section
+                setTimeout(() => {
+                    navigate(errorPath);
+                }, parameters.genCfg.timeOutFunction_ms);
+            }
+
             setUserCreated(true)
         }
-
+        // Get user properties to set cookies 
         if(!userCreated){
-            setUserProps()
+            setUserProps() 
         }
 
-    },[gameStates, userCreated, setUserCreated, SETUPURL, cookies, setToken])
+        // Ensure complete game settings provided by player 1 and player 2
+        if(gameStates.isPlayer1 && gameStates.opponentName.length > parameters.genCfg.minInputLength && gameStates.colorPlayer && gameStates.time4Turn){
+            setReadyToStart(true)
+        }else if(!gameStates.isPlayer1 && gameStates.opponentName.length > parameters.genCfg.minInputLength){
+            setReadyToStart(true)
+        }
 
+        // eslint-disable-next-line
+    },[gameStates, isReadyToStart, setReadyToStart, userCreated, setUserCreated, SETUPURL, cookies, setToken])
+
+    // Update the state with opponent name
     const handleChangedName = (event) => {
-        const inputValue = event.target.value
-        setOpponentName(inputValue.trim())      // Update the state with opponent name
+        const inputValue = event.target.value;
+        setGameStates((prevStates) => ({
+            ...prevStates,
+            opponentName:inputValue.trim(),
+        }))           
     };
 
     const startGame = () => {
@@ -78,16 +107,17 @@ const SetUp = ({ setToken,
                 <input style = {setUpProps.inputStyle} 
                     type='string' 
                     placeholder = "Name of opponent" 
-                    value={opponentName}
+                    value={gameStates.opponentName}
                     onChange = {handleChangedName} />
 
                 {gameStates.isPlayer1 ? (
                  <>
                   <DropDownButton />  
-                  <Button buttonName = {"Start Game"} isDisabled = {opponentName.length > 0 ? false : true} onCklickFunction = {startGame}/>                 
+                  <Button buttonName = {"Start Game"} isDisabled = {isReadyToStart ? false : true} onCklickFunction = {startGame}/>                 
                  </>   
                 ) : 
-                <Button buttonName = {"Join Game"} isDisabled = {opponentName.length > 0 ? false : true} onCklickFunction = {joinGame}/> } 
+                <Button buttonName = {"Join Game"} isDisabled = {isReadyToStart ? false : true} onCklickFunction = {joinGame}/> } 
+                <ToastContainer />
             </div>
                       
         </div> 
