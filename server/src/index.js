@@ -1,12 +1,13 @@
 import express from "express"
 import cors from "cors"
 import dotenv from 'dotenv'
-import stream from 'getstream'
 import { v4 as uuidv4 } from "uuid"
+import { StreamChat } from 'stream-chat';
+import e from "express";
 
 /*
 * Backend logic for running an express-server with the stream-chat API
-* Date of last changes: 20.01.2024
+* Date of last changes: 04.02.2024
 * Author: D.Kim
 */
 
@@ -22,7 +23,12 @@ app.use(cors());
 app.use(express.json());
 
 // Create an instance to connect the account to the stream platform 
-const serverClient = stream.connect(apiKey, apiSecret);
+const serverClient = StreamChat.getInstance(apiKey, apiSecret);
+
+// Clean-Up: Remove of old/offline users 
+await deleteOldUsers()
+await getUsers(); 
+
 
 // Get data from the frontend and provide specific User-ID and token
 app.post("/setup", async (req, res) => {
@@ -35,7 +41,7 @@ app.post("/setup", async (req, res) => {
             throw("Incomplete request body!")
         }
         const userID = uuidv4();                            // Generate a unique user ID
-        const token = serverClient.createUserToken(userID); // Create a specific token for authentication
+        const token = serverClient.createToken(userID); // Create a specific token for authentication
         const userProps = {userID: userID, playerName: playerName, playerNumber: playerNumber}; // Parameters should be adapted to requirements
         res.json({userProps, token})                        // Provide response data in json format
     }
@@ -50,3 +56,28 @@ app.listen(portNumber, () => {
     console.log(">> Server is running... ")
 })
 
+
+// Function to clean up the user list
+async function deleteOldUsers(){
+    console.log(">> Run user clean-up... ")
+    const response = await serverClient.queryUsers({});
+    let deletedUser = null;
+    try{    
+        response.users.forEach(async (props) => {        
+            if(props.id && !props.online && props.role === 'user'){
+                deletedUser = await serverClient.deleteUser(props.id)
+            }
+        })
+    }
+    catch(error){
+        console.log("Error: ", error)
+    }
+}
+
+// Function to get current users
+async function getUsers(){
+    const response = await serverClient.queryUsers({});
+    console.log(">> Current users: ", response.users)
+    
+    return response.users
+}

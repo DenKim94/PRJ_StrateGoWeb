@@ -140,6 +140,8 @@ const GameSection = () => {
             <ScoutStatesProvider> 
                 <GameField /> 
             </ScoutStatesProvider> 
+
+             {/* TO-DO: CHAT-Component */}
         </div>         
     )
 };

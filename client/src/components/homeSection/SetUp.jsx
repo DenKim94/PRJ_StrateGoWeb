@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
+import { Route, Routes } from 'react-router-dom';
+import { useChatContext, Channel } from 'stream-chat-react';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import Button from '../gameSection/Button.jsx'
@@ -8,6 +10,7 @@ import axios from 'axios';
 import Cookies from 'universal-cookie'
 import CustomTimerButton from './CustomTimerButton.jsx'
 import DropDownButton from './DropDownButton.jsx'
+import WaitingRoom from './WaitingRoom';
 import * as parameters from '../../game-logic/parameters.js';
 import { useGameStates } from '../context/GameStatesContext.js';
 
@@ -16,16 +19,18 @@ const SetUp = ({ setToken,
                  setUserCreated, 
                  setUpProps = parameters.setUpProps}) => {
 
+    const { client } = useChatContext();
     const cookies = useMemo(() => new Cookies(), []);
     const { gameStates, setGameStates } = useGameStates();
     const [isReadyToStart, setReadyToStart] = useState(false);
+    const [channel, setChannel] = useState(null);
 
     const navigate = useNavigate();
     const SETUPURL = process.env.REACT_APP_SETUP_URL;
     
     useEffect(() => {
         const setUserProps = async () => {
-            let toastId = null;
+            // let toastId = null;
 
             try {
                 // Get data from backend
@@ -45,8 +50,9 @@ const SetUp = ({ setToken,
             } catch(error) {
                 const errorPath = "/";
                 console.error(">> Error: ", error.message);
+
                 // Error Handling
-                toastId = toast.error("User-ID not found, please try again!", {
+                toast.error("User-ID not found, please try again!", {
                     autoClose: parameters.genCfg.timeOutAutoClose_ms, // Optional: Timeout for closing the pop-up
                   });
                 // Timeout for closing navigate back to the home section
@@ -72,6 +78,57 @@ const SetUp = ({ setToken,
         // eslint-disable-next-line
     },[gameStates, isReadyToStart, setReadyToStart, userCreated, setUserCreated, SETUPURL, cookies, setToken])
 
+    // Function to create a channel
+    const createChannel = async () => {
+
+        const response = await client.queryUsers({name: { $eq: gameStates.opponentName }}); 
+        console.log(">> response: ", response)
+        
+        // Checking if a user is found
+        const foundUser = response.users.filter( props => 
+            props.online === true &&
+            props.playerNumber !== gameStates.playerNumber
+        )
+
+        console.log(">> foundUser : ", foundUser )
+
+        if(foundUser.length === 0){
+            toast.info("Opponent not found! Please try again!", {
+                autoClose: parameters.genCfg.timeOutAutoClose_ms, // Optional: Timeout for closing the pop-up
+              });            
+            return null
+        }
+
+        if(client.userID !== foundUser[0].id){
+            const newChannel = client.channel("messaging", {
+                members: [client.userID, foundUser[0].id],
+            });
+            console.log(">> newChannel: ", newChannel)  
+    
+            await newChannel.watch() // Listening to the channel
+            setChannel(newChannel)
+        }
+        else{
+            alert(">> Names of user and opponent shall not match!")
+            return null
+        }
+
+    };
+
+    useEffect(() => {
+        console.log("channel: ", channel)
+        const provideUserToWaitingRoom = () => {
+            if(channel){
+                console.log(">> Channel established.")
+                console.log("####################")
+                const pathToNextPage = "/waitingRoom";
+                navigate(pathToNextPage)
+            }
+        }
+        provideUserToWaitingRoom()
+        // eslint-disable-next-line 
+    }, [channel])
+
     // Update the state with opponent name
     const handleChangedName = (event) => {
         const inputValue = event.target.value;
@@ -83,10 +140,12 @@ const SetUp = ({ setToken,
 
     const startGame = () => {
         console.log(">> Start Game in progress...")
+        createChannel()
     }
 
     const joinGame = () => {
         console.log(">> Join Game in progress...")
+        createChannel()
     }
 
     const handleCancel = () => {
@@ -136,7 +195,13 @@ const SetUp = ({ setToken,
                     <Button buttonName = {"Cancel"} isDisabled = {false} 
                             customStyleProps = {{width: '120px', marginTop:'20px'}} onCklickFunction = {handleCancel}/> 
                 </div> } 
-                 
+
+                <Channel channel={channel}>
+                    <Routes>
+                        <Route path = "/waitingRoom" element={ <WaitingRoom channel = {channel}/> }/>
+                    </Routes> 
+                </Channel>                      
+                              
                 <ToastContainer position='top-right'/>
             </div>
                       

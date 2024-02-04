@@ -7,10 +7,10 @@ import { StreamChat } from 'stream-chat'
 import Cookies from 'universal-cookie'
 import './App.css';
 import * as parameters from './game-logic/parameters';
-import * as helperFcn from './components/functions/helperFunctions.js'
 import GameLogo from './components/gameSection/GameLogo';  
 import HomeSection from './components/homeSection/HomeSection';
-import GameSection from './components/gameSection/GameSection'; 
+import WaitingRoom from './components/homeSection/WaitingRoom';
+import GameSection from './components/gameSection/GameSection';
 import ExitSection from './components/exitSection/ExitSection';  
 import PageNotFound from './components/PageNotFound';
 import SetUp from './components/homeSection/SetUp';
@@ -21,7 +21,7 @@ import SetUp from './components/homeSection/SetUp';
  * 
  * - Author: D.Kim 
  * - Version: 1.0.0 
- * - Date of last changes: 20.01.2024
+ * - Date of last changes: 04.02.2024
 */
 /* ******************************************************************* */ 
 const App = () => {
@@ -33,7 +33,7 @@ const App = () => {
     const [userCreated, setUserCreated] = useState(false);
     const [tokenRef, setTokenRef] = useState(null);
 
- 
+
     useEffect(() => {
         const maxConnectionAttempts = parameters.genCfg.maxConnectionAttempts;
         let connectionAttemptsCounter = 0;
@@ -42,19 +42,21 @@ const App = () => {
             // Connect the user to the Chat-API/Platform with a valid token
             const connectUser = async () => {
                 try {
+
                     const user = await client.connectUser({
-                    id: cookies.get("userID"),
-                    name: cookies.get("playerName"),
-                    playerNumber: cookies.get("playerNumber"),
+                        id: cookies.get("userID"),
+                        name: cookies.get("playerName"),
+                        playerNumber: cookies.get("playerNumber"),
                     }, tokenRef);
             
                     if (!userConnected) {
-                    setUserConnected(true);
-                    console.log(">> Connected user: ", user);
+                        setUserConnected(true);
+                        console.log(">> Connected user: ", user);
                     }
                     connectionAttemptsCounter = 0;
 
                 } catch (error) {
+
                     console.error(">> Connection failed:", error);
                     // Try to reconnect the user if maximum attempts currently not exceeded
                     if (connectionAttemptsCounter <= maxConnectionAttempts) {
@@ -64,21 +66,12 @@ const App = () => {
                         console.error(">> Connect user: Maximum number of attempts exceeded.");
                     }
                 }
-            };
-        
-            if (!userConnected) {
+            };       
+            if(!userConnected){
                 connectUser();
             }
         }
 
-        // Clean-up function
-        return () => {
-            if(!tokenRef && !userCreated){
-                console.log('>> Clean-Up...');
-                helperFcn.disconnectUser(client, cookies)
-            }
-
-        };
         }, [client, userConnected, cookies, userCreated, tokenRef]);
 
         if(parameters.genCfg.debugMode){
@@ -94,15 +87,18 @@ const App = () => {
                 <div className = "App" style={parameters.styleApp}> 
                     <GameLogo/> 
                     <ButtonStatesProvider>
-                        <GameStatesProvider>                
-                            <Routes>
-                                <Route path = "/" element={ <HomeSection /> }/>
-                                <Route path = "/setUp" element={ <SetUp setToken = {setTokenRef} userCreated = {userCreated} setUserCreated = {setUserCreated} /> }/>
-                                <Route path = "/gameSection" element={ <GameSection /> }/>
-                                <Route path = "/exitSection" element={ <ExitSection /> }/> 
+                        <GameStatesProvider>  
+                            <Chat client={client}>              
+                                <Routes>
+                                    <Route path = "/" element={ <HomeSection /> }/>
+                                    <Route path = "/setUp/*" element={ <SetUp setToken = {setTokenRef} userCreated = {userCreated} setUserCreated = {setUserCreated} /> }/>
+                                    <Route path = "/waitingRoom" element={ <WaitingRoom /> }/>
+                                    <Route path = "/gameSection" element={ <GameSection /> }/>
+                                    <Route path = "/exitSection" element={ <ExitSection /> }/> 
 
-                                <Route path = "*" element={ <PageNotFound />} />                    
-                            </Routes>  
+                                    <Route path = "*" element={ <PageNotFound />} />                    
+                                </Routes> 
+                            </Chat>     
                         </GameStatesProvider>
                     </ButtonStatesProvider>                                             
                 </div> 
