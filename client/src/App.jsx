@@ -10,7 +10,7 @@ import './App.css';
 import * as parameters from './game-logic/parameters';
 import GameLogo from './components/gameSection/GameLogo';  
 import HomeSection from './components/homeSection/HomeSection';
-// import WaitingRoom from './components/homeSection/WaitingRoom';
+import WaitingRoom from './components/homeSection/WaitingRoom';
 import GameSection from './components/gameSection/GameSection';
 import ExitSection from './components/exitSection/ExitSection';  
 import PageNotFound from './components/PageNotFound';
@@ -94,10 +94,11 @@ const App = () => {
                                     <Routes>
                                         <Route path = "/" element={ <HomeSection /> }/>
                                         <Route path = "/setUp/*" element={ <SetUp setToken = {setTokenRef} 
-                                                                                userCreated = {userCreated} 
-                                                                                setUserCreated = {setUserCreated} 
-                                                                                setUserConnected = {setUserConnected}/>}/>
-                                        {/* <Route path = "/waitingRoom" element={ <WaitingRoom /> }/> */}
+                                                                                  userCreated = {userCreated} 
+                                                                                  setUserCreated = {setUserCreated} 
+                                                                                  setUserConnected = {setUserConnected}/>}/>
+                                                                                  
+                                        <Route path = "/waitingRoom" element={ <WaitingRoom /> }/>
                                         <Route path = "/gameSection" element={ <GameSection /> }/>
                                         <Route path = "/exitSection" element={ <ExitSection /> }/> 
 
