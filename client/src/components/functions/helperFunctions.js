@@ -278,7 +278,7 @@ export function checkValidScoutMove(startPos, endPos, draggedOverFigurePosition)
             }
         }
     }
-    
+
     return isValidMove
 }   
 
@@ -321,12 +321,34 @@ export function getFieldPosition(targetFieldProps, fieldStates){
  * 
 */
 export async function disconnectUser(clientObj) {
-    
     try {
         await clientObj.disconnectUser();
+        console.log(">> User disconnected.") 
 
     } catch (error) {
         console.error(error);
     }
+
     return [clientObj]
+}
+
+/** 
+ * Function to delete all saved cookies
+ * 
+*/
+export function deleteCookies(cookiesObj){
+    try {
+        const allCookies = cookiesObj.getAll();
+        const cookieNames = Object.keys(allCookies);
+
+        cookieNames.forEach(cookieName => {
+            cookiesObj.remove(cookieName, { path: '/' });
+          });
+          console.log(">> Saved cookies removed.")  
+
+    } catch (error) {
+        console.error(error);
+    }
+
+    return [cookiesObj]
 }

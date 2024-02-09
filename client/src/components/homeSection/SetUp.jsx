@@ -12,25 +12,27 @@ import CustomTimerButton from './CustomTimerButton.jsx'
 import DropDownButton from './DropDownButton.jsx'
 import WaitingRoom from './WaitingRoom';
 import * as parameters from '../../game-logic/parameters.js';
+import * as helperFcn from '../functions/helperFunctions.js'
 import { useGameStates } from '../context/GameStatesContext.js';
+import { useConnectionStates } from '../context/ConnectionStatesContext.js';
 
 const SetUp = ({ setToken,
                  userCreated, 
                  setUserCreated, 
+                 setUserConnected,
                  setUpProps = parameters.setUpProps}) => {
 
     const { client } = useChatContext();
     const cookies = useMemo(() => new Cookies(), []);
     const { gameStates, setGameStates } = useGameStates();
     const [isReadyToStart, setReadyToStart] = useState(false);
-    const [channel, setChannel] = useState(null);
+    const { conncectionStates, setConnectionStates } = useConnectionStates();
 
     const navigate = useNavigate();
     const SETUPURL = process.env.REACT_APP_SETUP_URL;
     
     useEffect(() => {
         const setUserProps = async () => {
-            // let toastId = null;
 
             try {
                 // Get data from backend
@@ -76,7 +78,7 @@ const SetUp = ({ setToken,
         }
 
         // eslint-disable-next-line
-    },[gameStates, isReadyToStart, setReadyToStart, userCreated, setUserCreated, SETUPURL, cookies, setToken])
+    },[gameStates, setReadyToStart, userCreated, setUserCreated, SETUPURL, cookies, setToken])
 
     // Function to create a channel
     const createChannel = async () => {
@@ -106,7 +108,10 @@ const SetUp = ({ setToken,
             console.log(">> newChannel: ", newChannel)  
     
             await newChannel.watch() // Listening to the channel
-            setChannel(newChannel)
+            setConnectionStates((prevStates) => ({
+                ...prevStates,
+                channelObj: newChannel,
+            })) 
         }
         else{
             alert(">> Names of user and opponent shall not match!")
@@ -116,18 +121,19 @@ const SetUp = ({ setToken,
     };
 
     useEffect(() => {
-        console.log("channel: ", channel)
+        console.log("channel: ", conncectionStates.channelObj)
         const provideUserToWaitingRoom = () => {
-            if(channel){
+            if(conncectionStates.channelObj){
                 console.log(">> Channel established.")
                 console.log("####################")
-                const pathToNextPage = "/waitingRoom";
+
+                const pathToNextPage = "waitingRoom";
                 navigate(pathToNextPage)
             }
         }
         provideUserToWaitingRoom()
         // eslint-disable-next-line 
-    }, [channel])
+    }, [conncectionStates.channelObj])
 
     // Update the state with opponent name
     const handleChangedName = (event) => {
@@ -138,19 +144,26 @@ const SetUp = ({ setToken,
         }))           
     };
 
+    // Handle action for player 1
     const startGame = () => {
-        console.log(">> Start Game in progress...")
+        console.log(">> Starting game")
         createChannel()
     }
 
+    // Handle action for player 2
     const joinGame = () => {
-        console.log(">> Join Game in progress...")
+        console.log(">> Joining game")
         createChannel()
     }
 
-    const handleCancel = () => {
+    // Handle cancel
+    const handleCancel = async () => {
         console.log(">> User canceled.")
         const homePath = "/";
+        await helperFcn.disconnectUser(client); 
+        setUserConnected(false)
+        helperFcn.deleteCookies(cookies)
+        setUserCreated(false)
         navigate(homePath);
     }
      
@@ -162,48 +175,73 @@ const SetUp = ({ setToken,
 
     return (
         <div style={setUpProps.style}>
-            <p style={{ fontSize: '15px', 
-                        color: 'rgb(248, 202, 45)', 
-                        textAlign: 'center',
-                        marginBottom: "20px"}}>
+            
+                {conncectionStates.channelObj ? (   
+                    // Rendered section if channel is established
+                    <Channel channel={conncectionStates.channelObj}>
+                        <Routes>
+                            <Route path="waitingRoom" element={<WaitingRoom channel={conncectionStates.channelObj} />} />
+                        </Routes>
+                    </Channel>
+                ) : (
+                    // Rendered section if channel not established
+                    <>
+                        <p style={{ fontSize: '15px', 
+                            color: 'rgb(248, 202, 45)', 
+                            textAlign: 'center',
+                            marginBottom: "20px"}}>
 
-                Welcome {gameStates.playerName}! 
-                <br/> {gameStates.isPlayer1 ? (setUpProps.messages.player1) : (setUpProps.messages.player2)}
-            </p>
-            <div className='game-settings' style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
-                <input style = {setUpProps.inputStyle} 
-                    type='string' 
-                    placeholder = "Name of opponent" 
-                    value={gameStates.opponentName}
-                    onChange = {handleChangedName} />
-
-                {gameStates.isPlayer1 ? (
-                    <>   
-                        <DropDownButton /> 
-                        <CustomTimerButton /> 
-                        <div style={{display: 'flex', flexDirection: 'row', gap: '10px'}}> 
-                            <Button buttonName = {"Start Game"} isDisabled = {isReadyToStart ? false : true} 
-                                    customStyleProps = {{width: '120px', marginTop:'20px'}} onCklickFunction = {startGame}/> 
-                            <Button buttonName = {"Cancel"} isDisabled = {false}
-                                    customStyleProps = {{width: '120px', marginTop:'20px'}} onCklickFunction = {handleCancel}/>  
+                            Welcome {gameStates.playerName}! 
+                            <br/> {gameStates.isPlayer1 ? (setUpProps.messages.player1) : (setUpProps.messages.player2)}
+                        </p>                    
+                        <div className='game-settings' style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            <input
+                                style={setUpProps.inputStyle}
+                                type='string'
+                                placeholder="Name of opponent"
+                                value={gameStates.opponentName}
+                                onChange={handleChangedName}
+                            />
+                            {gameStates.isPlayer1 ? (
+                                <>
+                                    <DropDownButton />
+                                    <CustomTimerButton />
+                                    <div style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
+                                        <Button
+                                            buttonName={'Start Game'}
+                                            isDisabled={isReadyToStart ? false : true}
+                                            customStyleProps={{ width: '120px', marginTop: '20px' }}
+                                            onCklickFunction={startGame}
+                                        />
+                                        <Button
+                                            buttonName={'Cancel'}
+                                            isDisabled={false}
+                                            customStyleProps={{ width: '120px', marginTop: '20px' }}
+                                            onCklickFunction={handleCancel}
+                                        />
+                                    </div>
+                                </>
+                            ) : (
+                                <div style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
+                                    <Button
+                                        buttonName={'Join Game'}
+                                        isDisabled={isReadyToStart ? false : true}
+                                        customStyleProps={{ width: '120px', marginTop: '20px' }}
+                                        onCklickFunction={joinGame}
+                                    />
+                                    <Button
+                                        buttonName={'Cancel'}
+                                        isDisabled={false}
+                                        customStyleProps={{ width: '120px', marginTop: '20px' }}
+                                        onCklickFunction={handleCancel}
+                                    />
+                                </div>
+                            )}
+                            <ToastContainer position='top-right' />
                         </div>
-                    </>     
-                ) : 
-                <div style={{display: 'flex', flexDirection: 'row', gap: '10px'}}>
-                    <Button buttonName = {"Join Game"} isDisabled = {isReadyToStart ? false : true} 
-                            customStyleProps = {{width: '120px', marginTop:'20px'}} onCklickFunction = {joinGame}/> 
-                    <Button buttonName = {"Cancel"} isDisabled = {false} 
-                            customStyleProps = {{width: '120px', marginTop:'20px'}} onCklickFunction = {handleCancel}/> 
-                </div> } 
+                    </>
+                )}
 
-                <Channel channel={channel}>
-                    <Routes>
-                        <Route path = "/waitingRoom" element={ <WaitingRoom channel = {channel}/> }/>
-                    </Routes> 
-                </Channel>                      
-                              
-                <ToastContainer position='top-right'/>
-            </div>
                       
         </div> 
     );

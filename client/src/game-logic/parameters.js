@@ -1,7 +1,7 @@
-/** Main file for setting parameters [for developer]
+/** Main file for setting parameters [developer file]
  * This file is mandatory to run the application! 
- * - Author: D.Kim
- * - Date: 27.01.2024  
+ * - Developer: D.Kim
+ * - Dateof last changes: 09.02.2024  
 */
 
 /**** General/Global Configurations ****/

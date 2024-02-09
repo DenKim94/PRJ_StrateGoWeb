@@ -3,13 +3,14 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Chat } from 'stream-chat-react'
 import { ButtonStatesProvider } from './components/context/ButtonStatesContext';
 import { GameStatesProvider } from './components/context/GameStatesContext';
+import { ConnectionStatesProvider } from './components/context/ConnectionStatesContext';
 import { StreamChat } from 'stream-chat' 
 import Cookies from 'universal-cookie'
 import './App.css';
 import * as parameters from './game-logic/parameters';
 import GameLogo from './components/gameSection/GameLogo';  
 import HomeSection from './components/homeSection/HomeSection';
-import WaitingRoom from './components/homeSection/WaitingRoom';
+// import WaitingRoom from './components/homeSection/WaitingRoom';
 import GameSection from './components/gameSection/GameSection';
 import ExitSection from './components/exitSection/ExitSection';  
 import PageNotFound from './components/PageNotFound';
@@ -88,17 +89,22 @@ const App = () => {
                     <GameLogo/> 
                     <ButtonStatesProvider>
                         <GameStatesProvider>  
-                            <Chat client={client}>              
-                                <Routes>
-                                    <Route path = "/" element={ <HomeSection /> }/>
-                                    <Route path = "/setUp/*" element={ <SetUp setToken = {setTokenRef} userCreated = {userCreated} setUserCreated = {setUserCreated} /> }/>
-                                    <Route path = "/waitingRoom" element={ <WaitingRoom /> }/>
-                                    <Route path = "/gameSection" element={ <GameSection /> }/>
-                                    <Route path = "/exitSection" element={ <ExitSection /> }/> 
+                            <ConnectionStatesProvider>
+                                <Chat client={client}>              
+                                    <Routes>
+                                        <Route path = "/" element={ <HomeSection /> }/>
+                                        <Route path = "/setUp/*" element={ <SetUp setToken = {setTokenRef} 
+                                                                                userCreated = {userCreated} 
+                                                                                setUserCreated = {setUserCreated} 
+                                                                                setUserConnected = {setUserConnected}/>}/>
+                                        {/* <Route path = "/waitingRoom" element={ <WaitingRoom /> }/> */}
+                                        <Route path = "/gameSection" element={ <GameSection /> }/>
+                                        <Route path = "/exitSection" element={ <ExitSection /> }/> 
 
-                                    <Route path = "*" element={ <PageNotFound />} />                    
-                                </Routes> 
-                            </Chat>     
+                                        <Route path = "*" element={ <PageNotFound />} />                    
+                                    </Routes> 
+                                </Chat> 
+                            </ConnectionStatesProvider>    
                         </GameStatesProvider>
                     </ButtonStatesProvider>                                             
                 </div> 
