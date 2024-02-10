@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import { Route, Routes } from 'react-router-dom';
-import { useChatContext, Channel } from 'stream-chat-react';
+import { useChatContext } from 'stream-chat-react';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import Button from '../gameSection/Button.jsx'
@@ -14,7 +13,7 @@ import WaitingRoom from './WaitingRoom';
 import * as parameters from '../../game-logic/parameters.js';
 import * as helperFcn from '../functions/helperFunctions.js'
 import { useGameStates } from '../context/GameStatesContext.js';
-import { useConnectionStates } from '../context/ConnectionStatesContext.js';
+import { useChannelStates } from '../context/ChannelStatesContext.js';
 
 const SetUp = ({ setToken,
                  userCreated, 
@@ -26,7 +25,7 @@ const SetUp = ({ setToken,
     const cookies = useMemo(() => new Cookies(), []);
     const { gameStates, setGameStates } = useGameStates();
     const [isReadyToStart, setReadyToStart] = useState(false);
-    const { conncectionStates, setConnectionStates } = useConnectionStates();
+    const { channelStates, setChannelStates } = useChannelStates();
 
     const navigate = useNavigate();
     const SETUPURL = process.env.REACT_APP_SETUP_URL;
@@ -108,7 +107,8 @@ const SetUp = ({ setToken,
             console.log(">> newChannel: ", newChannel)  
     
             await newChannel.watch() // Listening to the channel
-            setConnectionStates((prevStates) => ({
+
+            setChannelStates((prevStates) => ({
                 ...prevStates,
                 channelObj: newChannel,
             })) 
@@ -119,21 +119,6 @@ const SetUp = ({ setToken,
         }
 
     };
-
-    useEffect(() => {
-        console.log("channel: ", conncectionStates.channelObj)
-        const provideUserToWaitingRoom = () => {
-            if(conncectionStates.channelObj){
-                console.log(">> Channel established.")
-                console.log("####################")
-
-                const pathToNextPage = "waitingRoom";
-                navigate(pathToNextPage)
-            }
-        }
-        provideUserToWaitingRoom()
-        // eslint-disable-next-line 
-    }, [conncectionStates.channelObj])
 
     // Update the state with opponent name
     const handleChangedName = (event) => {
@@ -176,13 +161,10 @@ const SetUp = ({ setToken,
     return (
         <div style={setUpProps.style}>
             
-                {conncectionStates.channelObj ? (   
-                    // Rendered section if channel is established
-                    <Channel channel={conncectionStates.channelObj}>
-                        <Routes>
-                            <Route path="waitingRoom" element={<WaitingRoom channel={conncectionStates.channelObj} />} />
-                        </Routes>
-                    </Channel>
+                {channelStates.channelObj ? (   
+                    // Rendered section if channel is established 
+                    <WaitingRoom />
+
                 ) : (
                     // Rendered section if channel not established
                     <>
@@ -237,6 +219,7 @@ const SetUp = ({ setToken,
                                     />
                                 </div>
                             )}
+
                             <ToastContainer position='top-right' />
                         </div>
                     </>

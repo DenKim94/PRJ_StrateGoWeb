@@ -314,9 +314,9 @@ export const pageNotFoundProps = {
 
 /**** Presets for GameSection-Component: GameFigure ****/
 /* Default paths to images */
-const path_redFig = "assets/images/redFigures/" ;
-const path_blueFig = "assets/images/blueFigures/" ;
-const path_deadFig = "assets/images/deadFigures/" ;
+const path_redFig = "../assets/images/redFigures/" ;
+const path_blueFig = "../assets/images/blueFigures/" ;
+const path_deadFig = "../assets/images/deadFigures/" ;
 
 /* Array of figure names: Entries must be equal to the stored image names */
 const figNames = ["Marshal.png",    // index: 0

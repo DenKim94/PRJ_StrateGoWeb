@@ -9,7 +9,6 @@ import './Buttons.css'
 
 /** 
  * - This Component manages the game interactions 
- * - This Component will be rendered after the user is checked in successfully 
  * 
 */
 

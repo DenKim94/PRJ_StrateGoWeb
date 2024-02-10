@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Chat } from 'stream-chat-react'
 import { ButtonStatesProvider } from './components/context/ButtonStatesContext';
 import { GameStatesProvider } from './components/context/GameStatesContext';
-import { ConnectionStatesProvider } from './components/context/ConnectionStatesContext';
+import { ChannelStatesProvider } from './components/context/ChannelStatesContext';
 import { StreamChat } from 'stream-chat' 
 import Cookies from 'universal-cookie'
 import './App.css';
@@ -89,7 +89,7 @@ const App = () => {
                     <GameLogo/> 
                     <ButtonStatesProvider>
                         <GameStatesProvider>  
-                            <ConnectionStatesProvider>
+                            <ChannelStatesProvider>
                                 <Chat client={client}>              
                                     <Routes>
                                         <Route path = "/" element={ <HomeSection /> }/>
@@ -105,7 +105,7 @@ const App = () => {
                                         <Route path = "*" element={ <PageNotFound />} />                    
                                     </Routes> 
                                 </Chat> 
-                            </ConnectionStatesProvider>    
+                            </ChannelStatesProvider>    
                         </GameStatesProvider>
                     </ButtonStatesProvider>                                             
                 </div> 

@@ -1,25 +1,45 @@
-import React, { useState } from 'react';
-import GameSection from '../gameSection/GameSection'; 
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useChannelStates } from '../context/ChannelStatesContext.js';
 
-const WaitingRoom = ({channel}) => {
+const WaitingRoom = () => {
+
+    const navigate = useNavigate();
+    const { channelStates } = useChannelStates();
 
     // State to ensure that both players joined the game
     const [connectedPlayers, setConnectedPlayers] = useState(
-        channel.state.watcher_count === 2
+        channelStates.channelObj.state.watcher_count === 2
     );
     
     // Tracking changes on the channel    
-    channel.on("user.watching.start", (event) => {
+    channelStates.channelObj.on("user.watching.start", (event) => {
         setConnectedPlayers(event.watcher_count === 2)
     })
 
-    if(!connectedPlayers){
-        return <div> Waiting for the opponent... </div>
-    }
+    useEffect(() => {
 
+        const provideUserToGame = () => {
+            if(connectedPlayers){
+                // Navigate user to the game field
+                const pathToNextPage = "/gameSection";
+                navigate(pathToNextPage)
+            }
+        }
+
+        provideUserToGame()
+        // eslint-disable-next-line 
+    }, [connectedPlayers])
+ 
     return ( 
         <div>
-            <GameSection />
+            {!connectedPlayers ? ( 
+                // TO-DO: Add a Bootstrap-Component for waiting | 10.02.2024
+
+                <div> Waiting for the opponent... </div>
+            ):(
+                null)
+            }
         </div>
      );
 }
