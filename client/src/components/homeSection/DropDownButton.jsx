@@ -10,22 +10,42 @@ const DropDownButton = () => {
     
     // Update state to provide chosen color 
     const handleColorSelection = (selectedColor) => {
+
+        // Color of player 2 depends on the chosen color by player 1
+        let colorOfPlayer2 
+
+        switch (selectedColor){
+            case 'red':
+                colorOfPlayer2 = 'blue';
+                break;
+
+            case 'blue':
+                colorOfPlayer2 = 'red';
+                break;  
+
+            default:
+                colorOfPlayer2 = '';                  
+        }
+
+        // Update gamestates
         setGameStates((prevStates) => ({        
           ...prevStates,
-          colorPlayer: selectedColor,
+          colorPlayer1: selectedColor,
+          colorPlayer2: colorOfPlayer2,
         }));
+
       };
 
     return ( 
         <DropdownButton
-        as={ButtonGroup}
-        key={'start'}
-        id={'dropdown-button-drop-start'}
-        drop={'start'}
-        variant="secondary"
-        title={'Chose your color'}
-        onSelect={handleColorSelection}
-        >
+            as={ButtonGroup}
+            key={'start'}
+            id={'dropdown-button-drop-start'}
+            drop={'start'}
+            variant="secondary"
+            title={'Chose your color'}
+            onSelect={handleColorSelection}>
+
             <Dropdown.Item eventKey="red">
                 <div>
                     <p style={{ color: 'red' }}> Red </p>

@@ -141,7 +141,7 @@ export function getFiguresOfPlayer(figList, colorPlayer){
  * @function
  * @param {Object} gameStates - Object containing game-related states.
  * @property {boolean} gameStates.isPlayer1 - Indicates whether the current player is Player 1.
- * @property {string} gameStates.colorPlayer - Color chosen by Player
+ * @property {string} gameStates.colorPlayer1 - Color chosen by Player1
  * @returns {string|null} colorPlayer: Color of the current player or null if not determined.
  */
 export function getColorOfPlayer(gameStates){
@@ -149,11 +149,11 @@ export function getColorOfPlayer(gameStates){
     let colorPlayer  
     // Chosen color of player 1
     if (gameStates.isPlayer1){ 
-        colorPlayer = gameStates.colorPlayer;
+        colorPlayer = gameStates.colorPlayer1;
     }
     else {
         // Color of player 2 depends on the chosen color by player 1
-        switch (gameStates.colorPlayer){
+        switch (gameStates.colorPlayer1){
             case 'red':
                 colorPlayer = 'blue';
                 break;

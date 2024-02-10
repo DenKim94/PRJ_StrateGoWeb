@@ -8,6 +8,7 @@ import DefeatedFigureStorage from './DefeatedFigureStorage';
 import { useButtonStates } from '../context/ButtonStatesContext.js';
 import { useGameStates } from '../context/GameStatesContext.js';
 import { useScoutStates } from '../context/ScoutStatesContext.js';
+import { useChannelStates } from '../context/ChannelStatesContext.js';
 import { figProperties } from '../../game-logic/parameters.js';
 import * as helperFcn from '../functions/helperFunctions.js'
 import * as gameLogic from '../../game-logic/gameLogic.js'
@@ -27,6 +28,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
   {
     const { buttonStates, setButtonStates } = useButtonStates();
     const { scoutStates, setScoutStates } = useScoutStates();
+    const { channelStates } = useChannelStates();
     const { gameStates } = useGameStates();
 
     /* ********************************************************************* */
@@ -63,9 +65,17 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     // Merging the axis arrays into a new array of coordinates 
     let fieldCoordinates = helperFcn.getCoordinatesArray(xAxisLetters,yAxisNumbers, gameStates.isPlayer1);
     
-    // Get color of the player
-    const playerColor = helperFcn.getColorOfPlayer(gameStates);
+    // Get color of current player
+    let playerColor 
 
+    if(gameStates.isPlayer1)
+        playerColor = gameStates.colorPlayer1;
+
+    else{
+        playerColor = gameStates.colorPlayer2;
+
+    }
+    
     /* ********************************************************************* */
     /* Set properties of a single field and store them in an array */
     
@@ -101,7 +111,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     /* Checking values of parameters in 'debugMode' */
     if(parameters.genCfg.debugMode){
       console.log("################### Component: GameField #####################");
-      console.log(">> Settings 'gameFieldStruct': ", gameFieldSettings);
+      console.log(">> Settings 'gameFieldSettings': ", gameFieldSettings);
       console.log(">> sizeSingleField [px]: ", sizeSingleField);
       console.log(">> Array 'fieldCoordinates': ", fieldCoordinates);
       console.log(">> playerColor: ", playerColor);

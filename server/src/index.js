@@ -3,11 +3,10 @@ import cors from "cors"
 import dotenv from 'dotenv'
 import { v4 as uuidv4 } from "uuid"
 import { StreamChat } from 'stream-chat';
-import e from "express";
 
 /*
 * Backend logic for running an express-server with the stream-chat API
-* Date of last changes: 04.02.2024
+* Date of last changes: 10.02.2024
 * Author: D.Kim
 */
 
@@ -41,9 +40,12 @@ app.post("/setup", async (req, res) => {
             throw("Incomplete request body!")
         }
         const userID = uuidv4();                            // Generate a unique user ID
-        const token = serverClient.createToken(userID); // Create a specific token for authentication
-        const userProps = {userID: userID, playerName: playerName, playerNumber: playerNumber}; // Parameters should be adapted to requirements
-        res.json({userProps, token})                        // Provide response data in json format
+        const token = serverClient.createToken(userID);     // Create a specific token for authentication
+        const userProps = {userID: userID, 
+                           playerName: playerName, 
+                           playerNumber: playerNumber};     // Set User properties
+
+        res.json({userProps, token})                        // Provide response as json-data
     }
     catch(e){
         console.log(e)

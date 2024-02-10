@@ -39,7 +39,7 @@ const SetUp = ({ setToken,
                 const { userProps, token } = res.data;
                     
                 // Setting cookies
-                cookies.set("token", token);
+                cookies.set("token", token);              
                 cookies.set("userID", userProps.userID);
                 cookies.set("playerName", userProps.playerName);
                 cookies.set("playerNumber", userProps.playerNumber);
@@ -54,7 +54,7 @@ const SetUp = ({ setToken,
                 toast.error("User-ID not found, please try again!", {
                     autoClose: parameters.genCfg.timeOutAutoClose_ms, // Optional: Timeout for closing the pop-up
                   });
-                  
+
                 // Timeout for closing navigate back to the home section
                 setTimeout(() => {
                     navigate(errorPath);
@@ -69,8 +69,9 @@ const SetUp = ({ setToken,
         }
 
         // Ensure complete game settings provided by player 1 and player 2
-        if(gameStates.isPlayer1 && gameStates.opponentName.length > parameters.genCfg.minInputLength && gameStates.colorPlayer && gameStates.timePerTurn_ms){
+        if(gameStates.isPlayer1 && gameStates.opponentName.length > parameters.genCfg.minInputLength && gameStates.colorPlayer1 && gameStates.timePerTurn_ms){
             setReadyToStart(true)
+
         }else if(!gameStates.isPlayer1 && gameStates.opponentName.length > parameters.genCfg.minInputLength){
             setReadyToStart(true)
         }

@@ -4,10 +4,12 @@ const GameStatesContext = createContext();
 
 export const GameStatesProvider = ({ children }) => {
   const [gameStates, setGameStates] = useState({
-    playerName: '',           
+    playerName: '', 
+    isPlayer1: false,          
     isCheckedIn: false,       
     opponentName: '',         
-    colorPlayer: '',
+    colorPlayer1: 'red',  // default value
+    colorPlayer2: 'blue', // default value
     ready2Play: false,
     isPaused: false,
     leaveGame: false,

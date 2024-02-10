@@ -1,15 +1,15 @@
 /** Main file for setting parameters [developer file]
  * This file is mandatory to run the application! 
  * - Developer: D.Kim
- * - Dateof last changes: 09.02.2024  
+ * - Date of last changes: 10.02.2024  
 */
 
 /**** General/Global Configurations ****/
 export const genCfg = {
-    debugMode: false,               // Boolean for showing parameter values in the console (if true) 
+    debugMode: true,               // Boolean for showing parameter values in the console (if true) 
     maxConnectionAttempts: 3,       // Maximum number of attempts to reconnect the user in case of failed connection
-    minInputLength: 2,              // Minimal length of user input (> 1 e.g. user name)
-    maxInputLength: 20,             // Maximal length of user input 
+    minInputLength: 2,              // Minimal length of user input (e.g. > 1 for user name)
+    maxInputLength: 20,             // Maximal length of user input (e.g. < 20 for user name)
     timeOutAutoClose_ms: 4000,      // Time value in ms for auto close (e.g. Pop-Ups)  
     timeOutFunction_ms: 4500,       // Time value in ms for time-out function
 };
@@ -314,7 +314,7 @@ export const pageNotFoundProps = {
 
 /**** Presets for GameSection-Component: GameFigure ****/
 /* Default paths to images */
-const path_redFig = "../assets/images/redFigures/" ;
+const path_redFig  = "../assets/images/redFigures/" ;
 const path_blueFig = "../assets/images/blueFigures/" ;
 const path_deadFig = "../assets/images/deadFigures/" ;
 
