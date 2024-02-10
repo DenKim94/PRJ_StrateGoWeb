@@ -1,16 +1,20 @@
 import React from 'react';
 import './Buttons.css'
 
-function Button({buttonName, isDisabled, onCklickFunction}){
-    
+function Button({buttonName, isDisabled, customStyleProps, onCklickFunction}){
     // Default style properties
-    const buttonStyle = {
-        marginTop: '10px',
-        border: '1px solid black',
-        textAlign: 'center',
-        fontSize:'15px',
-      };
+    let buttonStyle = {
+            marginTop: '10px',
+            border: '1px solid black',
+            textAlign: 'center',
+            fontSize:'15px',
+        };
 
+    // Add/Change style properties
+    if(customStyleProps){
+        buttonStyle = {... buttonStyle, ...customStyleProps};
+    }
+    
     return ( 
         <button style = {buttonStyle} 
                 type="button" 

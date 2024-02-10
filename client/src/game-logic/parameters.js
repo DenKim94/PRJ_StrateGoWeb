@@ -1,7 +1,7 @@
-/** Main file for setting parameters [for developer]
+/** Main file for setting parameters [developer file]
  * This file is mandatory to run the application! 
- * - Author: D.Kim
- * - Date: 27.01.2024  
+ * - Developer: D.Kim
+ * - Dateof last changes: 09.02.2024  
 */
 
 /**** General/Global Configurations ****/
@@ -10,8 +10,8 @@ export const genCfg = {
     maxConnectionAttempts: 3,       // Maximum number of attempts to reconnect the user in case of failed connection
     minInputLength: 2,              // Minimal length of user input (> 1 e.g. user name)
     maxInputLength: 20,             // Maximal length of user input 
-    timeOutAutoClose_ms: 3000,      // Time value in ms for auto close (e.g. Pop-Ups)  
-    timeOutFunction_ms: 3500,       // Time value in ms for time-out function
+    timeOutAutoClose_ms: 4000,      // Time value in ms for auto close (e.g. Pop-Ups)  
+    timeOutFunction_ms: 4500,       // Time value in ms for time-out function
 };
 
 /**** Settings for GameSection-Component: GameField ****/
@@ -314,9 +314,9 @@ export const pageNotFoundProps = {
 
 /**** Presets for GameSection-Component: GameFigure ****/
 /* Default paths to images */
-const path_redFig = "assets/images/redFigures/" ;
-const path_blueFig = "assets/images/blueFigures/" ;
-const path_deadFig = "assets/images/deadFigures/" ;
+const path_redFig = "../assets/images/redFigures/" ;
+const path_blueFig = "../assets/images/blueFigures/" ;
+const path_deadFig = "../assets/images/deadFigures/" ;
 
 /* Array of figure names: Entries must be equal to the stored image names */
 const figNames = ["Marshal.png",    // index: 0

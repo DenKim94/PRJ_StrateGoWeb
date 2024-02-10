@@ -7,9 +7,10 @@ import { useGameStates } from '../context/GameStatesContext.js';
 const DropDownButton = () => {
 
     const { setGameStates } = useGameStates();
-
+    
+    // Update state to provide chosen color 
     const handleColorSelection = (selectedColor) => {
-        setGameStates((prevStates) => ({        // Update state to provide chosen color 
+        setGameStates((prevStates) => ({        
           ...prevStates,
           colorPlayer: selectedColor,
         }));
@@ -18,9 +19,10 @@ const DropDownButton = () => {
     return ( 
         <DropdownButton
         as={ButtonGroup}
-        key={'Secondary'}
-        id={`dropdown-variants-${'Secondary'}`}
-        variant={'secondary'}
+        key={'start'}
+        id={'dropdown-button-drop-start'}
+        drop={'start'}
+        variant="secondary"
         title={'Chose your color'}
         onSelect={handleColorSelection}
         >

@@ -43,7 +43,9 @@ const HomeSection = ({ homeSectionProps = parameters.homeSectionProps }) => {
     
     // Handle user input
     const handleChangedPlayerName = (event) => {
-        const inputValue = event.target.value
+        let inputValue = event.target.value;
+        
+        // Update state to provide player name and remove blank spaces
         setGameStates((prevStates) => ({
             ...prevStates,
             playerName: inputValue.trim(),
