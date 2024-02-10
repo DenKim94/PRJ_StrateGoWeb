@@ -64,7 +64,6 @@ const HomeSection = ({ homeSectionProps = parameters.homeSectionProps }) => {
     }
 
     const joinGame = () => {
-        console.log(">> Join game")
         setGameStates((prevStates) => ({
             ...prevStates,
             playerNumber: 2,

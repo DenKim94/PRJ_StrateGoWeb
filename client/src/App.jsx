@@ -57,12 +57,13 @@ const App = () => {
                     connectionAttemptsCounter = 0;
 
                 } catch (error) {
-
                     console.error(">> Connection failed:", error);
+
                     // Try to reconnect the user if maximum attempts currently not exceeded
                     if (connectionAttemptsCounter <= maxConnectionAttempts) {
                         connectionAttemptsCounter += 1;
                         connectUser();
+
                     } else {
                         console.error(">> Connect user: Maximum number of attempts exceeded.");
                     }
@@ -72,7 +73,6 @@ const App = () => {
                 connectUser();
             }
         }
-
         }, [client, userConnected, cookies, userCreated, tokenRef]);
 
         if(parameters.genCfg.debugMode){

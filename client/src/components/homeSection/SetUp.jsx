@@ -37,9 +37,7 @@ const SetUp = ({ setToken,
                 // Get data from backend
                 const res = await axios.post(SETUPURL, { gameStates });
                 const { userProps, token } = res.data;
-          
-                console.log(">> res.data: ", res.data);
-          
+                    
                 // Setting cookies
                 cookies.set("token", token);
                 cookies.set("userID", userProps.userID);
@@ -50,12 +48,13 @@ const SetUp = ({ setToken,
 
             } catch(error) {
                 const errorPath = "/";
-                console.error(">> Error: ", error.message);
+                console.error(error.message);
 
                 // Error Handling
                 toast.error("User-ID not found, please try again!", {
                     autoClose: parameters.genCfg.timeOutAutoClose_ms, // Optional: Timeout for closing the pop-up
                   });
+                  
                 // Timeout for closing navigate back to the home section
                 setTimeout(() => {
                     navigate(errorPath);
@@ -81,31 +80,37 @@ const SetUp = ({ setToken,
 
     // Function to create a channel
     const createChannel = async () => {
-
+        // Search user with defined opponent name
         const response = await client.queryUsers({name: { $eq: gameStates.opponentName }}); 
-        console.log(">> response: ", response)
-        
-        // Checking if a user is found
+    
         const foundUser = response.users.filter( props => 
             props.online === true &&
             props.playerNumber !== gameStates.playerNumber
         )
 
-        console.log(">> foundUser : ", foundUser )
+        if(parameters.genCfg.debugMode){
+            console.log(">> foundUser : ", foundUser )
+        }
 
+        // If opponent not found
         if(foundUser.length === 0){
             toast.info("Opponent not found! Please try again!", {
                 autoClose: parameters.genCfg.timeOutAutoClose_ms, // Optional: Timeout for closing the pop-up
-              });            
+              }); 
+                         
             return null
         }
 
+        // Create a channel for both players
         if(client.userID !== foundUser[0].id){
             const newChannel = client.channel("messaging", {
                 members: [client.userID, foundUser[0].id],
             });
-            console.log(">> newChannel: ", newChannel)  
-    
+
+            if(parameters.genCfg.debugMode){
+                console.log(">> newChannel: ", newChannel)  
+            }
+
             await newChannel.watch() // Listening to the channel
 
             setChannelStates((prevStates) => ({
@@ -114,10 +119,13 @@ const SetUp = ({ setToken,
             })) 
         }
         else{
-            alert(">> Names of user and opponent shall not match!")
+
+            toast.info("Names between user and opponent shall not match!", {
+                autoClose: parameters.genCfg.timeOutAutoClose_ms, // Optional: Timeout for closing the pop-up
+              }); 
+
             return null
         }
-
     };
 
     // Update the state with opponent name
@@ -131,20 +139,18 @@ const SetUp = ({ setToken,
 
     // Handle action for player 1
     const startGame = () => {
-        console.log(">> Starting game")
         createChannel()
     }
 
     // Handle action for player 2
     const joinGame = () => {
-        console.log(">> Joining game")
         createChannel()
     }
 
     // Handle cancel
     const handleCancel = async () => {
-        console.log(">> User canceled.")
         const homePath = "/";
+
         await helperFcn.disconnectUser(client); 
         setUserConnected(false)
         helperFcn.deleteCookies(cookies)
@@ -166,7 +172,7 @@ const SetUp = ({ setToken,
                     <WaitingRoom />
 
                 ) : (
-                    // Rendered section if channel not established
+                    // Rendered section if channel is not established
                     <>
                         <p style={{ fontSize: '15px', 
                             color: 'rgb(248, 202, 45)', 
@@ -223,9 +229,7 @@ const SetUp = ({ setToken,
                             <ToastContainer position='top-right' />
                         </div>
                     </>
-                )}
-
-                      
+                )}          
         </div> 
     );
 }
