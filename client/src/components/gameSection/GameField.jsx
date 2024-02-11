@@ -8,7 +8,7 @@ import DefeatedFigureStorage from './DefeatedFigureStorage';
 import { useButtonStates } from '../context/ButtonStatesContext.js';
 import { useGameStates } from '../context/GameStatesContext.js';
 import { useScoutStates } from '../context/ScoutStatesContext.js';
-import { useChannelStates } from '../context/ChannelStatesContext.js';
+// import { useChannelStates } from '../context/ChannelStatesContext.js';
 import { figProperties } from '../../game-logic/parameters.js';
 import * as helperFcn from '../functions/helperFunctions.js'
 import * as gameLogic from '../../game-logic/gameLogic.js'
@@ -28,7 +28,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
   {
     const { buttonStates, setButtonStates } = useButtonStates();
     const { scoutStates, setScoutStates } = useScoutStates();
-    const { channelStates } = useChannelStates();
+    // const { channelStates } = useChannelStates();
     const { gameStates } = useGameStates();
 
     /* ********************************************************************* */
@@ -91,9 +91,9 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
 
       /* Define non playable fields and modify the properties */
       helperFcn.setNonPlayableFields(singleFieldProps,
-        fieldCoordinates[index],
-        coordsNonPlayableFields,
-        colorNonPlayableFields);
+                                    fieldCoordinates[index],
+                                    coordsNonPlayableFields,
+                                    colorNonPlayableFields);
       
         return singleFieldProps
     })
@@ -108,7 +108,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     /* *** State as array to store defeated game figures *** */
     const [defeatedFigureStorage,setDefeatedFigureStorage] = useState([]); 
 
-    /* Checking values of parameters in 'debugMode' */
+    // Checking values of parameters in 'debugMode' 
     if(parameters.genCfg.debugMode){
       console.log("################### Component: GameField #####################");
       console.log(">> Settings 'gameFieldSettings': ", gameFieldSettings);
@@ -170,6 +170,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
 
       // Checking values of parameters in 'debugMode' 
       if(parameters.genCfg.debugMode){
+        console.log("################### handleDragUpdate #####################");
         console.log('update: ', update);
         console.log('gameFieldState: ', fieldState);
         console.log("isScoutFigure: ", figureProps.isScoutFigure)

@@ -29,10 +29,6 @@ const GameFigure = ({propsObj, snapshot, figureStyle = parameters.styleGameFigur
       console.log('>> imgPath: ', imgPath);
     }
 
-    console.log('###### GameFigure ######');
-    console.log('>> propsObj: ', propsObj);
-    console.log('>> imgPath: ', imgPath);
-
     const imgStyle = {
       width: '100%', 
       height: '100%', 

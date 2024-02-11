@@ -5,9 +5,9 @@ import { v4 as uuidv4 } from "uuid"
 import { StreamChat } from 'stream-chat';
 
 /*
-* Backend logic for running an express-server with the stream-chat API
-* Date of last changes: 10.02.2024
-* Author: D.Kim
+* Backend logic for running an backend-server via express and the stream-chat API
+* Date of last changes: 11.02.2024
+* Developer: D.Kim
 */
 
 dotenv.config();  

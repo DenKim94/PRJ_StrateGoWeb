@@ -15,6 +15,16 @@ import * as helperFcn from '../functions/helperFunctions.js'
 import { useGameStates } from '../context/GameStatesContext.js';
 import { useChannelStates } from '../context/ChannelStatesContext.js';
 
+/**
+ * React component responsible for managing the setup phase before the game starts.
+ * @component
+ * @param {function} setToken - Function to set authentication token.
+ * @param {boolean} userCreated - Indicates if the user is created.
+ * @param {function} setUserCreated - Function to set user creation status.
+ * @param {function} setUserConnected - Function to set user connection status.
+ * @param {Object} setUpProps - Additional setup properties (default to parameters.setUpProps)
+ * @param {Object} setUpProps.style - Custom styles for the component.
+ */
 const SetUp = ({ setToken,
                  userCreated, 
                  setUserCreated, 

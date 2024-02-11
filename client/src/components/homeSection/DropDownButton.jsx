@@ -4,6 +4,12 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { useGameStates } from '../context/GameStatesContext.js';
 
+/**
+ * React component representing a drop down button.
+ * A color of player figures is going to be set by the user
+ * @component
+ */
+
 const DropDownButton = () => {
 
     const { setGameStates } = useGameStates();
