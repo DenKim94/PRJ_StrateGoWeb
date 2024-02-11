@@ -12,7 +12,7 @@ function Button({buttonName, isDisabled, customStyleProps, onCklickFunction}){
 
     // Add/Change style properties
     if(customStyleProps){
-        buttonStyle = {... buttonStyle, ...customStyleProps};
+        buttonStyle = {...buttonStyle, ...customStyleProps};
     }
     
     return ( 

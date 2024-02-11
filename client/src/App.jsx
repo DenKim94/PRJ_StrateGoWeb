@@ -16,15 +16,15 @@ import ExitSection from './components/exitSection/ExitSection';
 import PageNotFound from './components/PageNotFound';
 import SetUp from './components/homeSection/SetUp';
 
-/* ******************************************************************* */ 
+// ******************************************************************* 
 /** 
- * Main Component of the application "StrateGo" 
+ * Main component of the application "StrateGo" 
  * 
- * - Author: D.Kim 
+ * - Developer: D.Kim 
  * - Version: 1.0.0 
- * - Date of last changes: 04.02.2024
+ * - Date of last changes: 11.02.2024
 */
-/* ******************************************************************* */ 
+// *******************************************************************  
 const App = () => {
     const cookies = useMemo(() => new Cookies(), []);
     const apiKey = process.env.REACT_APP_API_KEY; 
@@ -57,12 +57,13 @@ const App = () => {
                     connectionAttemptsCounter = 0;
 
                 } catch (error) {
-
                     console.error(">> Connection failed:", error);
+
                     // Try to reconnect the user if maximum attempts currently not exceeded
                     if (connectionAttemptsCounter <= maxConnectionAttempts) {
                         connectionAttemptsCounter += 1;
                         connectUser();
+
                     } else {
                         console.error(">> Connect user: Maximum number of attempts exceeded.");
                     }
@@ -72,7 +73,6 @@ const App = () => {
                 connectUser();
             }
         }
-
         }, [client, userConnected, cookies, userCreated, tokenRef]);
 
         if(parameters.genCfg.debugMode){

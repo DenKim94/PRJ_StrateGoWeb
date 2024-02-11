@@ -15,6 +15,16 @@ import * as helperFcn from '../functions/helperFunctions.js'
 import { useGameStates } from '../context/GameStatesContext.js';
 import { useChannelStates } from '../context/ChannelStatesContext.js';
 
+/**
+ * React component responsible for managing the setup phase before the game starts.
+ * @component
+ * @param {function} setToken - Function to set authentication token.
+ * @param {boolean} userCreated - Indicates if the user is created.
+ * @param {function} setUserCreated - Function to set user creation status.
+ * @param {function} setUserConnected - Function to set user connection status.
+ * @param {Object} setUpProps - Additional setup properties (default to parameters.setUpProps)
+ * @param {Object} setUpProps.style - Custom styles for the component.
+ */
 const SetUp = ({ setToken,
                  userCreated, 
                  setUserCreated, 
@@ -37,11 +47,9 @@ const SetUp = ({ setToken,
                 // Get data from backend
                 const res = await axios.post(SETUPURL, { gameStates });
                 const { userProps, token } = res.data;
-          
-                console.log(">> res.data: ", res.data);
-          
+                    
                 // Setting cookies
-                cookies.set("token", token);
+                cookies.set("token", token);              
                 cookies.set("userID", userProps.userID);
                 cookies.set("playerName", userProps.playerName);
                 cookies.set("playerNumber", userProps.playerNumber);
@@ -50,12 +58,13 @@ const SetUp = ({ setToken,
 
             } catch(error) {
                 const errorPath = "/";
-                console.error(">> Error: ", error.message);
+                console.error(error.message);
 
                 // Error Handling
                 toast.error("User-ID not found, please try again!", {
                     autoClose: parameters.genCfg.timeOutAutoClose_ms, // Optional: Timeout for closing the pop-up
                   });
+
                 // Timeout for closing navigate back to the home section
                 setTimeout(() => {
                     navigate(errorPath);
@@ -70,8 +79,9 @@ const SetUp = ({ setToken,
         }
 
         // Ensure complete game settings provided by player 1 and player 2
-        if(gameStates.isPlayer1 && gameStates.opponentName.length > parameters.genCfg.minInputLength && gameStates.colorPlayer && gameStates.timePerTurn_ms){
+        if(gameStates.isPlayer1 && gameStates.opponentName.length > parameters.genCfg.minInputLength && gameStates.colorPlayer1 && gameStates.timePerTurn_ms){
             setReadyToStart(true)
+
         }else if(!gameStates.isPlayer1 && gameStates.opponentName.length > parameters.genCfg.minInputLength){
             setReadyToStart(true)
         }
@@ -81,31 +91,37 @@ const SetUp = ({ setToken,
 
     // Function to create a channel
     const createChannel = async () => {
-
+        // Search user with defined opponent name
         const response = await client.queryUsers({name: { $eq: gameStates.opponentName }}); 
-        console.log(">> response: ", response)
-        
-        // Checking if a user is found
+    
         const foundUser = response.users.filter( props => 
             props.online === true &&
             props.playerNumber !== gameStates.playerNumber
         )
 
-        console.log(">> foundUser : ", foundUser )
+        if(parameters.genCfg.debugMode){
+            console.log(">> foundUser : ", foundUser )
+        }
 
+        // If opponent not found
         if(foundUser.length === 0){
             toast.info("Opponent not found! Please try again!", {
                 autoClose: parameters.genCfg.timeOutAutoClose_ms, // Optional: Timeout for closing the pop-up
-              });            
+              }); 
+                         
             return null
         }
 
+        // Create a channel for both players
         if(client.userID !== foundUser[0].id){
             const newChannel = client.channel("messaging", {
                 members: [client.userID, foundUser[0].id],
             });
-            console.log(">> newChannel: ", newChannel)  
-    
+
+            if(parameters.genCfg.debugMode){
+                console.log(">> newChannel: ", newChannel)  
+            }
+
             await newChannel.watch() // Listening to the channel
 
             setChannelStates((prevStates) => ({
@@ -114,10 +130,13 @@ const SetUp = ({ setToken,
             })) 
         }
         else{
-            alert(">> Names of user and opponent shall not match!")
+
+            toast.info("Names between user and opponent shall not match!", {
+                autoClose: parameters.genCfg.timeOutAutoClose_ms, // Optional: Timeout for closing the pop-up
+              }); 
+
             return null
         }
-
     };
 
     // Update the state with opponent name
@@ -131,20 +150,18 @@ const SetUp = ({ setToken,
 
     // Handle action for player 1
     const startGame = () => {
-        console.log(">> Starting game")
         createChannel()
     }
 
     // Handle action for player 2
     const joinGame = () => {
-        console.log(">> Joining game")
         createChannel()
     }
 
     // Handle cancel
     const handleCancel = async () => {
-        console.log(">> User canceled.")
         const homePath = "/";
+
         await helperFcn.disconnectUser(client); 
         setUserConnected(false)
         helperFcn.deleteCookies(cookies)
@@ -166,7 +183,7 @@ const SetUp = ({ setToken,
                     <WaitingRoom />
 
                 ) : (
-                    // Rendered section if channel not established
+                    // Rendered section if channel is not established
                     <>
                         <p style={{ fontSize: '15px', 
                             color: 'rgb(248, 202, 45)', 
@@ -223,9 +240,7 @@ const SetUp = ({ setToken,
                             <ToastContainer position='top-right' />
                         </div>
                     </>
-                )}
-
-                      
+                )}          
         </div> 
     );
 }

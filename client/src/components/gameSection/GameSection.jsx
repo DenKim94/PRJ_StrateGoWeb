@@ -7,17 +7,20 @@ import { ScoutStatesProvider } from '../context/ScoutStatesContext';
 import Cover from './Cover';
 import './Buttons.css'
 
-/** 
- * - This Component manages the game interactions 
- * 
-*/
-
+/**
+ * React component responsible for managing game interactions.
+ * @component
+ */
 const GameSection = () => {
 
     const { buttonStates, setButtonStates } = useButtonStates();
     const { gameStates, setGameStates } = useGameStates();
 
-    /*** Functions after click the buttons ****/
+    /**
+     * Function to be executed when the "Start Game" button is clicked.
+     * If the game is not paused, sets the 'ready2Play' parameter to true and disables the button.
+     * @function
+     */
     function startGame(){
         if(gameStates.isPaused){
             return
@@ -33,7 +36,12 @@ const GameSection = () => {
             counterUsedStartButton: prevStates.counterUsedStartButton + 1,
         }));        
     }
-
+    /**
+     * Function to be executed when the "Pause/Proceed Game" button is clicked.
+     * If the game is not paused, it pauses the game and changes the button text to "Proceed Game".
+     * If the game is paused, it proceeds the game and changes the button text to "Pause Game".
+     * @function
+     */
     function pauseGame(){
         if(!gameStates.isPaused){
             // After pausing the game, change the button text of 'Pause Game' to 'Proceed Game'
@@ -42,7 +50,7 @@ const GameSection = () => {
                 pauseButtonText: "Proceed Game",
             }));
             
-            // Pause the timer of the game after triggering the event
+            // TO-DO: Pause the timer of the game after triggering the event
             // In Progress...
 
             // Set ready2Play = false
@@ -59,7 +67,7 @@ const GameSection = () => {
                 pauseButtonText: "Pause Game",
             }));            
 
-            // Activate the timer (without resetting) to proceed
+            // TO-DO: Activate the timer (without resetting) to proceed
             // In Progress...
 
             if(buttonStates.counterUsedStartButton === 0){
@@ -80,6 +88,11 @@ const GameSection = () => {
         }
     }
 
+    /**
+     * Function to be executed when the "Exit Game" button is clicked.
+     * Sets the 'ready2Play' parameter to false and triggers the exit from the game.
+     * @function
+     */
     function exitGame(){
         // Set ready2Play = false to exit game
         setGameStates((prevStates) => ({
@@ -89,7 +102,11 @@ const GameSection = () => {
         })); 
     }
 
-    // Change the functionality of the Start Button after starting the game
+    /**
+     * Effect hook to change the functionality of the Start Button after starting the game.
+     * Changes the text of the "Start Game" button to "End Turn" after the first usage.
+     * @function
+     */
     useEffect(() => {
         const changeStartButton = () => {
             if (buttonStates.counterUsedStartButton > 0) {
@@ -104,7 +121,7 @@ const GameSection = () => {
         }, [buttonStates.counterUsedStartButton, setButtonStates])
 
     if(parameters.genCfg.debugMode){
-        console.log("######################### App #############################")
+        console.log("######################### GameSection #############################")
         console.log(">> gameStates: ", gameStates)
         console.log(">> buttonStates: ", buttonStates)
         console.log("##########################################################")
@@ -141,6 +158,7 @@ const GameSection = () => {
             </ScoutStatesProvider> 
 
              {/* TO-DO: CHAT-Component */}
+
         </div>         
     )
 };

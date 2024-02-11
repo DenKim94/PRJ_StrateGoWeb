@@ -40,7 +40,6 @@ const HomeSection = ({ homeSectionProps = parameters.homeSectionProps }) => {
         
     }, [gameStates, homeSectionProps]);
 
-    
     // Handle user input
     const handleChangedPlayerName = (event) => {
         let inputValue = event.target.value;
@@ -64,7 +63,6 @@ const HomeSection = ({ homeSectionProps = parameters.homeSectionProps }) => {
     }
 
     const joinGame = () => {
-        console.log(">> Join game")
         setGameStates((prevStates) => ({
             ...prevStates,
             playerNumber: 2,
