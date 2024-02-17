@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Chat } from 'stream-chat-react'
 import { ButtonStatesProvider } from './components/context/ButtonStatesContext';
 import { GameStatesProvider } from './components/context/GameStatesContext';
+import { OpponentStatesProvider } from './components/context/OpponentStatesContext';
 import { ChannelStatesProvider } from './components/context/ChannelStatesContext';
 import { StreamChat } from 'stream-chat' 
 import Cookies from 'universal-cookie'
@@ -22,12 +23,13 @@ import SetUp from './components/homeSection/SetUp';
  * 
  * - Developer: D.Kim 
  * - Version: 1.0.0 
- * - Date of last changes: 11.02.2024
+ * - Date of last changes: 17.02.2024
 */
 // *******************************************************************  
 const App = () => {
     const cookies = useMemo(() => new Cookies(), []);
     const apiKey = process.env.REACT_APP_API_KEY; 
+    
     // Client side authentication to the Chat-API with a valid key
     const client = StreamChat.getInstance(apiKey); 
     const [userConnected, setUserConnected] = useState(false);
@@ -90,21 +92,23 @@ const App = () => {
                     <ButtonStatesProvider>
                         <GameStatesProvider>  
                             <ChannelStatesProvider>
-                                <Chat client={client}>              
-                                    <Routes>
-                                        <Route path = "/" element={ <HomeSection /> }/>
-                                        <Route path = "/setUp/*" element={ <SetUp setToken = {setTokenRef} 
-                                                                                  userCreated = {userCreated} 
-                                                                                  setUserCreated = {setUserCreated} 
-                                                                                  setUserConnected = {setUserConnected}/>}/>
-                                                                                  
-                                        <Route path = "/waitingRoom" element={ <WaitingRoom /> }/>
-                                        <Route path = "/gameSection" element={ <GameSection /> }/>
-                                        <Route path = "/exitSection" element={ <ExitSection /> }/> 
+                                <OpponentStatesProvider> 
+                                    <Chat client={client}>              
+                                        <Routes>
+                                            <Route path = "/" element={ <HomeSection /> }/>
+                                            <Route path = "/setUp/*" element={ <SetUp setToken = {setTokenRef} 
+                                                                                    userCreated = {userCreated} 
+                                                                                    setUserCreated = {setUserCreated} 
+                                                                                    setUserConnected = {setUserConnected}/>}/>
+                                                                                    
+                                            <Route path = "/waitingRoom" element={ <WaitingRoom /> }/>
+                                            <Route path = "/gameSection" element={ <GameSection /> }/>
+                                            <Route path = "/exitSection" element={ <ExitSection /> }/> 
 
-                                        <Route path = "*" element={ <PageNotFound />} />                    
-                                    </Routes> 
-                                </Chat> 
+                                            <Route path = "*" element={ <PageNotFound />} />                    
+                                        </Routes> 
+                                    </Chat> 
+                                </OpponentStatesProvider> 
                             </ChannelStatesProvider>    
                         </GameStatesProvider>
                     </ButtonStatesProvider>                                             

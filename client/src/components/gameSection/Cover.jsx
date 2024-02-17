@@ -33,7 +33,7 @@ const { gameStates, setGameStates } = useGameStates();
     }; 
 
     updateCoverState()
-    }, [gameStates.exitCanceled, gameStates.isPaused, setGameStates, buttonStates]) 
+    }, [gameStates.exitCanceled, gameStates.isPaused, setGameStates, buttonStates.counterUsedStartButton]) 
 
     // Predefined style of the cover component
     const coverStyle = {
@@ -44,7 +44,7 @@ const { gameStates, setGameStates } = useGameStates();
     return( 
         <div style = {coverStyle}>
           {/* Use an additional component to render and style the cover content  */}
-              <CoverContent />
+              <CoverContent/>
               {gameStates.leaveGame && !gameStates.exitCanceled && !gameStates.exitConfirmed && 
               (<ExitBox />)}
         </div>

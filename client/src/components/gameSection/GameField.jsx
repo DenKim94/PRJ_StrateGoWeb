@@ -8,6 +8,7 @@ import DefeatedFigureStorage from './DefeatedFigureStorage';
 import { useButtonStates } from '../context/ButtonStatesContext.js';
 import { useGameStates } from '../context/GameStatesContext.js';
 import { useScoutStates } from '../context/ScoutStatesContext.js';
+import { useOpponentStates } from '../context/OpponentStatesContext.js';
 // import { useChannelStates } from '../context/ChannelStatesContext.js';
 import { figProperties } from '../../game-logic/parameters.js';
 import * as helperFcn from '../functions/helperFunctions.js'
@@ -28,6 +29,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
   {
     const { buttonStates, setButtonStates } = useButtonStates();
     const { scoutStates, setScoutStates } = useScoutStates();
+    const { opponentStates } = useOpponentStates();
     // const { channelStates } = useChannelStates();
     const { gameStates } = useGameStates();
 
@@ -66,7 +68,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     let fieldCoordinates = helperFcn.getCoordinatesArray(xAxisLetters,yAxisNumbers, gameStates.isPlayer1);
     
     // Get color of current player
-    let playerColor 
+    let playerColor; 
 
     if(gameStates.isPlayer1)
         playerColor = gameStates.colorPlayer1;
@@ -87,7 +89,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                           index,
                                           fieldCoordinates[index],
                                           sizeSingleField,
-                                          backgroundColor );
+                                          backgroundColor);
 
       /* Define non playable fields and modify the properties */
       helperFcn.setNonPlayableFields(singleFieldProps,
@@ -96,13 +98,13 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                     colorNonPlayableFields);
       
         return singleFieldProps
-    })
+    });
 
     /* *** State as array to store and set game field properties *** */
     const [gameFieldState, setGameFieldState] = useState(defaultFieldState); 
 
     /* *** State as array to store and set game figure properties *** */
-    const playerFigures = helperFcn.getFiguresOfPlayer(figProperties, playerColor)
+    const playerFigures = helperFcn.getFiguresOfPlayer(figProperties, playerColor);
     const [figureStorageState,setFigureStorageState] = useState([...playerFigures]); 
 
     /* *** State as array to store defeated game figures *** */
@@ -118,7 +120,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
       console.log(">> playerFigures: ", playerFigures);
       console.log(">> State 'gameFieldState': ", gameFieldState);
       console.log(">> State 'figureStorageState': ", figureStorageState);
-      console.log(">> defeatedFigureStorage: ", defeatedFigureStorage)
+      console.log(">> defeatedFigureStorage: ", defeatedFigureStorage);
       console.log(">> Game states: ", gameStates);
       console.log(" #############################################################");
     }
@@ -161,11 +163,12 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
       if(scoutStates.isDraggedOverFigure && targetFieldPosition){
         const isValidMove = helperFcn.checkValidScoutMove(scoutStates.sourcePosition, 
                                                           targetFieldPosition, 
-                                                          scoutStates.draggedOverFigurePosition)
+                                                          scoutStates.draggedOverFigurePosition);
+
         setScoutStates((prevStates) => ({
           ...prevStates,
           isValidMove: isValidMove,
-        }))        
+        }));        
       }
 
       // Checking values of parameters in 'debugMode' 
@@ -199,24 +202,16 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                 // Update game related states                     
                                 const updatedStates = gameLogic.handleDragDrop(result, gameFieldState, figureStorageState, prefixSingleFieldID, gameStates);
 
-                                if (updatedStates) {
-                                  // Don't execute if specific scout move is not allowed and reset states
-                                  if(!scoutStates.isValidMove){
-                                    setScoutStates((prevStates) => ({
-                                      ...prevStates,
-                                      isDraggedOverFigure: false,  
-                                      sourcePosition: null,
-                                      draggedOverFigurePosition: null,       
-                                      isValidMove: true,
-                                    }))  
-                                  
-                                  return null                           
-                                }                                     
+                                if (updatedStates && !opponentStates.pausedGame){                                  
                                   // Get updated states from 'updatedStates'
                                   const { gameFieldState: newGameFieldState, figureStorageState: newFigureStorageState} = updatedStates;
                           
                                   setGameFieldState(newGameFieldState);         // Update the State of the game field 
                                   setFigureStorageState(newFigureStorageState); // Update the State of the figure storage
+                                }
+                                else{
+                                  return null
+
                                 } }}>
 
          {/* *** Rendering Components *** */}                         
@@ -232,6 +227,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                 {/* Create and render single field elements with specific coordinates */ }
                 {gameFieldState.map((fieldProps, index) => {   
                   return (
+
                     <Droppable droppableId={defaultFieldState[index].id} 
                     key={`${prefixSingleFieldID}_${index}`}
                     type = "FIGURE"
@@ -249,6 +245,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                       </div>
                     )}
                     </Droppable> 
+                    
                   )
                 })}
               </div>

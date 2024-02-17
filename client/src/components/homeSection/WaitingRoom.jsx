@@ -54,7 +54,7 @@ const WaitingRoom = () => {
     // Synchronize states between both players
     useEffect(() => {
         // Function to provide states, which shall be synchronized 
-        const sendGameStateUpdates = async (gameStates) => {
+        const sendGameStateSync = async (gameStates) => {
             await channelStates.channelObj.sendEvent({
                 type: "game-state-sync",
                 data: gameStates,
@@ -64,7 +64,7 @@ const WaitingRoom = () => {
         const syncStates = async () => {
             if (!statesSynced && connectedPlayers) {
                 console.log(">> Send game states ...")
-                await sendGameStateUpdates(gameStates);
+                await sendGameStateSync(gameStates);
     
                 if(gameStates.colorPlayer1 && gameStates.colorPlayer2){
                     setStatesSynced(true);
@@ -76,13 +76,12 @@ const WaitingRoom = () => {
     
     }, [gameStates, setGameStates, channelStates, statesSynced, connectedPlayers, setStatesSynced]);
 
-    console.log(">> connectedPlayers:", connectedPlayers)
-    console.log(">> gameStates:", gameStates)
-
+    
     if(parameters.genCfg.debugMode){
         console.log("######## WaitingRoom ########")
         console.log(">> client:", client)
         console.log(">> gameStates:", gameStates)
+        console.log(">> connectedPlayers:", connectedPlayers)
         console.log(">> statesSynced:", statesSynced)
         console.log(">> channelStates.channelObj:", channelStates.channelObj)
     }
