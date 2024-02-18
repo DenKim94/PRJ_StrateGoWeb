@@ -59,8 +59,8 @@ export const styleUiContainer = {
 
 // Generic Component: GameLogo
 export const styleGameLogo = {
-    fontFamily: 'Young Serif, serif',
-    fontSize: '40px',
+    fontFamily: 'Cinzel, serif',
+    fontSize: '45px',
     color: 'rgb(248, 202, 45)',
     position: 'relative',
     textAlign: 'center',

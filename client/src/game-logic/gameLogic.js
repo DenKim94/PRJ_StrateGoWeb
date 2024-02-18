@@ -129,7 +129,7 @@ function checkCorrectMoving(sourceFieldProps, targetFieldProps, figureProps){
 */
 function checkMovingDirection(startPos, endPos){
     // Initialized parameter, which will be returned as boolean [true or false]
-    let isAllowed   
+    let isAllowed = true;  
     // Absolute difference between the y-coordinates
     const absDiff_y = Math.abs(endPos[1] - startPos[1]); 
     // Moving in x-direction (allowed)
