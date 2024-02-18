@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import GameFigure from './GameFigure';
 import { Draggable } from 'react-beautiful-dnd';
+import { useOpponentStates } from '../context/OpponentStatesContext.js';
+import { useGameStates } from '../context/GameStatesContext.js';
 
 /**
  * This Component renders a single field with a game figure depending on the game state
@@ -10,9 +12,25 @@ import { Draggable } from 'react-beautiful-dnd';
 
 const SingleField = ({fieldState, idx, snapshot}) => {
 
+  const [isDraggable, setIsDraggable] = useState(true);
+  const { gameStates } = useGameStates();
+  const { opponentStates } = useOpponentStates();
+
   const figProps = fieldState.figure; 
   const emptyFigProps = !figProps; 
   
+  useEffect(() => {
+
+    if(gameStates.ready2Play && !opponentStates.ready2Play){
+      setIsDraggable(false);
+
+    }else{     
+      setIsDraggable(true);
+      
+    }
+
+  }, [setIsDraggable, gameStates.ready2Play, opponentStates.ready2Play])
+
   // Set style of the component 
   const fieldStyle = {
     alignItems: 'center', 
@@ -41,9 +59,10 @@ const SingleField = ({fieldState, idx, snapshot}) => {
     return(
           <div style={fieldStyle}>
               {/* Add draggable game figure component here, if 'fieldState' is not empty */}
-              <Draggable draggableId={`${figProps.color}_${figProps.id}`}
+              <Draggable  draggableId={`${figProps.color}_${figProps.id}`}
                           key= {`${figProps.color}_${figProps.id}`} 
                           index={idx} 
+                          isDragDisabled = {!isDraggable}
                           type = "FIGURE"
                           >
                             {(provided,snapshot)=>(

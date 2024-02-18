@@ -6,7 +6,7 @@
 
 /**** General/Global Configurations ****/
 export const genCfg = {
-    debugMode: false,               // Boolean for showing parameter values in the console (if true) 
+    debugMode: true,               // Boolean for showing parameter values in the console (if true) 
     maxConnectionAttempts: 3,       // Maximum number of attempts to reconnect the user in case of failed connection
     minInputLength: 2,              // Minimal length of user input (e.g. > 1 for user name)
     maxInputLength: 20,             // Maximal length of user input (e.g. < 20 for user name)

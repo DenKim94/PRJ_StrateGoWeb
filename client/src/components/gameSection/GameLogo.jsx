@@ -1,7 +1,9 @@
 import React from 'react';
 import { styleGameLogo } from '../../game-logic/parameters.js';
+
 /** 
- * This Component renders the title of the game 
+ * React component renders the title of the game 
+ * @component
  */
 const GameLogo = () => {
   return (

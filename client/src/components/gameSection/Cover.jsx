@@ -3,6 +3,7 @@ import * as parameters from '../../game-logic/parameters.js';
 import CoverContent from './CoverContent.jsx'
 import { useButtonStates } from '../context/ButtonStatesContext.js';
 import { useGameStates } from '../context/GameStatesContext.js';
+import { useOpponentStates } from '../context/OpponentStatesContext.js';
 import './Cover.css'
 import ExitBox from './ExitBox.jsx';
 /**
@@ -13,6 +14,8 @@ const Cover = ({ styleCover = parameters.styleCover }) => {
   
 const { buttonStates } = useButtonStates();
 const { gameStates, setGameStates } = useGameStates();
+
+const { opponentStates } = useOpponentStates();
 
   useEffect(() => {
     const updateCoverState = () => {
@@ -33,18 +36,18 @@ const { gameStates, setGameStates } = useGameStates();
     }; 
 
     updateCoverState()
-    }, [gameStates.exitCanceled, gameStates.isPaused, setGameStates, buttonStates]) 
+    }, [gameStates.exitCanceled, gameStates.isPaused, setGameStates, buttonStates.counterUsedStartButton]) 
 
     // Predefined style of the cover component
     const coverStyle = {
       ...styleCover,
-      opacity: gameStates.ready2Play ? 0 : 1,  // Opacity of the component depending on the state of 'isReady2Play'
+      opacity: (gameStates.ready2Play && opponentStates.ready2Play) ? 0 : 1,  // Opacity of the component depending on the state of 'isReady2Play'
     };
 
     return( 
         <div style = {coverStyle}>
           {/* Use an additional component to render and style the cover content  */}
-              <CoverContent />
+              <CoverContent/>
               {gameStates.leaveGame && !gameStates.exitCanceled && !gameStates.exitConfirmed && 
               (<ExitBox />)}
         </div>
