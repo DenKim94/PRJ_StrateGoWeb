@@ -15,21 +15,24 @@ import * as parameters from '../../game-logic/parameters.js';
 
 const GameFigure = ({propsObj, snapshot, figureStyle = parameters.styleGameFigure, valueStyle = parameters.valueStyleGameFigure}) => {
     
-    /* If 'propsObj' is empty, the component is not goint to be rendered */
+    // If 'propsObj' is empty, the component is not goint to be rendered
     if(!propsObj){
       return null;
     }
-    /* Extract figure properties for each ID  */
+    // Extract figure properties for each ID  
     const { imgPath, value, figName } = propsObj;
     
+    // Default border color
+    let colorBorder = 'yellow'; 
+
     const imgStyle = {
       width: '100%', 
       height: '100%', 
       borderRadius: '10%',
-      border: snapshot.isDragging ? '2px solid yellow' : 'none' ,
+      border: snapshot.isDragging ? `2px solid ${colorBorder}` : 'none' ,
     };
 
-   /* Return to render the component */
+   // Return to render the component 
     return (
       <div style={figureStyle}>
         <img

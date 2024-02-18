@@ -235,7 +235,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                     key={`${prefixSingleFieldID}_${index}`}
                     type = "FIGURE"
                     > 
-                    {(provided,snapshot) => (             
+                    {(provided) => (             
                       <div
                         style={fieldProps.style}
                         key={index}
@@ -243,7 +243,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                         ref={provided.innerRef} 
                         {...provided.droppableProps}
                       >
-                        <SingleField fieldState={fieldProps} idx = {index} snapshot = {snapshot}/>
+                        <SingleField fieldState={fieldProps} idx = {index}/>
                         {provided.placeholder}                        
                       </div>
                     )}
