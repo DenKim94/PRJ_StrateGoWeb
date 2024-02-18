@@ -32,7 +32,7 @@ const CoverContent  = ({ coverContentProps = parameters.coverContent }) => {
             setCoverContent([`* Waiting for ${gameStates.opponentName} ... *`])
           }          
           else if(opponentStates.exitConfirmed && !gameStates.exitConfirmed){
-            setCoverContent(["*** Congratulations you won! ***", `*** ${gameStates.opponentName} left the game ***`])
+            setCoverContent(["*** Congratulations you won! ***", `* ${gameStates.opponentName} left the game *`])
           }
           else return
       }; 

@@ -1,7 +1,7 @@
 /** Main file for setting parameters [developer file]
  * This file is mandatory to run the application! 
  * - Developer: D.Kim
- * - Date of last changes: 10.02.2024  
+ * - Date of last changes: 18.02.2024  
 */
 
 /**** General/Global Configurations ****/
@@ -75,7 +75,7 @@ export const styleGameLogo = {
 export const homeSectionProps = {
     inputPlaceHolder: "Player Name", // Placeholder for the user input
     style:{
-        fontFamily: 'Young Serif, serif',
+        fontFamily: 'Cinzel, serif',
         fontSize: '20px',
         marginTop: '60px', 
         display: 'flex',
@@ -100,7 +100,7 @@ export const setUpProps = {
         player2: "Please enter the name of your opponent to join the game."
     },
     style:{
-        fontFamily: 'Young Serif, serif',
+        fontFamily: 'Cinzel, serif',
         marginTop: '20px',
         marginBottom: '20px',
         alignItems: 'center',
@@ -142,7 +142,7 @@ export const styleGameFieldContainer = {
 
 // GameSection-Component: FigureStorageTopic
 export const styleStorageTopic = {
-    fontFamily: 'Young Serif, serif',
+    fontFamily: 'Cinzel, serif',
     display: 'flex',
     position: 'relative',
     alignItems: 'center',
@@ -181,7 +181,7 @@ export const styleGameFigure = {
 
 // GameSection-Component: xAxis
 export const styleXAxis = {
-    fontFamily: 'Young Serif, serif',
+    fontFamily: 'Cinzel, serif',
     display: 'flex',
     position: 'absolute',
     alignItems: 'center',
@@ -193,7 +193,7 @@ export const styleXAxis = {
 
 // GameSection-Component: yAxis
 export const styleYAxis = {
-    fontFamily: 'Young Serif, serif',
+    fontFamily: 'Cinzel, serif',
     position: 'relative',
     left: '-25px',
     height: `${gameFieldObj.fieldHeight}px`,
@@ -204,7 +204,7 @@ export const styleYAxis = {
 
 // GameSection-Component: Button
 export const styleButtonContainer = {
-    fontFamily: 'Young Serif, serif',
+    fontFamily: 'Cinzel, serif',
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
@@ -226,7 +226,7 @@ export const styleButtonText = {
 // GameSection-Component: Cover
 export const styleCover = {
     position: 'absolute',
-    fontFamily: 'Young Serif, serif',
+    fontFamily: 'Cinzel, serif',
     top: '0px',
     left: '80px',
     width: `${totalGameFieldSize}px`,
@@ -247,9 +247,10 @@ export const coverContent = {
     styleCoverContent:{
         display: 'flex',
         position: 'relative',
-        fontFamily: 'Young Serif, serif', 
+        fontFamily: 'Cinzel, serif', 
         alignItems: 'center',
         justifyContent: 'center', 
+        textAlign: 'center',
         color: 'white',  
         top: '25px',      
     },                   
@@ -266,7 +267,7 @@ export const exitBoxProps = {
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
-        fontFamily: 'Young Serif, serif', 
+        fontFamily: 'Cinzel, serif', 
         margin: 'auto',
         backgroundColor: 'rgb(248, 202, 45)',
         borderRadius: '5px',         
@@ -274,7 +275,7 @@ export const exitBoxProps = {
         top: `${(totalGameFieldSize/2 + (gameFieldObj.fieldWidth)/10)/2}px`,
     },
     styleParamsButtons:{
-        fontFamily: 'Young Serif, serif',
+        fontFamily: 'Cinzel, serif',
         position: 'relative',
         display: 'flex',
         flexDirection: 'row',
@@ -289,7 +290,7 @@ export const exitBoxProps = {
 export const exitSectionProps = {
     message: "You have successfully left the game. You can close the window.",
     style:{
-        fontFamily: 'Young Serif, serif',
+        fontFamily: 'Cinzel, serif',
         fontSize: '20px',
         margin: 'auto', 
         display: 'flex',
@@ -302,7 +303,7 @@ export const exitSectionProps = {
 export const pageNotFoundProps = {
     message: "Error: Page not found.",
     style:{
-        fontFamily: 'Young Serif, serif',
+        fontFamily: 'Cinzel, serif',
         fontSize: '25px',
         margin: 'auto', 
         display: 'flex',
