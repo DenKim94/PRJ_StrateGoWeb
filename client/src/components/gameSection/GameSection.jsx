@@ -224,7 +224,7 @@ const GameSection = () => {
 
     return(
         <div className="ui-container" >
-        {!gameStates.ready2Play && (<Cover className={gameStates.ready2Play ? '' : 'Cover-FadeOut'}/>)}
+        {(!gameStates.ready2Play || !opponentStates.ready2Play) && (<Cover className={(gameStates.ready2Play && opponentStates.ready2Play) ? '' : 'Cover-FadeOut'}/>)}
             <div className="btn-container" style = {parameters.styleButtonContainer}>
                 <button type="button" 
                         id={!buttonStates.disabledStartButton ? "highlighted-button": ''}

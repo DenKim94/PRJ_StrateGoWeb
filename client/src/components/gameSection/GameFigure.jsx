@@ -22,13 +22,6 @@ const GameFigure = ({propsObj, snapshot, figureStyle = parameters.styleGameFigur
     /* Extract figure properties for each ID  */
     const { imgPath, value, figName } = propsObj;
     
-    // Checking values of parameters in 'debugMode' 
-    if(parameters.genCfg.debugMode){
-      console.log('###### GameFigure ######');
-      console.log('>> propsObj: ', propsObj);
-      console.log('>> imgPath: ', imgPath);
-    }
-
     const imgStyle = {
       width: '100%', 
       height: '100%', 

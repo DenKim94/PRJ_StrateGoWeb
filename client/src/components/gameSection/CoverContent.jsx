@@ -17,16 +17,22 @@ const CoverContent  = ({ coverContentProps = parameters.coverContent }) => {
             setCoverContent([coverContentProps.messageWhilePause])
           }
           else if(opponentStates.pausedGame){
-            setCoverContent(["* Your opponent paused the game. *"])
+            setCoverContent([`* ${gameStates.opponentName} paused the game. *`])
           }
           else if(gameStates.leaveGame){
             setCoverContent([coverContentProps.messageAtExit])
           }
-          else if(!gameStates.isPaused && !gameStates.ready2Play && !opponentStates.pausedGame){
+          else if(!gameStates.isPaused && !gameStates.ready2Play && !opponentStates.ready2Play){
             setCoverContent([defaultCoverContent])
           }
+          else if(!gameStates.ready2Play && opponentStates.ready2Play){
+            setCoverContent([`* ${gameStates.opponentName} is waiting for you. *`])
+          }
+          else if(gameStates.ready2Play && !opponentStates.ready2Play){
+            setCoverContent([`* Waiting for ${gameStates.opponentName} ... *`])
+          }          
           else if(opponentStates.exitConfirmed && !gameStates.exitConfirmed){
-            setCoverContent(["*** Congratulations you won! ***", "* Your opponent left the game *"])
+            setCoverContent(["*** Congratulations you won! ***", `* ${gameStates.opponentName} left the game *`])
           }
           else return
       }; 
@@ -34,11 +40,13 @@ const CoverContent  = ({ coverContentProps = parameters.coverContent }) => {
       updateCoverContent()
 
       }, [gameStates.ready2Play,
+          gameStates.opponentName,
           gameStates.isPaused,
           gameStates.leaveGame,
           gameStates.exitConfirmed,
           defaultCoverContent,
           opponentStates.pausedGame,
+          opponentStates.ready2Play,
           opponentStates.exitConfirmed,
           coverContentProps.messageAtExit, 
           coverContentProps.messageWhilePause]) 

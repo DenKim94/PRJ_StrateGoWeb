@@ -244,8 +244,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                         {provided.placeholder}                        
                       </div>
                     )}
-                    </Droppable> 
-                    
+                    </Droppable>                    
                   )
                 })}
               </div>
