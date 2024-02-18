@@ -1,5 +1,4 @@
 import React, { useState, useEffect }  from 'react';
-// import { useNavigate } from 'react-router-dom';
 import { useGameStates } from '../context/GameStatesContext.js';
 import * as parameters from '../../game-logic/parameters.js';
 
@@ -23,7 +22,6 @@ const ExitBox = ({ exitBoxProps = parameters.exitBoxProps }) => {
     const { gameStates, setGameStates } = useGameStates();
     const [confirmedState, setConfirmedState] = useState(gameStates.exitConfirmed)
     const [canceledState, setCanceledState] = useState(gameStates.exitCanceled)
-    // const navigate = useNavigate();
 
     // Update game states after using the buttons
     function handleConfirm(){

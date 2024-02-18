@@ -211,7 +211,8 @@ const GameSection = () => {
         }; 
     
         changeStartButton()
-        }, [buttonStates.counterUsedStartButton, setButtonStates])
+
+    }, [buttonStates.counterUsedStartButton, setButtonStates])
 
     if(parameters.genCfg.debugMode){
         console.log("######################### GameSection #############################")
