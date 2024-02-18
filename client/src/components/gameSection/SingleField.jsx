@@ -21,15 +21,21 @@ const SingleField = ({fieldState, idx, snapshot}) => {
   
   useEffect(() => {
 
-    if(gameStates.ready2Play && !opponentStates.ready2Play){
-      setIsDraggable(false);
-
-    }else{     
-      setIsDraggable(true);
-      
+    if(!emptyFigProps){
+      // Ednabled drag option depends from the state of the opponent 
+      if(gameStates.ready2Play && !opponentStates.ready2Play){
+        setIsDraggable(false);
+      }
+      // Disabled drag option for 'Flag' and 'Bomb' when the game is started
+      else if(gameStates.ready2Play && (figProps.figName === 'Flag.png' || figProps.figName === 'Bomb.png')){
+          setIsDraggable(false);
+      }  
+      else{     
+        setIsDraggable(true);       
+      }
     }
 
-  }, [setIsDraggable, gameStates.ready2Play, opponentStates.ready2Play])
+  }, [setIsDraggable, gameStates.ready2Play, opponentStates.ready2Play, figProps, emptyFigProps])
 
   // Set style of the component 
   const fieldStyle = {

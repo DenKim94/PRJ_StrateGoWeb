@@ -168,17 +168,20 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
         setScoutStates((prevStates) => ({
           ...prevStates,
           isValidMove: isValidMove,
-        }));        
+        }));   
+
+        if(!parameters.genCfg.debugMode){
+          console.log("isValidMove_Scout: ", isValidMove)  
+        }   
       }
 
       // Checking values of parameters in 'debugMode' 
       if(parameters.genCfg.debugMode){
-        console.log("################### handleDragUpdate #####################");
-        console.log('update: ', update);
-        console.log('gameFieldState: ', fieldState);
-        console.log("isScoutFigure: ", figureProps.isScoutFigure)
-        console.log("draggedOverFigure: ", draggedOverFigure)
-        console.log("scoutStates_onDragUpdate: ", scoutStates)
+          console.log("################### handleDragUpdate #####################");
+          console.log('update: ', update);
+          console.log('gameFieldState: ', fieldState);
+          console.log("isScoutFigure: ", figureProps.isScoutFigure)
+          console.log("draggedOverFigure: ", draggedOverFigure)
         }   
     }
 

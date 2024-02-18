@@ -249,9 +249,9 @@ export function identifyScoutFigure(sourceFieldProps, fieldStates){
 /**
  * Checks the validity of a move for a scout figure on a game board.
  *
- * @param {number} startPos - The starting position (x, y) of the scout figure.
- * @param {number} endPos - The ending position (x, y) where the scout figure is being moved.
- * @param {number} draggedOverFigurePosition - The position (x, y) of the figure over which the scout is dragged.
+ * @param {number} startPos - The starting position [x, y] of the scout figure.
+ * @param {number} endPos - The ending position [x, y] where the scout figure is being moved.
+ * @param {number} draggedOverFigurePosition - The position [x, y] of the figure over which the scout is dragged.
  *
  * @returns {boolean} isValidMove - Indicates whether the move is valid for the scout figure.
  *   - Returns true if the move is valid.
@@ -262,7 +262,7 @@ export function checkValidScoutMove(startPos, endPos, draggedOverFigurePosition)
     let isValidMove = true;
 
     if(draggedOverFigurePosition && endPos && startPos){
-
+        // Vertical: from top to bottom movement
         if(startPos[1] > draggedOverFigurePosition[1]){
 
             if(endPos[1] < draggedOverFigurePosition[1] && 
@@ -270,6 +270,7 @@ export function checkValidScoutMove(startPos, endPos, draggedOverFigurePosition)
                     isValidMove = false;
             }
         }
+        // Vertical: from bottom to top movement
         else if(startPos[1] < draggedOverFigurePosition[1]){
             
             if(endPos[1] > draggedOverFigurePosition[1] && 
@@ -277,6 +278,22 @@ export function checkValidScoutMove(startPos, endPos, draggedOverFigurePosition)
                     isValidMove = false;
             }
         }
+        // Horizontal: from left to right movement
+        else if(startPos[0] < draggedOverFigurePosition[0]){
+            
+            if(endPos[0] > draggedOverFigurePosition[0] && 
+                draggedOverFigurePosition[1] === endPos[1]){
+                    isValidMove = false;
+            }
+        }  
+        // Horizontal: from right to left movement
+        else if(startPos[0] > draggedOverFigurePosition[0]){
+            
+            if(endPos[0] < draggedOverFigurePosition[0] && 
+                draggedOverFigurePosition[1] === endPos[1]){
+                    isValidMove = false;
+            }
+        }                
     }
 
     return isValidMove
