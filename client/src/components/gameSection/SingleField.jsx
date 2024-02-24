@@ -10,7 +10,7 @@ import { useGameStates } from '../context/GameStatesContext.js';
  * @returns {JSX.Element|null} Returns the JSX element representing a single field or null if figure properties are empty.
  */
 
-const SingleField = ({fieldState, idx, snapshot}) => {
+const SingleField = ({fieldState, idx}) => {
 
   const [isDraggable, setIsDraggable] = useState(true);
   const { gameStates } = useGameStates();
@@ -71,7 +71,7 @@ const SingleField = ({fieldState, idx, snapshot}) => {
                           isDragDisabled = {!isDraggable}
                           type = "FIGURE"
                           >
-                            {(provided,snapshot)=>(
+                            {(provided, snapshot)=>(
                                   <div className='game-figure'
                                       ref={provided.innerRef} 
                                       {...provided.draggableProps}

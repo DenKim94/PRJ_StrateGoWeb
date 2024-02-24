@@ -36,8 +36,7 @@ app.post("/setup", async (req, res) => {
         const {playerName, playerNumber} = gameSets;  // Parameters should be adapted to requirements
 
         if(!playerName || !playerNumber){
-            console.log("Error: Incomplete request body!")
-            throw("Incomplete request body!")
+            console.error("Error: Incomplete request body!")
         }
         const userID = uuidv4();                            // Generate a unique user ID
         const token = serverClient.createToken(userID);     // Create a specific token for authentication
