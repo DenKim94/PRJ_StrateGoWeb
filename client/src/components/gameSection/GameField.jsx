@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { ToastContainer, toast } from 'react-toastify';
 import './GameField.css'
 import * as parameters from '../../game-logic/parameters.js';
 import SingleField from './SingleField';
@@ -9,7 +10,7 @@ import { useButtonStates } from '../context/ButtonStatesContext.js';
 import { useGameStates } from '../context/GameStatesContext.js';
 import { useScoutStates } from '../context/ScoutStatesContext.js';
 import { useOpponentStates } from '../context/OpponentStatesContext.js';
-// import { useChannelStates } from '../context/ChannelStatesContext.js';
+import { useChannelStates } from '../context/ChannelStatesContext.js';
 import { figProperties } from '../../game-logic/parameters.js';
 import * as helperFcn from '../functions/helperFunctions.js'
 import * as gameLogic from '../../game-logic/gameLogic.js'
@@ -30,7 +31,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     const { buttonStates, setButtonStates } = useButtonStates();
     const { scoutStates, setScoutStates } = useScoutStates();
     const { opponentStates } = useOpponentStates();
-    // const { channelStates } = useChannelStates();
+    const { channelStates } = useChannelStates();
     const { gameStates } = useGameStates();
 
     /* ********************************************************************* */
@@ -79,7 +80,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     }
     
     /* ********************************************************************* */
-    /* Set properties of a single field and store them in an array */
+    // Set properties of a single field and store them in an array
     
     let defaultFieldState = Array.from({ length: arrayLengthGameFields }).map((_, index) => {
       let singleFieldProps = helperFcn.setProps4SingleField(
@@ -91,7 +92,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                           sizeSingleField,
                                           backgroundColor);
 
-      /* Define non playable fields and modify the properties */
+      // Define non playable fields and modify the properties
       helperFcn.setNonPlayableFields(singleFieldProps,
                                     fieldCoordinates[index],
                                     coordsNonPlayableFields,
@@ -100,15 +101,42 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
         return singleFieldProps
     });
 
-    /* *** State as array to store and set game field properties *** */
+    //State as array to store and set game field properties 
     const [gameFieldState, setGameFieldState] = useState(defaultFieldState); 
 
-    /* *** State as array to store and set game figure properties *** */
+    // State as array to store and set game figure properties
     const playerFigures = helperFcn.getFiguresOfPlayer(figProperties, playerColor);
     const [figureStorageState,setFigureStorageState] = useState([...playerFigures]); 
 
-    /* *** State as array to store defeated game figures *** */
+    // State as array to store defeated game figures
     const [defeatedFigureStorage,setDefeatedFigureStorage] = useState([]); 
+
+    // Set player to make a first turn - Player who is ready to start the game first, can make the first turn 
+    const [firstTurn, setFirstTurn] = useState(null);
+    const [counterFirstTurn, setCounterFirstTurn ] = useState(0); 
+
+    useEffect(() => {
+      if(opponentStates.ready2Play && !gameStates.ready2Play && counterFirstTurn === 0){
+        if(gameStates.isPlayer1){
+          setFirstTurn(2);
+        }else{
+          setFirstTurn(1);
+        }
+        setCounterFirstTurn(counterFirstTurn+1)
+  
+      }else if(!opponentStates.ready2Play && gameStates.ready2Play && counterFirstTurn === 0){    
+          if(gameStates.isPlayer1){
+            setFirstTurn(1);
+          }else{
+            setFirstTurn(2);
+          }
+          setCounterFirstTurn(counterFirstTurn+1)
+      }   
+
+    },[opponentStates.ready2Play, gameStates.ready2Play, gameStates.isPlayer1, counterFirstTurn])
+
+    // State to set the correct turn of a player; Player 2 is going to start the game
+    const [turnPlayer, setTurnPlayer] = useState(firstTurn); 
 
     // Checking values of parameters in 'debugMode' 
     if(parameters.genCfg.debugMode){
@@ -117,6 +145,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
       console.log(">> sizeSingleField [px]: ", sizeSingleField);
       console.log(">> Array 'fieldCoordinates': ", fieldCoordinates);
       console.log(">> playerColor: ", playerColor);
+      console.log(">> firstTurn: ", firstTurn);
       console.log(">> playerFigures: ", playerFigures);
       console.log(">> State 'gameFieldState': ", gameFieldState);
       console.log(">> State 'figureStorageState': ", figureStorageState);
@@ -261,8 +290,11 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
             <DefeatedFigureStorage defFigStateArray = {defeatedFigureStorage}
                                    setDefState = {setDefeatedFigureStorage}
                                    figStorageState = {figureStorageState} />
+
+            <ToastContainer position='top-right' />                           
         </div> 
       </DragDropContext>
+
       )     
 };
 
