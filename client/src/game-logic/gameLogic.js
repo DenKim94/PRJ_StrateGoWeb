@@ -1,13 +1,19 @@
 // import * as helperFcn from '../components/functions/helperFunctions.js'
 import { genCfg } from './parameters';
 import { gameFieldObj } from './parameters';
+import { figProperties } from './parameters';
 
 /**
  * Helper function to get the index of the game-field-array
 */
 function getIndexOfGameField(stateArray, fieldObj){
     const indexField = stateArray.findIndex((fieldProps) => fieldProps.id === fieldObj.droppableId);
-    return indexField || null;
+    
+    if(indexField > 0){ 
+        return indexField ;
+    }else{
+        return null;    // If index not found return null
+    }
 }
 
 /**
@@ -218,14 +224,21 @@ function battleFigures(figObj_1, figObj_2){
     }
 }
 
-/**** Helper function to update the properties of the game field ****/
-/*  
-Input: FieldState [Array including objects],
-       indexField [Number],
-       props [isPlayable, figureObj] 
-Output: 
-       FieldState with updated properties 
-*/
+/**
+ * Helper function to update the properties of a specific field in the game field.
+ *
+ * @function
+ * @param {Array<Object>} FieldState - The array representing the current state of the game field.
+ * @param {number} indexField - The index of the field in the array to be updated.
+ * @param {Array} props - An array containing the properties to be updated [isPlayable, figureObj].
+ * @param {boolean} props [0]: The updated value for the 'isPlayable' property.
+ * @param {Object} props [1]: The updated value for the 'figure' property.
+ * @returns {Array<Object>} The updated game field state with modified properties.
+ * @throws {Error} Throws an error if the provided index is out of bounds.
+ *
+ * @example
+ * const updatedFieldState = updateGameFieldStateProps(gameFieldState, 2, [true, { id: 1, imgPath: '', ... }]);
+ */
 function updateGameFieldStateProps(FieldState, indexField, props){
     FieldState[indexField] = {
         ...FieldState[indexField],
@@ -235,7 +248,22 @@ function updateGameFieldStateProps(FieldState, indexField, props){
     return FieldState;
 }
 
-/** *** Function to handle the drag and drop process and ensure a correct game logic *** */
+/**
+ * Function to handle the drag and drop process and ensure correct game logic.
+ *
+ * @param {Object} results - The results object containing information about the drag and drop action.
+ * @param {Array<Object>} gameFieldState - The current state of the game field.
+ * @param {Array<Object>} figureStorageState - The current state of the figure storage.
+ * @param {string} prefixSingleFieldID - The prefix used to identify a single field in the game.
+ * @param {Object} gameSettings - The current game settings.
+ * @param {boolean} gameSettings.isPaused - Indicates if the game is paused.
+ * @param {boolean} gameSettings.leaveGame - Indicates if a player has left the game.
+ * @returns {?Object} An object containing the updated game field and figure storage states, or null if no update is needed.
+ *
+ * @example
+ * const results = { source: {...}, destination: {...}, type: "FIGURE", draggableId: "white_knight" };
+ * const updatedStates = handleDragDrop(results, gameFieldState, figureStorageState, "field_", gameSettings);
+ */
 export function handleDragDrop(results, gameFieldState, figureStorageState, prefixSingleFieldID, gameSettings) 
 {   
     // Extract the properties after the DnD action
@@ -334,10 +362,68 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
     }
     // Return updates states
     return {
+        draggedFigure: draggedFigure,
         gameFieldState: newGameFieldState,
         figureStorageState: newFigureStorageState,
-      };
-        
+      };       
 }
 
+// Function to update the game field due to moved figures
+export function updateMovedFiguresOnGameField(movedFigObj, currentGameFieldState){
+    let updatedGameFieldStates = currentGameFieldState;
 
+    const indexSourceField = getIndexOfGameField(currentGameFieldState, movedFigObj.source);
+    const indexTargetField = getIndexOfGameField(currentGameFieldState, movedFigObj.destination); 
+
+    console.log(">> currentGameFieldState: ", currentGameFieldState)  
+    console.log(">> [indexSourceField, indexTargetField]: ", [indexSourceField, indexTargetField])
+
+    const indexFigureBack = figProperties.findIndex((figProps) => figProps.figName === "FigureBack.png");
+    console.log(">> indexFigureBack: ", indexFigureBack)
+}
+
+// Function to update the game field while setting up the game figures
+export function setUpGameFieldStates(movedFigObj, currentGameFieldState){
+
+    // console.log(">> movedFigObj: ", movedFigObj)
+    
+    let updatedGameFieldStates = currentGameFieldState;
+
+    const indexSourceField = getIndexOfGameField(currentGameFieldState, movedFigObj.source);
+    const indexTargetField = getIndexOfGameField(currentGameFieldState, movedFigObj.destination); 
+    
+    // console.log("++ gameFieldState: ", currentGameFieldState)  
+    console.log("++ [indexSourceField, indexTargetField]: ", [indexSourceField, indexTargetField])
+    
+    if(indexSourceField){ updatedGameFieldStates[indexSourceField].figure = null; }
+
+    if(indexTargetField){
+        updatedGameFieldStates[indexTargetField] = {
+            ...updatedGameFieldStates[indexTargetField],
+            figure: movedFigObj.figureProps,
+        };
+    }
+
+    return updatedGameFieldStates
+}
+
+export function addPathFigureBack(movedFigObj){
+
+        // Get a path of an corresponding image to hide the figure of the opponent
+        const indexFigureBack = figProperties.findIndex((figProps) => figProps.figName === "FigureBack.png" && figProps.color === movedFigObj.figureProps.color);
+        // console.log("++ indexFigureBack: ", indexFigureBack)
+    
+        const imgFigureBackPath = figProperties[indexFigureBack].imgPath[0];
+    
+        let currentFigurePaths = movedFigObj.figureProps.imgPath;
+        currentFigurePaths.push(imgFigureBackPath)
+        
+        const movedFigureProps = {
+            ...movedFigObj.figureProps,
+            imgPath: currentFigurePaths,
+        };
+   
+        // console.log("++ movedFigureProps: ", movedFigureProps)
+
+        return movedFigureProps
+}

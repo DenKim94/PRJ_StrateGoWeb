@@ -11,6 +11,7 @@ import { useGameStates } from '../context/GameStatesContext.js';
 import { useScoutStates } from '../context/ScoutStatesContext.js';
 import { useOpponentStates } from '../context/OpponentStatesContext.js';
 import { useChannelStates } from '../context/ChannelStatesContext.js';
+import { useChatContext } from 'stream-chat-react';
 import { figProperties } from '../../game-logic/parameters.js';
 import * as helperFcn from '../functions/helperFunctions.js'
 import * as gameLogic from '../../game-logic/gameLogic.js'
@@ -32,7 +33,46 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     const { scoutStates, setScoutStates } = useScoutStates();
     const { opponentStates } = useOpponentStates();
     const { channelStates } = useChannelStates();
+    const { client } = useChatContext();
     const { gameStates } = useGameStates();
+
+    // States to provide updates of moved figures to each player
+    const [movedFigure, setMovedFigure] = useState( 
+        { 
+            player: null,
+            figureProps: null,
+            source: null,
+            destination: null,
+        }
+    );
+
+    // Set player to make a first turn 
+    // --> A player who is ready to start the game first, can make the first turn 
+    const [firstTurn, setFirstTurn] = useState(null);
+    const [counterFirstTurn, setCounterFirstTurn ] = useState(0); 
+
+    useEffect(() => {
+      if(opponentStates.ready2Play && !gameStates.ready2Play && counterFirstTurn === 0){
+        if(gameStates.isPlayer1){
+          setFirstTurn(2);
+        }else{
+          setFirstTurn(1);
+        }
+        setCounterFirstTurn(counterFirstTurn+1)
+  
+      }else if(!opponentStates.ready2Play && gameStates.ready2Play && counterFirstTurn === 0){    
+          if(gameStates.isPlayer1){
+            setFirstTurn(1);
+          }else{
+            setFirstTurn(2);
+          }
+          setCounterFirstTurn(counterFirstTurn+1)
+      }   
+
+    },[opponentStates.ready2Play, gameStates.ready2Play, gameStates.isPlayer1, counterFirstTurn])
+
+    // State to set the correct turn of a player 
+    const [turnPlayer, setTurnPlayer] = useState(firstTurn); 
 
     /* ********************************************************************* */
     const fieldWidth = gameFieldSettings.fieldWidth;
@@ -68,15 +108,17 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     // Merging the axis arrays into a new array of coordinates 
     let fieldCoordinates = helperFcn.getCoordinatesArray(xAxisLetters,yAxisNumbers, gameStates.isPlayer1);
     
-    // Get color of current player
+    // Get color and number of current player
     let playerColor; 
+    let playerNumber;
 
-    if(gameStates.isPlayer1)
-        playerColor = gameStates.colorPlayer1;
-
+    if(gameStates.isPlayer1){
+      playerColor = gameStates.colorPlayer1;
+      playerNumber = 1;
+    }
     else{
-        playerColor = gameStates.colorPlayer2;
-
+      playerColor = gameStates.colorPlayer2;
+      playerNumber = 2;
     }
     
     /* ********************************************************************* */
@@ -106,37 +148,79 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
 
     // State as array to store and set game figure properties
     const playerFigures = helperFcn.getFiguresOfPlayer(figProperties, playerColor);
-    const [figureStorageState,setFigureStorageState] = useState([...playerFigures]); 
+    const [figureStorageState, setFigureStorageState] = useState([...playerFigures]); 
 
     // State as array to store defeated game figures
-    const [defeatedFigureStorage,setDefeatedFigureStorage] = useState([]); 
+    const [defeatedFigureStorage, setDefeatedFigureStorage] = useState([]); 
 
-    // Set player to make a first turn - Player who is ready to start the game first, can make the first turn 
-    const [firstTurn, setFirstTurn] = useState(null);
-    const [counterFirstTurn, setCounterFirstTurn ] = useState(0); 
-
+    // Send updates to channel
     useEffect(() => {
-      if(opponentStates.ready2Play && !gameStates.ready2Play && counterFirstTurn === 0){
-        if(gameStates.isPlayer1){
-          setFirstTurn(2);
-        }else{
-          setFirstTurn(1);
-        }
-        setCounterFirstTurn(counterFirstTurn+1)
-  
-      }else if(!opponentStates.ready2Play && gameStates.ready2Play && counterFirstTurn === 0){    
-          if(gameStates.isPlayer1){
-            setFirstTurn(1);
-          }else{
-            setFirstTurn(2);
+      const provideUpdatesToChannel = async (movedFigure) => 
+      {
+          gameLogic.addPathFigureBack(movedFigure);
+
+          if(turnPlayer === playerNumber){
+              // Change turn of current player
+              setTurnPlayer(playerNumber === 1 ? 2:1)
+
+              await channelStates.channelObj.sendEvent({
+                  type: "moved-figure",
+                  data: {movedFigure, turnPlayer},
+              })
           }
-          setCounterFirstTurn(counterFirstTurn+1)
-      }   
 
-    },[opponentStates.ready2Play, gameStates.ready2Play, gameStates.isPlayer1, counterFirstTurn])
+          if(!turnPlayer || movedFigure.source.droppableId === "storageZone"){
+            await channelStates.channelObj.sendEvent({
+              type: "set-up-figures",
+              data: {movedFigure},
+          })            
+          }
+      }
+      
+      if(movedFigure.figureProps){
+          provideUpdatesToChannel(movedFigure)
 
-    // State to set the correct turn of a player; Player 2 is going to start the game
-    const [turnPlayer, setTurnPlayer] = useState(firstTurn); 
+          console.log(">> movedFigure: ", movedFigure)
+          console.log(">> Updates provided.")
+
+          // Reset states of moved figure
+          setMovedFigure((prevStates) => ({
+            ...prevStates,
+            figureProps: null,
+            source: null,
+            destination: null,
+        }));
+      } 
+
+    }, [movedFigure, playerNumber, turnPlayer, channelStates.channelObj])
+
+
+    // Get channel updates from the opponent
+    channelStates.channelObj.on((event) => {
+      // Track changes during the started game
+      if(event.type === "moved-figure" && event.user.id !== client.userID){
+          // Provide update of changed turn of current player after started game
+          setTurnPlayer(event.data.movedFigure.player === 1 ? 2:1)
+          console.log(">> @moved-figure - event.data:", event.data)
+
+          // Update field states
+          const updatedFieldStates = gameLogic.updateMovedFiguresOnGameField(event.data.movedFigure, gameFieldState);
+      }
+
+      // Track changes during setting up the figures
+      if(event.type === "set-up-figures" && event.user.id !== client.userID){
+        console.log(">> @set-up-figures - event.data:", event.data)
+
+        const setUpFieldStates = gameLogic.setUpGameFieldStates(event.data.movedFigure, gameFieldState);
+
+        console.log(">> setUpFieldStates: ", setUpFieldStates)
+      }     
+    })
+
+    // console.log(">> playerNumber: ", playerNumber);
+    // console.log(">> turnPlayer: ", turnPlayer);
+    // console.log(">> firstTurn: ", firstTurn);
+    console.log(">> State 'gameFieldState': ", gameFieldState);
 
     // Checking values of parameters in 'debugMode' 
     if(parameters.genCfg.debugMode){
@@ -236,8 +320,22 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
 
                                 if (updatedStates && !opponentStates.pausedGame){                                  
                                   // Get updated states from 'updatedStates'
-                                  const { gameFieldState: newGameFieldState, figureStorageState: newFigureStorageState} = updatedStates;
-                          
+                                  const { draggedFigure, gameFieldState: newGameFieldState, figureStorageState: newFigureStorageState} = updatedStates;
+
+                                  console.log(">> draggedFigure: ", draggedFigure)
+                                  console.log(">> newGameFieldState: ", newGameFieldState)
+                                  
+                                  if(draggedFigure){
+                                    setMovedFigure((prevStates) => ({
+                                      ...prevStates,
+                                      player: playerNumber,
+                                      figureProps: draggedFigure,
+                                      source: result.source,
+                                      destination: result.destination,
+                                  }))
+
+                                  }
+
                                   setGameFieldState(newGameFieldState);         // Update the State of the game field 
                                   setFigureStorageState(newFigureStorageState); // Update the State of the figure storage
                                 }
