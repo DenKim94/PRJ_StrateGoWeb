@@ -370,6 +370,8 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
 
 // Function to update the game field due to moved figures
 export function updateMovedFiguresOnGameField(movedFigObj, currentGameFieldState){
+
+    // In progress ...
     let updatedGameFieldStates = currentGameFieldState;
 
     const indexSourceField = getIndexOfGameField(currentGameFieldState, movedFigObj.source);
@@ -378,40 +380,36 @@ export function updateMovedFiguresOnGameField(movedFigObj, currentGameFieldState
     console.log(">> currentGameFieldState: ", currentGameFieldState)  
     console.log(">> [indexSourceField, indexTargetField]: ", [indexSourceField, indexTargetField])
 
-    const indexFigureBack = figProperties.findIndex((figProps) => figProps.figName === "FigureBack.png");
-    console.log(">> indexFigureBack: ", indexFigureBack)
 }
 
-// Function to update the game field while setting up the game figures
-export function setUpGameFieldStates(movedFigObj, currentGameFieldState){
-
-    // console.log(">> movedFigObj: ", movedFigObj)
+// Function to get properties of added opponent figures
+export function getAddedFigureOnField(movedFigObj, currentGameFieldState){
     
-    let updatedGameFieldStates = currentGameFieldState;
+    let addedFigure = {
+        figureProps: null,
+        indexDestField: null,
+        destFieldID: null,
+    };
 
-    const indexSourceField = getIndexOfGameField(currentGameFieldState, movedFigObj.source);
     const indexTargetField = getIndexOfGameField(currentGameFieldState, movedFigObj.destination); 
-    
-    // console.log("++ gameFieldState: ", currentGameFieldState)  
-    console.log("++ [indexSourceField, indexTargetField]: ", [indexSourceField, indexTargetField])
-    
-    if(indexSourceField){ updatedGameFieldStates[indexSourceField].figure = null; }
+    const targetFieldID    = currentGameFieldState[indexTargetField].id;
 
     if(indexTargetField){
-        updatedGameFieldStates[indexTargetField] = {
-            ...updatedGameFieldStates[indexTargetField],
-            figure: movedFigObj.figureProps,
+        addedFigure = {
+            figureProps: movedFigObj.figureProps,
+            indexDestField: indexTargetField,
+            destFieldID: targetFieldID,
         };
     }
 
-    return updatedGameFieldStates
+    return addedFigure
 }
 
+// Function to add an additional path for the back side of a gamefigure
 export function addPathFigureBack(movedFigObj){
 
         // Get a path of an corresponding image to hide the figure of the opponent
         const indexFigureBack = figProperties.findIndex((figProps) => figProps.figName === "FigureBack.png" && figProps.color === movedFigObj.figureProps.color);
-        // console.log("++ indexFigureBack: ", indexFigureBack)
     
         const imgFigureBackPath = figProperties[indexFigureBack].imgPath[0];
     
@@ -423,7 +421,5 @@ export function addPathFigureBack(movedFigObj){
             imgPath: currentFigurePaths,
         };
    
-        // console.log("++ movedFigureProps: ", movedFigureProps)
-
         return movedFigureProps
 }
