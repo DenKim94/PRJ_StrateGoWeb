@@ -5,13 +5,15 @@ const ChannelStatesContext = createContext();
 /**
  * React component for providing channel states to its children.
  * @component
- * @param {Object} props - Component props.
+ * @param {Object} channelObj - Channel properties
+ * @param {Object} cookieObj - Cookie properties
  * @param {React.ReactNode} props.children - The child components to be wrapped by the ChannelStatesProvider.
  * @returns {JSX.Element} React JSX element representing the ChannelStatesProvider component.
  */
 export const ChannelStatesProvider = ({ children }) => {
   const [channelStates, setChannelStates] = useState({
     channelObj: null,
+    cookieObj: null,
   });
 
   return (
@@ -30,4 +32,5 @@ export const ChannelStatesProvider = ({ children }) => {
  */
 export const useChannelStates = () => {
   return useContext(ChannelStatesContext);
+  
 };

@@ -1,17 +1,23 @@
 // import * as helperFcn from '../components/functions/helperFunctions.js'
 import { genCfg } from './parameters';
 import { gameFieldObj } from './parameters';
+import { figProperties } from './parameters';
 
 /**
- * Helper function to get the index of the game-field-array
+ * Helper function to get an index of a game field with specific ID
 */
 function getIndexOfGameField(stateArray, fieldObj){
     const indexField = stateArray.findIndex((fieldProps) => fieldProps.id === fieldObj.droppableId);
-    return indexField || null;
+    
+    if(indexField > 0){ 
+        return indexField ;
+    }else{
+        return null;    // If index not found return null
+    }
 }
 
 /**
- * Helper function to get the properties of a single field element
+ * Helper function to get properties of a single field element
 */
 function getPropsOfGameField(stateArray, index){
     const fieldProps = stateArray[index];
@@ -19,7 +25,7 @@ function getPropsOfGameField(stateArray, index){
 }
 
 /**
- * Helper function to move game figures inside the game field 
+ * Helper function to move game figures on the game field 
 */
 function moveFigureOnField(GameFieldState, gameSettings, draggableId, figureStorageState, 
                            indexSourceField, indexTargetField)
@@ -81,21 +87,21 @@ function moveFigureOnField(GameFieldState, gameSettings, draggableId, figureStor
     }
     // Show values of parameters in a console when 'debugMode' is active
     if(genCfg.debugMode){
-        console.log("**** function moveFigureOnField ****")
-        console.log(">> GameFieldState:", GameFieldState)
-        console.log(">> draggableId:", draggableId)
-        console.log(">> sourceFieldProps:", sourceFieldProps)  
-        console.log(">> targetFieldProps:", targetFieldProps)           
-        console.log(">> draggedFigure:", draggedFigure)
-        console.log(">> newGameFieldState:", newGameFieldState)
-        console.log("*************************************")
+        console.log("##############################################")
+        console.log("@moveFigureOnField - GameFieldState:", GameFieldState)
+        console.log("@moveFigureOnField - draggableId:", draggableId)
+        console.log("@moveFigureOnField - sourceFieldProps:", sourceFieldProps)  
+        console.log("@moveFigureOnField - targetFieldProps:", targetFieldProps)           
+        console.log("@moveFigureOnField - draggedFigure:", draggedFigure)
+        console.log("@moveFigureOnField - newGameFieldState:", newGameFieldState)
+        console.log("##############################################")
     }
     // Return States
     return [newGameFieldState, newFigureStorageState]   
 }
 
 /**
- * Helper function to maintain a correct moving of a game figure 
+ * Helper function to ensure a correct movement of the game figure 
 */
 function checkCorrectMoving(sourceFieldProps, targetFieldProps, figureProps){
     // Start position of dragged figure: [x,y]
@@ -125,7 +131,7 @@ function checkCorrectMoving(sourceFieldProps, targetFieldProps, figureProps){
 }
 
 /**
- * Helper function to check if the direction of a movement is allowed 
+ * Helper function to check a valid/allowed direction of a movement
 */
 function checkMovingDirection(startPos, endPos){
     // Initialized parameter, which will be returned as boolean [true or false]
@@ -146,17 +152,18 @@ function checkMovingDirection(startPos, endPos){
     }
     // Show values of parameters in a console when 'debugMode' is active
     if(genCfg.debugMode){
-        console.log("**** function checkMovingDirection ****")
-        console.log(">> startPos: ", startPos)
-        console.log(">> endPos: ", endPos)
-        console.log(">> absDiff_y: ", absDiff_y)
-        console.log(">> isAllowedDirection: ", isAllowed)
+        console.log("##############################################")
+        console.log("@checkMovingDirection - startPos: ", startPos)
+        console.log("@checkMovingDirection - endPos: ", endPos)
+        console.log("@checkMovingDirection - absDiff_y: ", absDiff_y)
+        console.log("@checkMovingDirection - isAllowedDirection: ", isAllowed)
+        console.log("##############################################")
     }   
     return isAllowed
 }
 
 /**
- * Helper function to maintain a correct number of movement steps of dragged figure 
+ * Helper function to get a number of moving steps of a dragged figure 
 */
 function getMovingSteps(startPos, endPos){
     // Array to translate a letter to corresponding number as defined in 'parameters/gameFieldObj'
@@ -169,9 +176,10 @@ function getMovingSteps(startPos, endPos){
     const steps = [x_steps, y_steps]; 
     // Show values of parameters in a console when 'debugMode' is active
     if(genCfg.debugMode){
-        console.log("**** function getMovingSteps ****")
-        console.log(">> let2num: ", let2num)
-        console.log(">> [x_steps, y_steps]: ", steps)
+        console.log("##############################################")
+        console.log("@getMovingSteps - let2num: ", let2num)
+        console.log("@getMovingSteps - [x_steps, y_steps]: ", steps)
+        console.log("##############################################")
     }   
     return steps
 }    
@@ -184,8 +192,9 @@ function handleOccupiedField(targetFieldProps, draggedFigure){
     const placedFigure = targetFieldProps.figure;
     // Show values of parameters in a console when 'debugMode' is active
     if(genCfg.debugMode){
-        console.log("**** function handleOccupiedField ****")
-        console.log(">> placedFigure: ", placedFigure)
+        console.log("##############################################")
+        console.log("@handleOccupiedField - placedFigure: ", placedFigure)
+        console.log("##############################################")
     }
 
     // If 'placedFigure' does not exist, return null
@@ -203,7 +212,7 @@ function handleOccupiedField(targetFieldProps, draggedFigure){
     }   
 }
 /**
- * Helper function to handle the battle between figures
+ * Helper function to handle the battle between two game figures
 */
 function battleFigures(figObj_1, figObj_2){
     let winner = "drawn"; 
@@ -218,14 +227,21 @@ function battleFigures(figObj_1, figObj_2){
     }
 }
 
-/**** Helper function to update the properties of the game field ****/
-/*  
-Input: FieldState [Array including objects],
-       indexField [Number],
-       props [isPlayable, figureObj] 
-Output: 
-       FieldState with updated properties 
-*/
+/**
+ * Helper function to update the properties of a specific field in the game field.
+ *
+ * @function
+ * @param {Array<Object>} FieldState - The array representing the current state of the game field.
+ * @param {number} indexField - The index of the field in the array to be updated.
+ * @param {Array} props - An array containing the properties to be updated [isPlayable, figureObj].
+ * @param {boolean} props [0]: The updated value for the 'isPlayable' property.
+ * @param {Object} props [1]: The updated value for the 'figure' property.
+ * @returns {Array<Object>} The updated game field state with modified properties.
+ * @throws {Error} Throws an error if the provided index is out of bounds.
+ *
+ * @example
+ * const updatedFieldState = updateGameFieldStateProps(gameFieldState, 2, [true, { id: 1, imgPath: '', ... }]);
+ */
 function updateGameFieldStateProps(FieldState, indexField, props){
     FieldState[indexField] = {
         ...FieldState[indexField],
@@ -235,16 +251,32 @@ function updateGameFieldStateProps(FieldState, indexField, props){
     return FieldState;
 }
 
-/** *** Function to handle the drag and drop process and ensure a correct game logic *** */
+/**
+ * Function to handle the drag and drop process and ensure correct game logic.
+ *
+ * @param {Object} results - The results object containing information about the drag and drop action.
+ * @param {Array<Object>} gameFieldState - The current state of the game field.
+ * @param {Array<Object>} figureStorageState - The current state of the figure storage.
+ * @param {string} prefixSingleFieldID - The prefix used to identify a single field in the game.
+ * @param {Object} gameSettings - The current game settings.
+ * @param {boolean} gameSettings.isPaused - Indicates if the game is paused.
+ * @param {boolean} gameSettings.leaveGame - Indicates if a player has left the game.
+ * @returns {?Object} An object containing the updated game field and figure storage states, or null if no update is needed.
+ *
+ * @example
+ * const results = { source: {...}, destination: {...}, type: "FIGURE", draggableId: "white_knight" };
+ * const updatedStates = handleDragDrop(results, gameFieldState, figureStorageState, "field_", gameSettings);
+ */
 export function handleDragDrop(results, gameFieldState, figureStorageState, prefixSingleFieldID, gameSettings) 
 {   
     // Extract the properties after the DnD action
     const { source, destination, type, draggableId } = results;
 
     if(genCfg.debugMode){
-        console.log("**** function handleDragDrop ****")
-        console.log(">> results: ",results)
-        console.log(">> gameFieldState: ",gameFieldState)
+        console.log("##############################################")
+        console.log("@handleDragDrop - results: ",results)
+        console.log("@handleDragDrop - gameFieldState: ",gameFieldState)
+        console.log("##############################################")
     }
 
     // If the game is paused, do nothing
@@ -253,7 +285,7 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
     }
     // If destination doesn't exist, do nothing 
     if(!destination){
-        alert(" Invalid drop: Please drop the figure inside the game field!")
+        alert("Invalid drop: Please drop the figure inside the game field!")
         return null;        
     } 
     // If source and destination are equal, do nothing 
@@ -317,12 +349,13 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
             };
             // Show values of parameters in a console when 'debugMode' is active
             if(genCfg.debugMode){
-                console.log("**** function handleDragDrop ****")
-                console.log(">> figureStorageState: ", figureStorageState)
-                console.log(">> newFigureStorageState: ", newFigureStorageState)
-                console.log(">> gameFieldState: ", gameFieldState)
-                console.log(">> targetFieldProps: ", targetFieldProps)
-                console.log(">> newGameFieldState:", newGameFieldState)
+                console.log("##############################################")
+                console.log("@handleDragDrop - figureStorageState: ", figureStorageState)
+                console.log("@handleDragDrop - newFigureStorageState: ", newFigureStorageState)
+                console.log("@handleDragDrop - gameFieldState: ", gameFieldState)
+                console.log("@handleDragDrop - targetFieldProps: ", targetFieldProps)
+                console.log("@handleDragDrop - newGameFieldState:", newGameFieldState)
+                console.log("##############################################")
             }
         }
         // Moving figures inside the game field
@@ -334,10 +367,64 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
     }
     // Return updates states
     return {
+        draggedFigure: draggedFigure,
         gameFieldState: newGameFieldState,
         figureStorageState: newFigureStorageState,
-      };
-        
+      };       
 }
 
+// Function to update the game field due to moved figures
+export function updateMovedFiguresOnGameField(movedFigObj, currentGameFieldState){
 
+    // In progress ...
+    let updatedGameFieldStates = currentGameFieldState;
+
+    const indexSourceField = getIndexOfGameField(currentGameFieldState, movedFigObj.source);
+    const indexTargetField = getIndexOfGameField(currentGameFieldState, movedFigObj.destination); 
+
+    console.log("@updateMovedFiguresOnGameField - currentGameFieldState: ", currentGameFieldState)  
+    console.log("@updateMovedFiguresOnGameField - [indexSourceField, indexTargetField]: ", [indexSourceField, indexTargetField])
+
+}
+
+// Function to get properties of added opponent figures
+export function getAddedFigureOnField(movedFigObj, currentGameFieldState){
+    
+    let addedFigure = {
+        figureProps: null,
+        indexDestField: null,
+        destFieldID: null,
+    };
+
+    const indexTargetField = getIndexOfGameField(currentGameFieldState, movedFigObj.destination); 
+    const targetFieldID    = currentGameFieldState[indexTargetField].id;
+
+    if(indexTargetField){
+        addedFigure = {
+            figureProps: movedFigObj.figureProps,
+            indexDestField: indexTargetField,
+            destFieldID: targetFieldID,
+        };
+    }
+
+    return addedFigure
+}
+
+// Function to add an additional path for the back side of a gamefigure
+export function addPathFigureBack(movedFigObj){
+
+        // Get a path of an corresponding image to hide the figure of the opponent
+        const indexFigureBack = figProperties.findIndex((figProps) => figProps.figName === "FigureBack.png" && figProps.color === movedFigObj.figureProps.color);
+    
+        const imgFigureBackPath = figProperties[indexFigureBack].imgPath[0];
+    
+        let currentFigurePaths = movedFigObj.figureProps.imgPath;
+        currentFigurePaths.push(imgFigureBackPath)
+        
+        const movedFigureProps = {
+            ...movedFigObj.figureProps,
+            imgPath: currentFigurePaths,
+        };
+   
+        return movedFigureProps
+}

@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { ToastContainer, toast } from 'react-toastify';
 import './GameField.css'
 import * as parameters from '../../game-logic/parameters.js';
 import SingleField from './SingleField';
@@ -9,7 +10,8 @@ import { useButtonStates } from '../context/ButtonStatesContext.js';
 import { useGameStates } from '../context/GameStatesContext.js';
 import { useScoutStates } from '../context/ScoutStatesContext.js';
 import { useOpponentStates } from '../context/OpponentStatesContext.js';
-// import { useChannelStates } from '../context/ChannelStatesContext.js';
+import { useChannelStates } from '../context/ChannelStatesContext.js';
+import { useChatContext } from 'stream-chat-react';
 import { figProperties } from '../../game-logic/parameters.js';
 import * as helperFcn from '../functions/helperFunctions.js'
 import * as gameLogic from '../../game-logic/gameLogic.js'
@@ -30,8 +32,47 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     const { buttonStates, setButtonStates } = useButtonStates();
     const { scoutStates, setScoutStates } = useScoutStates();
     const { opponentStates } = useOpponentStates();
-    // const { channelStates } = useChannelStates();
+    const { channelStates } = useChannelStates();
+    const { client } = useChatContext();
     const { gameStates } = useGameStates();
+
+    // States to provide updates of moved figures to each player
+    const [movedFigure, setMovedFigure] = useState( 
+        { 
+            player: null,
+            figureProps: null,
+            source: null,
+            destination: null,
+        }
+    );
+
+    // Set player to make a first turn 
+    // --> A player who is ready to start the game first, can make the first turn 
+    const [firstTurn, setFirstTurn] = useState(null);
+    const [counterFirstTurn, setCounterFirstTurn ] = useState(0); 
+
+    useEffect(() => {
+      if(opponentStates.ready2Play && !gameStates.ready2Play && counterFirstTurn === 0){
+        if(gameStates.isPlayer1){
+          setFirstTurn(2);
+        }else{
+          setFirstTurn(1);
+        }
+        setCounterFirstTurn(counterFirstTurn+1)
+  
+      }else if(!opponentStates.ready2Play && gameStates.ready2Play && counterFirstTurn === 0){    
+          if(gameStates.isPlayer1){
+            setFirstTurn(1);
+          }else{
+            setFirstTurn(2);
+          }
+          setCounterFirstTurn(counterFirstTurn+1)
+      }   
+
+    },[opponentStates.ready2Play, gameStates.ready2Play, gameStates.isPlayer1, counterFirstTurn])
+
+    // State to set the correct turn of a player 
+    const [turnPlayer, setTurnPlayer] = useState(firstTurn); 
 
     /* ********************************************************************* */
     const fieldWidth = gameFieldSettings.fieldWidth;
@@ -67,19 +108,21 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     // Merging the axis arrays into a new array of coordinates 
     let fieldCoordinates = helperFcn.getCoordinatesArray(xAxisLetters,yAxisNumbers, gameStates.isPlayer1);
     
-    // Get color of current player
+    // Get color and number of current player
     let playerColor; 
+    let playerNumber;
 
-    if(gameStates.isPlayer1)
-        playerColor = gameStates.colorPlayer1;
-
+    if(gameStates.isPlayer1){
+      playerColor = gameStates.colorPlayer1;
+      playerNumber = 1;
+    }
     else{
-        playerColor = gameStates.colorPlayer2;
-
+      playerColor = gameStates.colorPlayer2;
+      playerNumber = 2;
     }
     
     /* ********************************************************************* */
-    /* Set properties of a single field and store them in an array */
+    // Set properties of a single field and store them in an array
     
     let defaultFieldState = Array.from({ length: arrayLengthGameFields }).map((_, index) => {
       let singleFieldProps = helperFcn.setProps4SingleField(
@@ -91,7 +134,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                           sizeSingleField,
                                           backgroundColor);
 
-      /* Define non playable fields and modify the properties */
+      // Define non playable fields and modify the properties
       helperFcn.setNonPlayableFields(singleFieldProps,
                                     fieldCoordinates[index],
                                     coordsNonPlayableFields,
@@ -100,35 +143,108 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
         return singleFieldProps
     });
 
-    /* *** State as array to store and set game field properties *** */
+    //State as array to store and set game field properties 
     const [gameFieldState, setGameFieldState] = useState(defaultFieldState); 
 
-    /* *** State as array to store and set game figure properties *** */
+    // State as array to store and set game figure properties
     const playerFigures = helperFcn.getFiguresOfPlayer(figProperties, playerColor);
-    const [figureStorageState,setFigureStorageState] = useState([...playerFigures]); 
+    const [figureStorageState, setFigureStorageState] = useState([...playerFigures]); 
 
-    /* *** State as array to store defeated game figures *** */
-    const [defeatedFigureStorage,setDefeatedFigureStorage] = useState([]); 
+    // State as array to store defeated game figures
+    const [defeatedFigureStorage, setDefeatedFigureStorage] = useState([]); 
+
+    // State of added figures on field due to the opponent
+    const [addedOpponentFiguresOnField, setAddedOpponentFiguresOnField] = useState([]);
+
+    // Send updates to channel
+    useEffect(() => {
+      const provideUpdatesToChannel = async (movedFigure) => 
+      {
+          gameLogic.addPathFigureBack(movedFigure);
+
+          if(turnPlayer === playerNumber){
+              // Change turn of current player
+              setTurnPlayer(playerNumber === 1 ? 2:1)
+
+              await channelStates.channelObj.sendEvent({
+                  type: "moved-figure",
+                  data: {movedFigure, turnPlayer},
+              })
+          }
+
+          if(!turnPlayer || movedFigure.source.droppableId === "storageZone"){
+            await channelStates.channelObj.sendEvent({
+              type: "set-up-figures",
+              data: {movedFigure},
+          })            
+          }
+      }
+      
+      if(movedFigure.figureProps){
+          provideUpdatesToChannel(movedFigure)
+
+          console.log("@GameField - movedFigure: ", movedFigure)
+
+          // Reset states of moved figure
+          setMovedFigure((prevStates) => ({
+            ...prevStates,
+            figureProps: null,
+            source: null,
+            destination: null,
+        }));
+      } 
+
+    }, [movedFigure, playerNumber, turnPlayer, channelStates.channelObj])
+
+    // Handle channel events
+    useEffect(() => {
+      const handleChannelEvent = (event) => {
+
+        if (event.type === "moved-figure" && event.user.id !== client.userID) {
+          // Provide update of changed turn of current player after started game
+          setTurnPlayer(event.data.movedFigure.player === 1 ? 2:1)
+          console.log("@moved-figure - event.data:", event.data)
+
+          // Update field states (in progress...)
+          const updatedFieldStates = gameLogic.updateMovedFiguresOnGameField(event.data.movedFigure, gameFieldState);
+        }
+  
+        if (event.type === "set-up-figures" && event.user.id !== client.userID) {
+        
+          const addedFigure = gameLogic.getAddedFigureOnField(event.data.movedFigure, gameFieldState);
+          const addedFigArray = [...addedOpponentFiguresOnField, addedFigure]; 
+
+          setAddedOpponentFiguresOnField(addedFigArray);
+        }
+      };
+  
+      channelStates.channelObj.on(handleChannelEvent);
+  
+    }, [gameFieldState, client.userID, channelStates.channelObj, addedOpponentFiguresOnField]); 
+
+    console.log("@GameField - current gameFieldState: ", gameFieldState);
+    console.log("@GameField - addedOpponentFiguresOnField: ", addedOpponentFiguresOnField)
 
     // Checking values of parameters in 'debugMode' 
     if(parameters.genCfg.debugMode){
-      console.log("################### Component: GameField #####################");
-      console.log(">> Settings 'gameFieldSettings': ", gameFieldSettings);
-      console.log(">> sizeSingleField [px]: ", sizeSingleField);
-      console.log(">> Array 'fieldCoordinates': ", fieldCoordinates);
-      console.log(">> playerColor: ", playerColor);
-      console.log(">> playerFigures: ", playerFigures);
-      console.log(">> State 'gameFieldState': ", gameFieldState);
-      console.log(">> State 'figureStorageState': ", figureStorageState);
-      console.log(">> defeatedFigureStorage: ", defeatedFigureStorage);
-      console.log(">> Game states: ", gameStates);
-      console.log(" #############################################################");
+      console.log("#############################################################");
+      console.log("@GameField - gameFieldSettings: ", gameFieldSettings);
+      console.log("@GameField - sizeSingleField [px]: ", sizeSingleField);
+      console.log("@GameField - fieldCoordinates: ", fieldCoordinates);
+      console.log("@GameField - playerColor: ", playerColor);
+      console.log("@GameField - firstTurn: ", firstTurn);
+      console.log("@GameField - playerFigures: ", playerFigures);
+      console.log("@GameField - gameFieldState: ", gameFieldState);
+      console.log("@GameField - figureStorageState: ", figureStorageState);
+      console.log("@GameField - defeatedFigureStorage: ", defeatedFigureStorage);
+      console.log("@GameField - gameStates: ", gameStates);
+      console.log("#############################################################");
     }
 
-    // Enable the Start Button to start the game, when the figure storage list is empty
+    // Enable the button to start the game, when the figure storage list is empty
     useEffect(() => {
       const updateStartButton = () => {
-        // Überprüfen, ob der Start-Button aktiviert werden soll
+        // Check if figure storage list is empty
         if (figureStorageState.length === 0 && buttonStates.counterUsedStartButton < 1) {
             setButtonStates((prevStates) => ({
               ...prevStates,
@@ -136,11 +252,14 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
             }));
         }
       }; 
+
       updateStartButton()
+
     }, [figureStorageState, buttonStates.counterUsedStartButton, setButtonStates]);
     
-    /** *** Function to handle changes while dragging and ensure valid movement of the scout *** */
+    // Function to handle changes while dragging and ensure valid movement of the scout 
     const handleDragUpdate = ( update, fieldState ) => {
+
       const { source, destination } = update;
       // Indentify 'Scout' and get figure properties
       const figureProps = helperFcn.identifyScoutFigure(source, fieldState); 
@@ -170,18 +289,19 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
           isValidMove: isValidMove,
         }));   
 
-        if(!parameters.genCfg.debugMode){
-          console.log("isValidMove_Scout: ", isValidMove)  
+        if(parameters.genCfg.debugMode){
+          console.log("@handleDragUpdate - isValidMove_Scout: ", isValidMove)  
         }   
       }
 
       // Checking values of parameters in 'debugMode' 
       if(parameters.genCfg.debugMode){
-          console.log("################### handleDragUpdate #####################");
-          console.log('update: ', update);
-          console.log('gameFieldState: ', fieldState);
-          console.log("isScoutFigure: ", figureProps.isScoutFigure)
-          console.log("draggedOverFigure: ", draggedOverFigure)
+          console.log("##########################################################");
+          console.log("@handleDragUpdate - update: ", update);
+          console.log("@handleDragUpdate - gameFieldState: ", fieldState);
+          console.log("@handleDragUpdate - isScoutFigure: ", figureProps.isScoutFigure)
+          console.log("@handleDragUpdate - draggedOverFigure: ", draggedOverFigure)
+          console.log("##########################################################");
         }   
     }
 
@@ -199,23 +319,32 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                       draggedOverFigurePosition: null,       
                                       isValidMove: true,
                                     }))  
-                                  
-                                  return null                           
-                                }                      
-                                // Update game related states                     
-                                const updatedStates = gameLogic.handleDragDrop(result, gameFieldState, figureStorageState, prefixSingleFieldID, gameStates);
+                                    return null                           
+                                  }                      
+                                  // Update game related states                     
+                                  const updatedStates = gameLogic.handleDragDrop(result, gameFieldState, figureStorageState, prefixSingleFieldID, gameStates);
 
-                                if (updatedStates && !opponentStates.pausedGame){                                  
-                                  // Get updated states from 'updatedStates'
-                                  const { gameFieldState: newGameFieldState, figureStorageState: newFigureStorageState} = updatedStates;
-                          
-                                  setGameFieldState(newGameFieldState);         // Update the State of the game field 
-                                  setFigureStorageState(newFigureStorageState); // Update the State of the figure storage
-                                }
-                                else{
-                                  return null
+                                  if (updatedStates && !opponentStates.pausedGame){                                  
+                                    // Get updated states from 'updatedStates'
+                                    const { draggedFigure, gameFieldState: newGameFieldState, figureStorageState: newFigureStorageState} = updatedStates;
+                                    
+                                    if(draggedFigure){
+                                      setMovedFigure((prevStates) => ({
+                                        ...prevStates,
+                                        player: playerNumber,
+                                        figureProps: draggedFigure,
+                                        source: result.source,
+                                        destination: result.destination,
+                                    }))
 
-                                } }}>
+                                    }
+
+                                    setGameFieldState(newGameFieldState);         // Update the State of the game field 
+                                    setFigureStorageState(newFigureStorageState); // Update the State of the figure storage
+                                  }
+                                  else{ return null }
+                                
+                                }}>
 
          {/* *** Rendering Components *** */}                         
          <div className = "dnd-container" style={parameters.styleDnDContainer}>
@@ -261,9 +390,11 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
             <DefeatedFigureStorage defFigStateArray = {defeatedFigureStorage}
                                    setDefState = {setDefeatedFigureStorage}
                                    figStorageState = {figureStorageState} />
+
+            <ToastContainer position='top-right' />                           
         </div> 
       </DragDropContext>
-      )     
+    )     
 };
 
 export default GameField;

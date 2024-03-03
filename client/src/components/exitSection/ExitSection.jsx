@@ -1,5 +1,9 @@
-import React from "react";
+import React, { useEffect }  from "react";
 import * as parameters from '../../game-logic/parameters.js';
+import * as helperFcn from '../functions/helperFunctions.js'
+import { useChatContext } from 'stream-chat-react';
+import { useGameStates } from '../context/GameStatesContext.js';
+import { useChannelStates } from '../context/ChannelStatesContext.js';
 
 /**
  * React component rendered after the user leaves the game.
@@ -9,8 +13,24 @@ import * as parameters from '../../game-logic/parameters.js';
  * @returns {JSX.Element} - React JSX element representing the ExitSection component.
  */
 const ExitSection = ({exitSectionProps = parameters.exitSectionProps}) => {
+    
+    const { channelStates } = useChannelStates();
+    const { gameStates } = useGameStates();
+    const { client } = useChatContext();
+    const cookiesObj = channelStates.cookieObj;
 
-    // TO-DO: Delete all saved cookies [11.02.2024]
+    useEffect(() => {
+        const checkoutUser = async () => {
+            // Disconnect user and delete all saved cookies 
+            helperFcn.deleteCookies(cookiesObj)
+            await helperFcn.disconnectUser(client);
+        };
+
+        if(gameStates.exitConfirmed){
+            checkoutUser()
+        }
+
+    },[client, cookiesObj, gameStates.exitConfirmed])
 
     return(
         <div style={exitSectionProps.style}>
