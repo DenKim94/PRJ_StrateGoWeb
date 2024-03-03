@@ -24,13 +24,12 @@ const WaitingRoom = () => {
         if(event.type === "game-state-sync" && event.user.id !== client.userID){
 
             if(parameters.genCfg.debugMode){
-                console.log("######## WaitingRoom ########")
-                console.log(">> event.data:", event.data)
+                console.log("############################################")
+                console.log("@WaitingRoom - event.data:", event.data)
+                console.log("############################################")
             }
 
             if(event.data.isPlayer1){
-                console.log(">> event.data:", event.data)
-
                 setGameStates((prevStates) => ({
                     ...prevStates,
                     colorPlayer1: event.data.colorPlayer1,
@@ -63,7 +62,6 @@ const WaitingRoom = () => {
 
         const syncStates = async () => {
             if (!statesSynced && connectedPlayers) {
-                console.log(">> Send game states ...")
                 await sendGameStateSync(gameStates);
     
                 if(gameStates.colorPlayer1 && gameStates.colorPlayer2){
@@ -78,12 +76,13 @@ const WaitingRoom = () => {
 
     
     if(parameters.genCfg.debugMode){
-        console.log("######## WaitingRoom ########")
-        console.log(">> client:", client)
-        console.log(">> gameStates:", gameStates)
-        console.log(">> connectedPlayers:", connectedPlayers)
-        console.log(">> statesSynced:", statesSynced)
-        console.log(">> channelStates.channelObj:", channelStates.channelObj)
+        console.log("############################################")
+        console.log("@WaitingRoom - client:", client)
+        console.log("@WaitingRoom - gameStates:", gameStates)
+        console.log("@WaitingRoom - connectedPlayers:", connectedPlayers)
+        console.log("@WaitingRoom - statesSynced:", statesSynced)
+        console.log("@WaitingRoom - channelStates.channelObj:", channelStates.channelObj)
+        console.log("############################################")
     }
 
     useEffect(() => {

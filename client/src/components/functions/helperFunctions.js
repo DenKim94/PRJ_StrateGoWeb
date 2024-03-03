@@ -1,5 +1,5 @@
 /**
- * Helper function to create properties for a single game field.
+ * Helper function to set properties for a single game field
  * 
  * @function
  * @param {boolean} isPlayer1 - Boolean for player 1
@@ -43,13 +43,13 @@ export const setProps4SingleField = (isPlayer1, arrayLengthGameFields,
 };
 
 /**
- * Helper function to get coordinates for each field based on column and row arrays.
+ * Helper function to get coordinates for each field based on column and row arrays
  * 
  * @function
- * @param {Array} xCoordArray - Array representing columns.
- * @param {Array} yCoordArray - Array representing rows.
- * @param {boolean} isPlayer1 - Indicates whether the coordinates are for Player 1.
- * @returns {Array} coordinatesArray: Array of coordinates [column, row].
+ * @param {Array} xCoordArray - Array of letters [string]
+ * @param {Array} yCoordArray - Array of numbers [string]
+ * @param {boolean} isPlayer1 - Indicates whether the coordinates are for Player 1
+ * @returns {Array} coordinatesArray: Array of coordinates [column, row]
  */
 export function getCoordinatesArray(xCoordArray,yCoordArray, isPlayer1){
 
@@ -59,11 +59,12 @@ export function getCoordinatesArray(xCoordArray,yCoordArray, isPlayer1){
     if(!isPlayer1){
         coordinatesArray = coordinatesArray.reverse(); 
     }
+    
     return coordinatesArray
 };
 
 /**
- * Helper function to set properties of non-playable fields based on specified coordinates.
+ * Helper function to set properties of non-playable fields based on specified coordinates
  * 
  * @function
  * @param {Object} singleFieldProps - Properties of a single game field.
@@ -84,11 +85,12 @@ export function setNonPlayableFields(singleFieldProps,
     const containsCoordinates = coordsNonPlayableFields.some(coords =>
         arraysAreEqual(coords, currentCoordinates)
     );
-    if (containsCoordinates){
+    if(containsCoordinates){
         singleFieldProps.isPlayable = false;
         singleFieldProps.style.border = '0';
         singleFieldProps.style.backgroundColor = color;
       }
+
     return singleFieldProps  
 }
 /**
@@ -128,7 +130,7 @@ export function getObjArrayKeys(objArray){
  */
 export function getFiguresOfPlayer(figList, colorPlayer){
     
-    // Filter the list to get figures with corrresponding color and without 'FigureBack.png'
+    // Filter the list to get figures with corrresponding color by ignoring 'FigureBack.png'
     const playerFigures = figList.filter((figProps) => {
         return figProps.color === colorPlayer && figProps.figName !== 'FigureBack.png'
     }); 
@@ -136,7 +138,7 @@ export function getFiguresOfPlayer(figList, colorPlayer){
 }
 
 /**
- * Helper function to get the color of the player based on game states.
+ * Helper function to get a color of the player based on the game states
  * 
  * @function
  * @param {Object} gameStates - Object containing game-related states.

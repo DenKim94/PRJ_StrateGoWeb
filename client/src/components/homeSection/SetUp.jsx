@@ -100,7 +100,7 @@ const SetUp = ({ setToken,
         )
 
         if(parameters.genCfg.debugMode){
-            console.log(">> foundUser : ", foundUser )
+            console.log("@SetUp - foundUser : ", foundUser )
         }
 
         // If opponent not found
@@ -119,7 +119,7 @@ const SetUp = ({ setToken,
             });
 
             if(parameters.genCfg.debugMode){
-                console.log(">> newChannel: ", newChannel)  
+                console.log("@SetUp - newChannel: ", newChannel)  
             }
 
             await newChannel.watch() // Listening to the channel
@@ -128,6 +128,14 @@ const SetUp = ({ setToken,
                 ...prevStates,
                 channelObj: newChannel,
             })) 
+
+            // Add cookie properties to the channel state
+            if(cookies.cookies){
+                setChannelStates((prevStates) => ({
+                    ...prevStates,
+                    cookieObj: cookies,
+                })) 
+            }            
         }
         else{
 
@@ -170,9 +178,12 @@ const SetUp = ({ setToken,
     }
      
     if(parameters.genCfg.debugMode){
-        console.log("> cookies_SetUp:", cookies)
-        console.log("> gameStates_SetUp:", gameStates)
-        console.log("> userCreated_SetUp:", userCreated)
+        console.log("######################################################")
+        console.log("@SetUp - cookies:", cookies.cookies)
+        console.log("@SetUp - gameStates:", gameStates)
+        console.log("@SetUp - channelStates:", channelStates)
+        console.log("@SetUp - userCreated:", userCreated)
+        console.log("######################################################")
     }
 
     return (

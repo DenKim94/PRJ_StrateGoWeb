@@ -66,6 +66,7 @@ const GameSection = () => {
         }
 
         if(gameStates.exitConfirmed){
+
             // Navigate the player to the exit section
             navigate("/exitSection")
         }
@@ -78,8 +79,9 @@ const GameSection = () => {
             if(event.type === "game-state-update" && event.user.id !== client.userID){
     
                 if(parameters.genCfg.debugMode){
-                    console.log("######## GameSection ########")
-                    console.log(">> event.data:", event.data)
+                    console.log("########################################")
+                    console.log("@GameSection - event.data:", event.data)
+                    console.log("########################################")
                 }
                 
                 if(!stateIsUpdated){ 
@@ -215,12 +217,12 @@ const GameSection = () => {
     }, [buttonStates.counterUsedStartButton, setButtonStates])
 
     if(parameters.genCfg.debugMode){
-        console.log("######################### GameSection #############################")
-        console.log(">> gameStates: ", gameStates)
-        console.log(">> buttonStates: ", buttonStates)
-        console.log(">> stateIsUpdated:", stateIsUpdated) 
-        console.log(">> opponentStates: ", opponentStates)
-        console.log("##########################################################")
+        console.log("######################################################")
+        console.log("@GameSection - gameStates: ", gameStates)
+        console.log("@GameSection - buttonStates: ", buttonStates)
+        console.log("@GameSection - stateIsUpdated: ", stateIsUpdated) 
+        console.log("@GameSection - opponentStates: ", opponentStates)
+        console.log("######################################################")
     }
 
     return(

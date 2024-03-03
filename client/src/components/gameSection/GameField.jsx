@@ -183,8 +183,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
       if(movedFigure.figureProps){
           provideUpdatesToChannel(movedFigure)
 
-          console.log(">> movedFigure: ", movedFigure)
-          console.log(">> Updates provided.")
+          console.log("@GameField - movedFigure: ", movedFigure)
 
           // Reset states of moved figure
           setMovedFigure((prevStates) => ({
@@ -204,7 +203,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
         if (event.type === "moved-figure" && event.user.id !== client.userID) {
           // Provide update of changed turn of current player after started game
           setTurnPlayer(event.data.movedFigure.player === 1 ? 2:1)
-          console.log(">> @moved-figure - event.data:", event.data)
+          console.log("@moved-figure - event.data:", event.data)
 
           // Update field states (in progress...)
           const updatedFieldStates = gameLogic.updateMovedFiguresOnGameField(event.data.movedFigure, gameFieldState);
@@ -215,8 +214,6 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
           const addedFigure = gameLogic.getAddedFigureOnField(event.data.movedFigure, gameFieldState);
           const addedFigArray = [...addedOpponentFiguresOnField, addedFigure]; 
 
-          console.log("++ addedFigure: ", addedFigure)
-          
           setAddedOpponentFiguresOnField(addedFigArray);
         }
       };
@@ -225,23 +222,23 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
   
     }, [gameFieldState, client.userID, channelStates.channelObj, addedOpponentFiguresOnField]); 
 
-    console.log(">> current gameFieldState: ", gameFieldState);
-    console.log(">> addedOpponentFiguresOnField: ", addedOpponentFiguresOnField)
+    console.log("@GameField - current gameFieldState: ", gameFieldState);
+    console.log("@GameField - addedOpponentFiguresOnField: ", addedOpponentFiguresOnField)
 
     // Checking values of parameters in 'debugMode' 
     if(parameters.genCfg.debugMode){
-      console.log("################### Component: GameField #####################");
-      console.log(">> Settings 'gameFieldSettings': ", gameFieldSettings);
-      console.log(">> sizeSingleField [px]: ", sizeSingleField);
-      console.log(">> Array 'fieldCoordinates': ", fieldCoordinates);
-      console.log(">> playerColor: ", playerColor);
-      console.log(">> firstTurn: ", firstTurn);
-      console.log(">> playerFigures: ", playerFigures);
-      console.log(">> State 'gameFieldState': ", gameFieldState);
-      console.log(">> State 'figureStorageState': ", figureStorageState);
-      console.log(">> defeatedFigureStorage: ", defeatedFigureStorage);
-      console.log(">> Game states: ", gameStates);
-      console.log(" #############################################################");
+      console.log("#############################################################");
+      console.log("@GameField - gameFieldSettings: ", gameFieldSettings);
+      console.log("@GameField - sizeSingleField [px]: ", sizeSingleField);
+      console.log("@GameField - fieldCoordinates: ", fieldCoordinates);
+      console.log("@GameField - playerColor: ", playerColor);
+      console.log("@GameField - firstTurn: ", firstTurn);
+      console.log("@GameField - playerFigures: ", playerFigures);
+      console.log("@GameField - gameFieldState: ", gameFieldState);
+      console.log("@GameField - figureStorageState: ", figureStorageState);
+      console.log("@GameField - defeatedFigureStorage: ", defeatedFigureStorage);
+      console.log("@GameField - gameStates: ", gameStates);
+      console.log("#############################################################");
     }
 
     // Enable the button to start the game, when the figure storage list is empty
@@ -292,18 +289,19 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
           isValidMove: isValidMove,
         }));   
 
-        if(!parameters.genCfg.debugMode){
-          console.log("isValidMove_Scout: ", isValidMove)  
+        if(parameters.genCfg.debugMode){
+          console.log("@handleDragUpdate - isValidMove_Scout: ", isValidMove)  
         }   
       }
 
       // Checking values of parameters in 'debugMode' 
       if(parameters.genCfg.debugMode){
-          console.log("################### handleDragUpdate #####################");
-          console.log('update: ', update);
-          console.log('gameFieldState: ', fieldState);
-          console.log("isScoutFigure: ", figureProps.isScoutFigure)
-          console.log("draggedOverFigure: ", draggedOverFigure)
+          console.log("##########################################################");
+          console.log("@handleDragUpdate - update: ", update);
+          console.log("@handleDragUpdate - gameFieldState: ", fieldState);
+          console.log("@handleDragUpdate - isScoutFigure: ", figureProps.isScoutFigure)
+          console.log("@handleDragUpdate - draggedOverFigure: ", draggedOverFigure)
+          console.log("##########################################################");
         }   
     }
 

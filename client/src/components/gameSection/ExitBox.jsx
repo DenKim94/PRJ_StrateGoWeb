@@ -37,11 +37,9 @@ const ExitBox = ({ exitBoxProps = parameters.exitBoxProps }) => {
                 setGameStates((prevStates) => ({
                     ...prevStates,
                     exitConfirmed: true,
-                }));
-
-                // TO-DO: Remove saved cookies [17.02.2024]
-
+                }));                
             }
+            
             if(canceledState){
                 setGameStates((prevStates) => ({
                     ...prevStates,
