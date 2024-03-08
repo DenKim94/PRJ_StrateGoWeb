@@ -428,3 +428,23 @@ export function addPathFigureBack(movedFigObj){
    
         return movedFigureProps
 }
+
+// Function to add hided figures of the opponent to the game field state
+export function mergeGameFieldStates(currentFieldStates, addedFigure){
+
+    // Copy state array to avoid changes on the input array
+    let copiedGameFieldState = [...currentFieldStates];
+    // Find the specific field ID to add a figure to a corresponding field
+    const foundIndex = copiedGameFieldState.findIndex((fieldProps) => fieldProps.id === addedFigure.destFieldID);
+
+    // Add figure properties to the state array
+    if(foundIndex !== -1){
+        copiedGameFieldState[foundIndex] = {
+            ...copiedGameFieldState[foundIndex],
+            figure: addedFigure.figureProps,
+        };
+    }
+    else{ return null }
+
+    return copiedGameFieldState
+}

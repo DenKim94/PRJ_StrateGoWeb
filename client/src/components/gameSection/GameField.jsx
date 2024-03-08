@@ -85,15 +85,15 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     const arrayLengthGameFields = gameFieldSettings.arrayLengthGameFields;
     /* ********************************************************************* */
 
-    const sizeSingleField = Math.abs(fieldWidth)/10;
+    const sizeSingleField = Math.abs(fieldWidth)/arrayLengthAxis;
     const fieldStyle = {
       width: fieldWidth,
       height: fieldHeight,
       display: 'grid',
 
       // Separate the game field into single patterns 
-      gridTemplateColumns: `repeat(10, ${sizeSingleField}px)`,
-      gridTemplateRows: `repeat(10, ${sizeSingleField}px)`
+      gridTemplateColumns: `repeat(${arrayLengthAxis}, ${sizeSingleField}px)`,
+      gridTemplateRows: `repeat(${arrayLengthAxis}, ${sizeSingleField}px)`
     };
   
     // Create an array (Strings) for the x-Axis 
@@ -103,7 +103,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
 
     // Create an array (Numbers) for the y-Axis 
     const yAxisNumbers = (Array.from({ length: arrayLengthAxis }, (_, index) => 
-    (10 - index)));
+    (arrayLengthAxis - index)));
     
     // Merging the axis arrays into a new array of coordinates 
     let fieldCoordinates = helperFcn.getCoordinatesArray(xAxisLetters,yAxisNumbers, gameStates.isPlayer1);
@@ -154,7 +154,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     const [defeatedFigureStorage, setDefeatedFigureStorage] = useState([]); 
 
     // State of added figures on field due to the opponent
-    const [addedOpponentFiguresOnField, setAddedOpponentFiguresOnField] = useState([]);
+    const [mergedSetUpFieldStates, setMergedSetUpFieldStates] = useState(null);
 
     // Send updates to channel
     useEffect(() => {
@@ -200,7 +200,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     useEffect(() => {
       const handleChannelEvent = (event) => {
 
-        if (event.type === "moved-figure" && event.user.id !== client.userID) {
+        if(event.type === "moved-figure" && event.user.id !== client.userID) {
           // Provide update of changed turn of current player after started game
           setTurnPlayer(event.data.movedFigure.player === 1 ? 2:1)
           console.log("@moved-figure - event.data:", event.data)
@@ -209,21 +209,38 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
           const updatedFieldStates = gameLogic.updateMovedFiguresOnGameField(event.data.movedFigure, gameFieldState);
         }
   
-        if (event.type === "set-up-figures" && event.user.id !== client.userID) {
-        
+        if(event.type === "set-up-figures" && event.user.id !== client.userID) {
+          // Get properties of added opponent figure
           const addedFigure = gameLogic.getAddedFigureOnField(event.data.movedFigure, gameFieldState);
-          const addedFigArray = [...addedOpponentFiguresOnField, addedFigure]; 
+          // Create an array with merged game field states
+          const mergedFieldState = gameLogic.mergeGameFieldStates(gameFieldState, addedFigure);
 
-          setAddedOpponentFiguresOnField(addedFigArray);
+          if(mergedFieldState){ 
+            setMergedSetUpFieldStates(mergedFieldState) 
+          }
         }
       };
   
       channelStates.channelObj.on(handleChannelEvent);
   
-    }, [gameFieldState, client.userID, channelStates.channelObj, addedOpponentFiguresOnField]); 
+    }, [gameFieldState, client.userID, channelStates.channelObj, mergedSetUpFieldStates]); 
+  
+    // Rendering all igures of the game when both players are ready to play
+    useEffect(() => {
 
-    console.log("@GameField - current gameFieldState: ", gameFieldState);
-    console.log("@GameField - addedOpponentFiguresOnField: ", addedOpponentFiguresOnField)
+      if(gameStates.ready2Play && opponentStates.ready2Play && buttonStates.counterUsedStartButton === 1){
+        console.log("@GameField - current gameFieldState: ", gameFieldState);
+        console.log("@GameField - mergedSetUpFieldStates: ", mergedSetUpFieldStates)
+        
+        // Update 'gameFieldState' to render hidden opponent and own game figures
+        setGameFieldState(mergedSetUpFieldStates)
+      }
+
+    },[gameStates.ready2Play, 
+       opponentStates.ready2Play, 
+       buttonStates.counterUsedStartButton, 
+       gameFieldState, mergedSetUpFieldStates])
+
 
     // Checking values of parameters in 'debugMode' 
     if(parameters.genCfg.debugMode){
