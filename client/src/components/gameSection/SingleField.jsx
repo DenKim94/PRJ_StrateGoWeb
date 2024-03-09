@@ -22,6 +22,16 @@ const SingleField = ({fieldState, idx}) => {
   useEffect(() => {
 
     if(!emptyFigProps){
+
+      // Get color of current player
+      let playerColor
+
+      if(gameStates.isPlayer1){
+        playerColor = gameStates.colorPlayer1;
+      }else{
+        playerColor = gameStates.colorPlayer2;
+      }
+
       // Ednabled drag option depends from the state of the opponent 
       if(gameStates.ready2Play && !opponentStates.ready2Play){
         setIsDraggable(false);
@@ -29,6 +39,10 @@ const SingleField = ({fieldState, idx}) => {
       // Disabled drag option for 'Flag' and 'Bomb' when the game is started
       else if(gameStates.ready2Play && (figProps.figName === 'Flag.png' || figProps.figName === 'Bomb.png')){
           setIsDraggable(false);
+
+      }else if(figProps.color !== playerColor){
+        // Disable drag property for the opponent figures
+        setIsDraggable(false);
       }  
       else{     
         setIsDraggable(true);       

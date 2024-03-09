@@ -20,7 +20,7 @@ const FigureStorage = ({ figStateArray,
 
     // *** Handle Early Return *** 
     if(!figStateArray || figStateArray.length === 0){
-        console.log(">> Early Return in 'FigureStorage' ")
+        // console.log(">> Early Return in 'FigureStorage' ")
         return null;
     }
 
