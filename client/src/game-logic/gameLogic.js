@@ -436,6 +436,7 @@ export function addPathFigureBack(movedFigObj, defaultFigProps = figProperties){
 }
 
 // Function to add hided figures of the opponent to the game field state
+// To-Do: Check/Test the logic and correct behaviour [10.03.2024]
 export function mergeGameFieldStates(addedOpponentFigureState, gameFieldState){
 
     // Copy input state arrays to avoid changes on the input array
