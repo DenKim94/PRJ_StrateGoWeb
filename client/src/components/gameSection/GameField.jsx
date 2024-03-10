@@ -97,29 +97,16 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     };
   
     // Create an array (Strings) for the x-Axis 
-    const xAxisLetters = Array.from({ length: arrayLengthAxis }, (_, index) =>
-      String.fromCharCode(65 + index)
-    );
+    const xAxisLetters = Array.from({ length: arrayLengthAxis }, (_, index) => String.fromCharCode(65 + index));
 
     // Create an array (Numbers) for the y-Axis 
-    const yAxisNumbers = (Array.from({ length: arrayLengthAxis }, (_, index) => 
-    (arrayLengthAxis - index)));
+    const yAxisNumbers = (Array.from({ length: arrayLengthAxis }, (_, index) => (arrayLengthAxis - index)));
     
     // Merging the axis arrays into a new array of coordinates 
     let fieldCoordinates = helperFcn.getCoordinatesArray(xAxisLetters,yAxisNumbers, gameStates.isPlayer1);
     
     // Get color and number of current player
-    let playerColor; 
-    let playerNumber;
-
-    if(gameStates.isPlayer1){
-      playerColor = gameStates.colorPlayer1;
-      playerNumber = 1;
-    }
-    else{
-      playerColor = gameStates.colorPlayer2;
-      playerNumber = 2;
-    }
+    const [playerColor, playerNumber] = helperFcn.getColorAndNumberOfCurrentPlayer(gameStates.isPlayer1, gameStates.colorPlayer1, gameStates.colorPlayer2);
     
     /* ********************************************************************* */
     // Set properties of a single field and store them in an array
@@ -274,7 +261,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     }, [figureStorageState, buttonStates.counterUsedStartButton, setButtonStates]);
     
     // Function to handle changes while dragging and ensure valid movement of the scout 
-    const handleDragUpdate = ( update, fieldState ) => {
+    const handleDragUpdate = ( update, fieldState, playerNumber) => {
 
       const { source, destination } = update;
       // Indentify 'Scout' and get figure properties
@@ -285,20 +272,31 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
       const targetFieldPosition = helperFcn.getFieldPosition(destination, fieldState);
       
       // Update states in case of a found figure which was dragged over by the figure 'Scout'
-      if(figureProps.isScoutFigure && draggedOverFigure.figure && gameStates.ready2Play){  
-        setScoutStates((prevStates) => ({
-          ...prevStates,
-          isDraggedOverFigure: true,  
-          sourcePosition: figureProps.sourcePosition,
-          draggedOverFigurePosition: draggedOverFigure.position,       
-        }))
-      }
+      if(figureProps.isScoutFigure && targetFieldPosition && gameStates.ready2Play){
 
+        if(draggedOverFigure.figure){
+          setScoutStates((prevStates) => ({
+            ...prevStates, 
+            isDraggedOverFigure: true, 
+            sourcePosition: figureProps.sourcePosition,
+            targetPosition: targetFieldPosition,       
+          }))
+
+        }else{
+          setScoutStates((prevStates) => ({
+            ...prevStates, 
+            sourcePosition: figureProps.sourcePosition,
+            targetPosition: targetFieldPosition,       
+          }))
+        }
+      }
+      
       // Check if the move made by the figure 'Scout' is valid and update state
-      if(scoutStates.isDraggedOverFigure && targetFieldPosition){
-        const isValidMove = helperFcn.checkValidScoutMove(scoutStates.sourcePosition, 
-                                                          targetFieldPosition, 
-                                                          scoutStates.draggedOverFigurePosition);
+      if(figureProps.sourcePosition && targetFieldPosition && gameStates.ready2Play){
+        const isValidMove = helperFcn.checkValidScoutMove(figureProps.sourcePosition, 
+                                                          targetFieldPosition,  
+                                                          gameFieldState,
+                                                          playerNumber);
 
         setScoutStates((prevStates) => ({
           ...prevStates,
@@ -321,10 +319,10 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
         }   
     }
 
-    /* *************** Managing the behaviour of game related components *************** */ 
     return(
       <DragDropContext onDragUpdate = { (update) => {
-                                    handleDragUpdate(update, gameFieldState)}}
+                                    handleDragUpdate(update, gameFieldState, playerNumber)}}
+
                        onDragEnd = {(result) => {
                                   // Don't execute if specific scout move is not allowed and reset states
                                   if(!scoutStates.isValidMove){
@@ -332,7 +330,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                       ...prevStates,
                                       isDraggedOverFigure: false,  
                                       sourcePosition: null,
-                                      draggedOverFigurePosition: null,       
+                                      targetPosition: null,       
                                       isValidMove: true,
                                     }))  
                                     return null                           
@@ -361,18 +359,17 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                   else{ return null }
                                 
                                 }}>
-
-         {/* *** Rendering Components *** */}                         
+                    
          <div className = "dnd-container" style={parameters.styleDnDContainer}>
           <div className = "game-field-container" style={parameters.styleGameFieldContainer}>
-              {/* *** y-Axis *** */}
+
               <YAxis yAxisArray = {yAxisNumbers} 
                      axisHeight = {fieldHeight}
                      gameStates = {gameStates} 
                      axisStyle = {parameters.styleYAxis}/>
-              {/* *** Game Field *** */}
+
               <div className="game-field" style={fieldStyle}>
-                {/* Create and render single field elements with specific coordinates */ }
+
                 {gameFieldState.map((fieldProps, index) => {   
                   return (
 
@@ -396,7 +393,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                   )
                 })}
               </div>
-              {/* *** x-Axis *** */}                   
+                 
               <XAxis xAxisArray = {xAxisLetters} 
                      singleFieldWidth = {sizeSingleField} 
                      gameStates = {gameStates} 
