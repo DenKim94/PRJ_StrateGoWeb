@@ -85,41 +85,28 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     const arrayLengthGameFields = gameFieldSettings.arrayLengthGameFields;
     /* ********************************************************************* */
 
-    const sizeSingleField = Math.abs(fieldWidth)/10;
+    const sizeSingleField = Math.abs(fieldWidth)/arrayLengthAxis;
     const fieldStyle = {
       width: fieldWidth,
       height: fieldHeight,
       display: 'grid',
 
       // Separate the game field into single patterns 
-      gridTemplateColumns: `repeat(10, ${sizeSingleField}px)`,
-      gridTemplateRows: `repeat(10, ${sizeSingleField}px)`
+      gridTemplateColumns: `repeat(${arrayLengthAxis}, ${sizeSingleField}px)`,
+      gridTemplateRows: `repeat(${arrayLengthAxis}, ${sizeSingleField}px)`
     };
   
     // Create an array (Strings) for the x-Axis 
-    const xAxisLetters = Array.from({ length: arrayLengthAxis }, (_, index) =>
-      String.fromCharCode(65 + index)
-    );
+    const xAxisLetters = Array.from({ length: arrayLengthAxis }, (_, index) => String.fromCharCode(65 + index));
 
     // Create an array (Numbers) for the y-Axis 
-    const yAxisNumbers = (Array.from({ length: arrayLengthAxis }, (_, index) => 
-    (10 - index)));
+    const yAxisNumbers = (Array.from({ length: arrayLengthAxis }, (_, index) => (arrayLengthAxis - index)));
     
     // Merging the axis arrays into a new array of coordinates 
     let fieldCoordinates = helperFcn.getCoordinatesArray(xAxisLetters,yAxisNumbers, gameStates.isPlayer1);
     
     // Get color and number of current player
-    let playerColor; 
-    let playerNumber;
-
-    if(gameStates.isPlayer1){
-      playerColor = gameStates.colorPlayer1;
-      playerNumber = 1;
-    }
-    else{
-      playerColor = gameStates.colorPlayer2;
-      playerNumber = 2;
-    }
+    const [playerColor, playerNumber] = helperFcn.getColorAndNumberOfCurrentPlayer(gameStates.isPlayer1, gameStates.colorPlayer1, gameStates.colorPlayer2);
     
     /* ********************************************************************* */
     // Set properties of a single field and store them in an array
@@ -154,7 +141,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     const [defeatedFigureStorage, setDefeatedFigureStorage] = useState([]); 
 
     // State of added figures on field due to the opponent
-    const [addedOpponentFiguresOnField, setAddedOpponentFiguresOnField] = useState([]);
+    const [addedOpponentFigures, setAddedOpponentFigures] = useState([]);
 
     // Send updates to channel
     useEffect(() => {
@@ -183,8 +170,6 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
       if(movedFigure.figureProps){
           provideUpdatesToChannel(movedFigure)
 
-          console.log("@GameField - movedFigure: ", movedFigure)
-
           // Reset states of moved figure
           setMovedFigure((prevStates) => ({
             ...prevStates,
@@ -200,30 +185,48 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     useEffect(() => {
       const handleChannelEvent = (event) => {
 
-        if (event.type === "moved-figure" && event.user.id !== client.userID) {
+        if(event.type === "moved-figure" && event.user.id !== client.userID) {
           // Provide update of changed turn of current player after started game
           setTurnPlayer(event.data.movedFigure.player === 1 ? 2:1)
-          console.log("@moved-figure - event.data:", event.data)
 
           // Update field states (in progress...)
           const updatedFieldStates = gameLogic.updateMovedFiguresOnGameField(event.data.movedFigure, gameFieldState);
         }
   
-        if (event.type === "set-up-figures" && event.user.id !== client.userID) {
-        
+        if(event.type === "set-up-figures" && event.user.id !== client.userID) {
+          // Get properties of added opponent figure
           const addedFigure = gameLogic.getAddedFigureOnField(event.data.movedFigure, gameFieldState);
-          const addedFigArray = [...addedOpponentFiguresOnField, addedFigure]; 
 
-          setAddedOpponentFiguresOnField(addedFigArray);
+          // Create an array with added game figures of the opponent and update the state array
+          const updatedOpponentFigures = [...addedOpponentFigures, addedFigure];
+          setAddedOpponentFigures(updatedOpponentFigures) 
         }
       };
   
       channelStates.channelObj.on(handleChannelEvent);
+    
+    }, [gameFieldState, client.userID, channelStates.channelObj, addedOpponentFigures]); 
   
-    }, [gameFieldState, client.userID, channelStates.channelObj, addedOpponentFiguresOnField]); 
+    // console.log("@GameField - current gameFieldState: ", gameFieldState);
+    // console.log("@GameField - mergedSetUpFieldStates: ", addedOpponentFigures)
 
-    console.log("@GameField - current gameFieldState: ", gameFieldState);
-    console.log("@GameField - addedOpponentFiguresOnField: ", addedOpponentFiguresOnField)
+    // Rendering all igures of the game when both players are ready to play
+    useEffect(() => {
+
+      if(gameStates.ready2Play && opponentStates.ready2Play && buttonStates.counterUsedStartButton === 1){
+
+        // Update 'gameFieldState' to render hidden opponent and own game figures
+        const mergedSetUpFieldState = gameLogic.mergeGameFieldStates(addedOpponentFigures, gameFieldState);
+
+        console.log("@GameField - mergedSetUpFieldState: ", mergedSetUpFieldState)
+
+        setGameFieldState(mergedSetUpFieldState)
+      }
+
+      // eslint-disable-next-line
+    },[gameStates.ready2Play, 
+       opponentStates.ready2Play, 
+       buttonStates.counterUsedStartButton])
 
     // Checking values of parameters in 'debugMode' 
     if(parameters.genCfg.debugMode){
@@ -258,7 +261,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     }, [figureStorageState, buttonStates.counterUsedStartButton, setButtonStates]);
     
     // Function to handle changes while dragging and ensure valid movement of the scout 
-    const handleDragUpdate = ( update, fieldState ) => {
+    const handleDragUpdate = ( update, fieldState, playerNumber) => {
 
       const { source, destination } = update;
       // Indentify 'Scout' and get figure properties
@@ -269,20 +272,31 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
       const targetFieldPosition = helperFcn.getFieldPosition(destination, fieldState);
       
       // Update states in case of a found figure which was dragged over by the figure 'Scout'
-      if(figureProps.isScoutFigure && draggedOverFigure.figure && gameStates.ready2Play){  
-        setScoutStates((prevStates) => ({
-          ...prevStates,
-          isDraggedOverFigure: true,  
-          sourcePosition: figureProps.sourcePosition,
-          draggedOverFigurePosition: draggedOverFigure.position,       
-        }))
-      }
+      if(figureProps.isScoutFigure && targetFieldPosition && gameStates.ready2Play){
 
+        if(draggedOverFigure.figure){
+          setScoutStates((prevStates) => ({
+            ...prevStates, 
+            isDraggedOverFigure: true, 
+            sourcePosition: figureProps.sourcePosition,
+            targetPosition: targetFieldPosition,       
+          }))
+
+        }else{
+          setScoutStates((prevStates) => ({
+            ...prevStates, 
+            sourcePosition: figureProps.sourcePosition,
+            targetPosition: targetFieldPosition,       
+          }))
+        }
+      }
+      
       // Check if the move made by the figure 'Scout' is valid and update state
-      if(scoutStates.isDraggedOverFigure && targetFieldPosition){
-        const isValidMove = helperFcn.checkValidScoutMove(scoutStates.sourcePosition, 
-                                                          targetFieldPosition, 
-                                                          scoutStates.draggedOverFigurePosition);
+      if(figureProps.sourcePosition && targetFieldPosition && gameStates.ready2Play){
+        const isValidMove = helperFcn.checkValidScoutMove(figureProps.sourcePosition, 
+                                                          targetFieldPosition,  
+                                                          gameFieldState,
+                                                          playerNumber);
 
         setScoutStates((prevStates) => ({
           ...prevStates,
@@ -305,10 +319,10 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
         }   
     }
 
-    /* *************** Managing the behaviour of game related components *************** */ 
     return(
       <DragDropContext onDragUpdate = { (update) => {
-                                    handleDragUpdate(update, gameFieldState)}}
+                                    handleDragUpdate(update, gameFieldState, playerNumber)}}
+
                        onDragEnd = {(result) => {
                                   // Don't execute if specific scout move is not allowed and reset states
                                   if(!scoutStates.isValidMove){
@@ -316,7 +330,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                       ...prevStates,
                                       isDraggedOverFigure: false,  
                                       sourcePosition: null,
-                                      draggedOverFigurePosition: null,       
+                                      targetPosition: null,       
                                       isValidMove: true,
                                     }))  
                                     return null                           
@@ -345,18 +359,17 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                   else{ return null }
                                 
                                 }}>
-
-         {/* *** Rendering Components *** */}                         
+                    
          <div className = "dnd-container" style={parameters.styleDnDContainer}>
           <div className = "game-field-container" style={parameters.styleGameFieldContainer}>
-              {/* *** y-Axis *** */}
+
               <YAxis yAxisArray = {yAxisNumbers} 
                      axisHeight = {fieldHeight}
                      gameStates = {gameStates} 
                      axisStyle = {parameters.styleYAxis}/>
-              {/* *** Game Field *** */}
+
               <div className="game-field" style={fieldStyle}>
-                {/* Create and render single field elements with specific coordinates */ }
+
                 {gameFieldState.map((fieldProps, index) => {   
                   return (
 
@@ -380,7 +393,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                   )
                 })}
               </div>
-              {/* *** x-Axis *** */}                   
+                 
               <XAxis xAxisArray = {xAxisLetters} 
                      singleFieldWidth = {sizeSingleField} 
                      gameStates = {gameStates} 

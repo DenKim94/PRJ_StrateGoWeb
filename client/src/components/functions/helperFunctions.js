@@ -250,52 +250,94 @@ export function identifyScoutFigure(sourceFieldProps, fieldStates){
 
 /**
  * Checks the validity of a move for a scout figure on a game board.
+ * @param {Array} startPos - The starting position [x (string), y (number)] of the scout figure
+ * @param {Array} endPos   - The ending position [x (string), y (number)] where the scout figure is being moved
+ * @param {Object} fieldStates  - Object-Array of field states containing information about single game fields
+ * @param {number} playerNumber - Number of current player 
  *
- * @param {number} startPos - The starting position [x, y] of the scout figure.
- * @param {number} endPos - The ending position [x, y] where the scout figure is being moved.
- * @param {number} draggedOverFigurePosition - The position [x, y] of the figure over which the scout is dragged.
- *
- * @returns {boolean} isValidMove - Indicates whether the move is valid for the scout figure.
- *   - Returns true if the move is valid.
- *   - Returns false if the move is not valid based on scout movement rules.
+ * @returns {boolean} isValidMove - Indicates whether the move of the scout figure is valid 
  */
-export function checkValidScoutMove(startPos, endPos, draggedOverFigurePosition){
+export function checkValidScoutMove(startPos, endPos, fieldStates, playerNumber){
+
+    const copiedGameFieldState = JSON.parse(JSON.stringify(fieldStates));
 
     let isValidMove = true;
 
-    if(draggedOverFigurePosition && endPos && startPos){
-        // Vertical: from top to bottom movement
-        if(startPos[1] > draggedOverFigurePosition[1]){
+    if(startPos[0] === endPos[0]){ // vertical movement: constant value of x-coordinate
+        const foundArrayElements = copiedGameFieldState.filter(item => item.pos_x === startPos[0] && item.figure);
+        
+        if(playerNumber === 1){
+            for (const elementProps of foundArrayElements){
 
-            if(endPos[1] < draggedOverFigurePosition[1] && 
-                draggedOverFigurePosition[0] === endPos[0]){
+                if(elementProps.pos_y !== startPos[1]){ // Ignore the same scout figure
+                   if(elementProps.pos_y > startPos[1] && elementProps.pos_y < endPos[1]){ // scout 'jumped over' another figure from bottom to top
+                    //  console.log("scout 'jumped over' another figure from bottom to top")
+                     isValidMove = false;
+                     break;
+
+                   }else if(elementProps.pos_y < startPos[1] && elementProps.pos_y > endPos[1]){ // scout 'jumped over' another figure from top to bottom
+                    // console.log("scout 'jumped over' another figure from top to bottom")
                     isValidMove = false;
+                    break;
+                   }                   
+                }
+            }
+
+        }else{
+            for (const elementProps of foundArrayElements){
+
+                if(elementProps.pos_y !== startPos[1]){ // Ignore the same scout figure
+                   if(elementProps.pos_y < startPos[1] && elementProps.pos_y > endPos[1]){ // scout 'jumped over' another figure from bottom to top
+                    //  console.log("scout 'jumped over' another figure from bottom to top")
+                     isValidMove = false;
+                     break;
+
+                   }else if(elementProps.pos_y > startPos[1] && elementProps.pos_y < endPos[1]){ // scout 'jumped over' another figure from top to bottom
+                    // console.log("scout 'jumped over' another figure from top to bottom")
+                    isValidMove = false;
+                    break;
+                   }                   
+                }
             }
         }
-        // Vertical: from bottom to top movement
-        else if(startPos[1] < draggedOverFigurePosition[1]){
-            
-            if(endPos[1] > draggedOverFigurePosition[1] && 
-                draggedOverFigurePosition[0] === endPos[0]){
+
+    }else{ // horizontal movement: constant value of y-coordinate
+        const foundArrayElements = copiedGameFieldState.filter(item => item.pos_y === startPos[1] && item.figure);
+
+        if(playerNumber === 1){
+            for (const elementProps of foundArrayElements){
+                
+                if(elementProps.pos_x !== startPos[0]){ // Ignore the same scout figure
+                   if(elementProps.pos_x > startPos[0] && elementProps.pos_x < endPos[0]){ // scout 'jumped over' another figure from left to right
+                    //  console.log("scout 'jumped over' another figure from left to right")
+                     isValidMove = false;
+                     break;
+
+                   }else if(elementProps.pos_x < startPos[0] && elementProps.pos_x > endPos[0]){ // scout 'jumped over' another figure from right to left
+                    // console.log("scout 'jumped over' another figure from right to left")
                     isValidMove = false;
+                    break;
+                   }                   
+                }
+            }
+
+        }else{
+            for (const elementProps of foundArrayElements){
+
+                if(elementProps.pos_x !== startPos[0]){ // Ignore the same scout figure
+                   if(elementProps.pos_x < startPos[0] && elementProps.pos_x > endPos[0]){ // scout 'jumped over' another figure from left to right
+                    //  console.log("scout 'jumped over' another figure from left to right")
+                     isValidMove = false;
+                     break;
+
+                   }else if(elementProps.pos_x > startPos[0] && elementProps.pos_x <= endPos[0]){ // // scout 'jumped over' another figure from right to left
+                    // console.log("scout 'jumped over' another figure from right to left")
+                    isValidMove = false;
+                    break;
+                   }                   
+                }
             }
         }
-        // Horizontal: from left to right movement
-        else if(startPos[0] < draggedOverFigurePosition[0]){
-            
-            if(endPos[0] > draggedOverFigurePosition[0] && 
-                draggedOverFigurePosition[1] === endPos[1]){
-                    isValidMove = false;
-            }
-        }  
-        // Horizontal: from right to left movement
-        else if(startPos[0] > draggedOverFigurePosition[0]){
-            
-            if(endPos[0] < draggedOverFigurePosition[0] && 
-                draggedOverFigurePosition[1] === endPos[1]){
-                    isValidMove = false;
-            }
-        }                
     }
 
     return isValidMove
@@ -370,4 +412,21 @@ export function deleteCookies(cookiesObj){
     }
 
     return [cookiesObj]
+}
+
+export function getColorAndNumberOfCurrentPlayer(isPlayer1, colorPlayer1, colorPlayer2){
+    
+    let playerColor; 
+    let playerNumber;
+
+    if(isPlayer1){
+        playerColor  = colorPlayer1;
+        playerNumber = 1;
+    }
+    else{
+        playerColor  = colorPlayer2;
+        playerNumber = 2;
+    }  
+      
+    return [playerColor, playerNumber];
 }

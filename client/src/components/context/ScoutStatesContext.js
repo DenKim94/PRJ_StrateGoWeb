@@ -13,7 +13,7 @@ export const ScoutStatesProvider = ({ children }) => {
   const [scoutStates, setScoutStates] = useState({
     isDraggedOverFigure: false,
     sourcePosition: null,
-    draggedOverFigurePosition: null,
+    targetPosition: null,
     isValidMove: true,
   });
 

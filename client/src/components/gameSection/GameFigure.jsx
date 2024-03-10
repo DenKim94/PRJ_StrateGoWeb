@@ -1,5 +1,7 @@
 import React from "react";
 import * as parameters from '../../game-logic/parameters.js';
+import * as helperFcn from '../functions/helperFunctions.js'
+import { useGameStates } from '../context/GameStatesContext.js';
 
 /**
  * React component representing a game figure.
@@ -15,15 +17,19 @@ import * as parameters from '../../game-logic/parameters.js';
 
 const GameFigure = ({propsObj, snapshot, figureStyle = parameters.styleGameFigure, valueStyle = parameters.valueStyleGameFigure}) => {
     
-    // If 'propsObj' is empty, the component is not goint to be rendered
+    const { gameStates } = useGameStates();
+
+    // Get only a color of current player
+    const [playerColor] = helperFcn.getColorAndNumberOfCurrentPlayer(gameStates.isPlayer1, gameStates.colorPlayer1, gameStates.colorPlayer2);
+
     if(!propsObj){
       return null;
     }
-    // Extract figure properties for each ID  
-    const { imgPath, value, figName } = propsObj;
+
+    const { imgPath, value, figName, color } = propsObj;
     
-    // Default border color
-    let colorBorder = 'yellow'; 
+    // Using default border color and image style
+    const colorBorder = 'yellow'; 
 
     const imgStyle = {
       width: '100%', 
@@ -32,7 +38,11 @@ const GameFigure = ({propsObj, snapshot, figureStyle = parameters.styleGameFigur
       border: snapshot.isDragging ? `2px solid ${colorBorder}` : 'none' ,
     };
 
-   // Return to render the component 
+    // Hide figures of the opponent by showing the back side
+    if(color !== playerColor){
+        
+    } 
+
     return (
       <div style={figureStyle}>
         <img

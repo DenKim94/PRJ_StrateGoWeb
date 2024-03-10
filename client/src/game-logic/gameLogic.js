@@ -9,7 +9,7 @@ import { figProperties } from './parameters';
 function getIndexOfGameField(stateArray, fieldObj){
     const indexField = stateArray.findIndex((fieldProps) => fieldProps.id === fieldObj.droppableId);
     
-    if(indexField > 0){ 
+    if(indexField !== -1){ 
         return indexField ;
     }else{
         return null;    // If index not found return null
@@ -389,7 +389,7 @@ export function updateMovedFiguresOnGameField(movedFigObj, currentGameFieldState
 
 // Function to get properties of added opponent figures
 export function getAddedFigureOnField(movedFigObj, currentGameFieldState){
-    
+    // Default Object
     let addedFigure = {
         figureProps: null,
         indexDestField: null,
@@ -397,34 +397,69 @@ export function getAddedFigureOnField(movedFigObj, currentGameFieldState){
     };
 
     const indexTargetField = getIndexOfGameField(currentGameFieldState, movedFigObj.destination); 
-    const targetFieldID    = currentGameFieldState[indexTargetField].id;
 
-    if(indexTargetField){
+    if(indexTargetField !== null){       
+        const targetFieldID = currentGameFieldState[indexTargetField].id;
+
         addedFigure = {
             figureProps: movedFigObj.figureProps,
             indexDestField: indexTargetField,
             destFieldID: targetFieldID,
         };
-    }
+    }else{ console.log(">>[@getAddedFigureOnField] indexTargetField:", indexTargetField) }
 
     return addedFigure
 }
 
 // Function to add an additional path for the back side of a gamefigure
-export function addPathFigureBack(movedFigObj){
+export function addPathFigureBack(movedFigObj, defaultFigProps = figProperties){
 
         // Get a path of an corresponding image to hide the figure of the opponent
-        const indexFigureBack = figProperties.findIndex((figProps) => figProps.figName === "FigureBack.png" && figProps.color === movedFigObj.figureProps.color);
+        const indexFigureBack = defaultFigProps.findIndex((figProps) => figProps.figName === "FigureBack.png" && figProps.color === movedFigObj.figureProps.color);
+
+        if(indexFigureBack !== -1){
+            const imgFigureBackPath = defaultFigProps[indexFigureBack].imgPath[0];
     
-        const imgFigureBackPath = figProperties[indexFigureBack].imgPath[0];
-    
-        let currentFigurePaths = movedFigObj.figureProps.imgPath;
-        currentFigurePaths.push(imgFigureBackPath)
+            let currentFigurePaths = movedFigObj.figureProps.imgPath;
+            currentFigurePaths.push(imgFigureBackPath)
+            
+            const movedFigureProps = {
+                ...movedFigObj.figureProps,
+                imgPath: currentFigurePaths,
+            };
+       
+            return movedFigureProps
+        }
+
+    // Handle case when "FigureBack.png" for the specified color is not found
+    return movedFigObj.figureProps;
+}
+
+// Function to add hided figures of the opponent to the game field state
+export function mergeGameFieldStates(addedOpponentFigureState, gameFieldState){
+
+    // Copy input state arrays to avoid changes on the input array
+    const copiedAddedOpponentFigureState = [...addedOpponentFigureState];
+    const copiedGameFieldState           = [...gameFieldState];
+
+    console.log(">>[@mergeGameFieldStates] copiedAddedOpponentFigureState_in:", copiedAddedOpponentFigureState)
+    console.log(">>[@mergeGameFieldStates] copiedGameFieldState_in:", copiedGameFieldState)
+
+    copiedAddedOpponentFigureState.forEach(addedProps => {
+        let foundIndex = copiedGameFieldState.findIndex((fieldProps) => fieldProps.id === addedProps.destFieldID);
         
-        const movedFigureProps = {
-            ...movedFigObj.figureProps,
-            imgPath: currentFigurePaths,
-        };
-   
-        return movedFigureProps
+        if(foundIndex !== -1){
+            copiedGameFieldState[foundIndex] = {
+                ...copiedGameFieldState[foundIndex],
+                figure: addedProps.figureProps,
+            };
+        }
+        else{
+            console.log(">>[@mergeGameFieldStates] foundIndex:", foundIndex)
+            console.log(">>[@mergeGameFieldStates] addedProps:", addedProps)
+        }
+    }) 
+    console.log(">>[@mergeGameFieldStates] copiedGameFieldState_out:", copiedGameFieldState)
+
+    return copiedGameFieldState
 }

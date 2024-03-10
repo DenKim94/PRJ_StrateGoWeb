@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import GameFigure from './GameFigure';
+import * as helperFcn from '../functions/helperFunctions.js'
 import { Draggable } from 'react-beautiful-dnd';
 import { useOpponentStates } from '../context/OpponentStatesContext.js';
 import { useGameStates } from '../context/GameStatesContext.js';
@@ -17,25 +18,31 @@ const SingleField = ({fieldState, idx}) => {
   const { opponentStates } = useOpponentStates();
 
   const figProps = fieldState.figure; 
-  const emptyFigProps = !figProps; 
-  
+
   useEffect(() => {
 
-    if(!emptyFigProps){
+    if(figProps){
+      // Get only a color of current player
+      const [playerColor] = helperFcn.getColorAndNumberOfCurrentPlayer(gameStates.isPlayer1, gameStates.colorPlayer1, gameStates.colorPlayer2);
+
       // Ednabled drag option depends from the state of the opponent 
       if(gameStates.ready2Play && !opponentStates.ready2Play){
         setIsDraggable(false);
       }
       // Disabled drag option for 'Flag' and 'Bomb' when the game is started
       else if(gameStates.ready2Play && (figProps.figName === 'Flag.png' || figProps.figName === 'Bomb.png')){
-          setIsDraggable(false);
+        setIsDraggable(false);
+
+      // Disable drag property for the opponent figures  
+      }else if(figProps.color !== playerColor){
+        setIsDraggable(false);
       }  
       else{     
         setIsDraggable(true);       
       }
     }
-
-  }, [setIsDraggable, gameStates.ready2Play, opponentStates.ready2Play, figProps, emptyFigProps])
+    // eslint-disable-next-line
+  }, [gameStates.ready2Play, opponentStates.ready2Play, figProps])
 
   // Set style of the component 
   const fieldStyle = {
@@ -44,7 +51,7 @@ const SingleField = ({fieldState, idx}) => {
   };
 
   // If empty field, return the function
-  if(emptyFigProps){
+  if(!figProps){
     return null;
   }
 

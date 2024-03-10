@@ -23,7 +23,7 @@ import SetUp from './components/homeSection/SetUp';
  * 
  * - Developer: D.Kim 
  * - Version: 1.0.0 
- * - Date of last changes: 18.02.2024
+ * - Date of last changes: 10.03.2024
 */
 // *******************************************************************  
 const App = () => {
@@ -33,8 +33,8 @@ const App = () => {
     // Client side authentication to the Chat-API with a valid key
     const client = StreamChat.getInstance(apiKey); 
     const [userConnected, setUserConnected] = useState(false);
-    const [userCreated, setUserCreated] = useState(false);
-    const [tokenRef, setTokenRef] = useState(null);
+    const [userCreated, setUserCreated]     = useState(false);
+    const [tokenRef, setTokenRef]           = useState(null);
 
 
     useEffect(() => {
@@ -84,7 +84,6 @@ const App = () => {
             console.log("> App: userCreated: ", userCreated)
         }
 
-        /*** Rendering the components ***/  
         return(
             <Router>
                 <div className = "App" style={parameters.styleApp}> 
