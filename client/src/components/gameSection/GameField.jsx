@@ -199,6 +199,8 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
 
           // Create an array with added game figures of the opponent and update the state array
           const updatedOpponentFigures = [...addedOpponentFigures, addedFigure];
+          console.log("@GameField - updatedOpponentFigures: ", updatedOpponentFigures);
+
           setAddedOpponentFigures(updatedOpponentFigures) 
         }
       };
@@ -208,7 +210,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     }, [gameFieldState, client.userID, channelStates.channelObj, addedOpponentFigures]); 
   
     // console.log("@GameField - current gameFieldState: ", gameFieldState);
-    // console.log("@GameField - mergedSetUpFieldStates: ", addedOpponentFigures)
+    console.log("@GameField - addedOpponentFigures: ", addedOpponentFigures)
 
     // Rendering all igures of the game when both players are ready to play
     useEffect(() => {

@@ -19,6 +19,11 @@ const CustomTimerButton = () => {
         }));
       };
 
+    const itemStyle = {
+        margin: '4px', 
+        textAlign: 'center'
+    };
+
     return ( 
         <DropdownButton
         as={ButtonGroup}
@@ -31,22 +36,22 @@ const CustomTimerButton = () => {
         >
             <Dropdown.Item eventKey='60'>
                 <div>
-                    <p> 1 Min. </p>
+                    <p style={itemStyle}> 1 Min. </p>
                 </div>
             </Dropdown.Item>
             <Dropdown.Item eventKey="120">
                 <div>
-                    <p> 2 Min. </p>
+                    <p style={itemStyle}> 2 Min. </p>
                 </div>
             </Dropdown.Item>
             <Dropdown.Item eventKey="180">
                 <div>
-                    <p> 3 Min. </p>
+                    <p style={itemStyle}> 3 Min. </p>
                 </div>
             </Dropdown.Item>   
             <Dropdown.Item eventKey="240">
                 <div>
-                    <p> 4 Min. </p>
+                    <p style={itemStyle}> 4 Min. </p>
                 </div>
             </Dropdown.Item>  
 

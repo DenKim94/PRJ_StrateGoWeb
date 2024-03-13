@@ -26,7 +26,7 @@ const GameFigure = ({propsObj, snapshot, figureStyle = parameters.styleGameFigur
       return null;
     }
 
-    const { imgPath, value, figName, color } = propsObj;
+    const { imgPath, value, figName, color , isActive} = propsObj;
     
     // Using default border color and image style
     const colorBorder = 'yellow'; 
@@ -38,20 +38,28 @@ const GameFigure = ({propsObj, snapshot, figureStyle = parameters.styleGameFigur
       border: snapshot.isDragging ? `2px solid ${colorBorder}` : 'none' ,
     };
 
-    // Hide figures of the opponent by showing the back side
-    if(color !== playerColor){
-        
+    let pathIndex
+
+    if(color !== playerColor && isActive){
+        // Hide figures of the opponent by showing the back side
+        pathIndex = imgPath.findIndex((path) => path.includes('FigureBack'));
+
+    }else if(color === playerColor && isActive){
+        pathIndex = imgPath.findIndex((path) => path.includes(playerColor));
+
+    }else{
+        pathIndex = imgPath.findIndex((path) => path.includes('dead'));
     } 
 
     return (
       <div style={figureStyle}>
         <img
-          src={imgPath[0]}
+          src={imgPath[pathIndex]}
           alt={"Name of the game figure: " + figName}
           style={imgStyle}
         />
 
-        {(figName !== 'Bomb.png') && (figName !== 'Flag.png') && (figName !== 'FigureBack.png') && (
+        {(!figName.includes('Bomb.png')) && (!figName.includes('Flag')) && (!imgPath[pathIndex].includes( 'FigureBack')) && (
           <span style={valueStyle}>{value}</span>
         )}
     </div>
