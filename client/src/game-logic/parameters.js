@@ -10,7 +10,7 @@ export const genCfg = {
     maxConnectionAttempts: 3,       // Maximum number of attempts to reconnect the user in case of failed connection
     minInputLength: 2,              // Minimal length of user input (e.g. > 1 for user name)
     maxInputLength: 20,             // Maximal length of user input (e.g. < 20 for user name)
-    timeOutAutoClose_ms: 4000,      // Time value in ms for auto close (e.g. Pop-Ups)  
+    timeOutAutoClose_ms: 3500,      // Time value in ms for auto close (e.g. Pop-Ups)  
     timeOutFunction_ms: 4500,       // Time value in ms for time-out function
 };
 

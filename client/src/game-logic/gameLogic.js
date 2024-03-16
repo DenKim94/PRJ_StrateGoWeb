@@ -97,7 +97,7 @@ function moveFigureOnField(GameFieldState, gameSettings, draggableId, figureStor
         console.log("##############################################")
     }
     // Return States
-    return [newGameFieldState, newFigureStorageState]   
+    return [newGameFieldState, newFigureStorageState, draggedFigure]   
 }
 
 /**
@@ -326,6 +326,7 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
                     return null;
                 } 
                 break;
+
             default:    
         }
     } 
@@ -360,7 +361,7 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
         }
         // Moving figures inside the game field
         else if(destination.droppableId.includes(prefixSingleFieldID) && source.droppableId !== "storageZone"){
-            [newGameFieldState, newFigureStorageState] = moveFigureOnField(newGameFieldState, gameSettings, 
+            [newGameFieldState, newFigureStorageState, draggedFigure] = moveFigureOnField(newGameFieldState, gameSettings, 
                                                                            draggableId, figureStorageState, 
                                                                            indexSourceField, indexTargetField)
         }  
@@ -435,8 +436,7 @@ export function addPathFigureBack(movedFigObj, defaultFigProps = figProperties){
     return movedFigObj.figureProps;
 }
 
-// Function to add hided figures of the opponent to the game field state
-// To-Do: Check/Test the logic and correct behaviour [10.03.2024]
+// Function to add fieldstates of the opponent to the game field states of current player
 export function mergeGameFieldStates(addedOpponentFigureState, gameFieldState){
 
     // Copy input state arrays to avoid changes on the input array
@@ -447,20 +447,36 @@ export function mergeGameFieldStates(addedOpponentFigureState, gameFieldState){
     console.log(">>[@mergeGameFieldStates] copiedGameFieldState_in:", copiedGameFieldState)
 
     copiedAddedOpponentFigureState.forEach(addedProps => {
-        let foundIndex = copiedGameFieldState.findIndex((fieldProps) => fieldProps.id === addedProps.destFieldID);
+        let foundIndex = copiedGameFieldState.findIndex((fieldProps) => fieldProps.id === addedProps.id);
         
         if(foundIndex !== -1){
-            copiedGameFieldState[foundIndex] = {
-                ...copiedGameFieldState[foundIndex],
-                figure: addedProps.figureProps,
-            };
+            copiedGameFieldState[foundIndex] = addedProps;
         }
         else{
             console.log(">>[@mergeGameFieldStates] foundIndex:", foundIndex)
             console.log(">>[@mergeGameFieldStates] addedProps:", addedProps)
         }
     }) 
-    console.log(">>[@mergeGameFieldStates] copiedGameFieldState_out:", copiedGameFieldState)
 
     return copiedGameFieldState
+}
+
+export function trackOpponentFieldStateUpdates(prevFieldStateArray, providedFieledState){
+
+    let opponentFieldStates = [...prevFieldStateArray];
+    console.log("@trackOpponentFieldStateUpdates - providedFieledState: ", providedFieledState)
+    console.log("@trackOpponentFieldStateUpdates - opponentFieldStates_in: ", opponentFieldStates)
+
+    const foundElemIndex = opponentFieldStates.findIndex(obj => obj.figure.id === providedFieledState.figure.id);
+    console.log("@trackOpponentFieldStateUpdates - foundElemIndex: ", foundElemIndex)
+
+    if(foundElemIndex !== -1){
+        opponentFieldStates[foundElemIndex] = providedFieledState;
+    }
+    else{
+        opponentFieldStates.push(providedFieledState);
+    }
+    console.log("@trackOpponentFieldStateUpdates - opponentFieldStates_out: ", opponentFieldStates)
+
+    return opponentFieldStates
 }

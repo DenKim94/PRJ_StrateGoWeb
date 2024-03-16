@@ -101,7 +101,6 @@ const GameSection = () => {
     }catch(error){ 
         // Error handling: Navigate the player back to the home section
         console.error(error.message);
-        navigate("/");
     }
 
     /**
