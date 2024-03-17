@@ -40,7 +40,20 @@ const DropDownButton = () => {
           colorPlayer2: colorOfPlayer2,
         }));
 
-      };
+    };
+
+    const styleItem_1 = {
+        color: 'red', 
+        margin: 'auto',
+        textAlign: 'center'
+
+    };
+
+    const styleItem_2 = {
+        color: 'rgb(21, 104, 219)', 
+        margin: 'auto',
+        textAlign: 'center'
+    };
 
     return ( 
         <DropdownButton
@@ -54,12 +67,12 @@ const DropDownButton = () => {
 
             <Dropdown.Item eventKey="red">
                 <div>
-                    <p style={{ color: 'red' }}> Red </p>
+                    <p style={styleItem_1}> Red </p>
                 </div>
             </Dropdown.Item>
             <Dropdown.Item eventKey="blue">
                 <div>
-                    <p style={{ color: 'rgb(21, 104, 219)' }}> Blue </p>
+                    <p style={styleItem_2}> Blue </p>
                 </div>
             </Dropdown.Item>
         </DropdownButton>
