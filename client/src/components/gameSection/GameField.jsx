@@ -159,18 +159,14 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
 
           }else{
             if(turnPlayer === playerNumber){
-              // Change turn of current player
+              // Change turn of current player 
+              // --> To-Do: After pressing the button 'end turn' [17.03.2024]
               setTurnPlayer(playerNumber === 1 ? 2:1)
 
               await channelStates.channelObj.sendEvent({
                   type: "moved-figure",
                   data: {movedFigure, turnPlayer},
               })
-
-            }else{
-                toast.info("It's not your turn!", {
-                  autoClose: parameters.genCfg.timeOutAutoClose_ms, // Optional: Timeout for closing the pop-up
-              });        
             }
           }
         }
@@ -207,7 +203,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                 const addedFigure = gameLogic.getAddedFigureOnField(event.data.movedFigure, gameFieldState);
                 
                 console.log("@GameField - addedFigure: ", addedFigure);
-                console.log("@GameField - turnPlayer: ", turnPlayer);
+                console.log("@GameField - event.data.turnPlayer: ", event.data.turnPlayer);
 
                 // Update field states (in progress...)
                 // const updatedFieldStates = gameLogic.updateMovedFiguresOnGameField(event.data.movedFigure, gameFieldState);
@@ -231,16 +227,18 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
   
     // console.log("@GameField - current gameFieldState: ", gameFieldState);
     // console.log("@GameField - addedOpponentFieldStates: ", addedOpponentFieldStates)
+    console.log("@GameField - turnPlayer: ", turnPlayer);
+    console.log("@GameField - gameStates: ", gameStates)
 
     // Rendering all igures of the game when both players are ready to play
     useEffect(() => {
 
       if(gameStates.ready2Play && opponentStates.ready2Play && buttonStates.counterUsedStartButton === 1){
-        console.log("@GameField - firstTurn: ", firstTurn);
         const mergedSetUpFieldState = gameLogic.mergeGameFieldStates(addedOpponentFieldState, gameFieldState);
-
         console.log("@GameField - mergedSetUpFieldState: ", mergedSetUpFieldState)
+        console.log("@GameField - firstTurn: ", firstTurn);
 
+        setTurnPlayer(firstTurn)
         // Update 'gameFieldState' to render hidden opponent and own game figures
         setGameFieldState(mergedSetUpFieldState)
       }
@@ -248,6 +246,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
       // eslint-disable-next-line
     },[gameStates.ready2Play, 
        opponentStates.ready2Play, 
+       firstTurn,
        buttonStates.counterUsedStartButton])
 
     // Checking values of parameters in 'debugMode' 
@@ -356,8 +355,17 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                       isValidMove: true,
                                     }))  
                                     return null                           
-                                  }                      
-                                  // Update game related states                     
+                                  }        
+                                  
+                                  if(turnPlayer && turnPlayer !== playerNumber){
+                                      toast.info("It's not your turn!", {
+                                        autoClose: parameters.genCfg.timeOutAutoClose_ms, // Optional: Timeout for closing the pop-up
+                                    }); 
+
+                                    return null
+                                  }
+                                  
+                                  // Drag and Drop logic                     
                                   const updatedStates = gameLogic.handleDragDrop(result, gameFieldState, figureStorageState, prefixSingleFieldID, gameStates);
                                 
                                   if (updatedStates && !opponentStates.pausedGame){                                  

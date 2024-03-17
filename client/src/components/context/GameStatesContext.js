@@ -15,7 +15,7 @@ export const GameStatesProvider = ({ children }) => {
 
     playerName: '', 
     isPlayer1: false,          
-    isCheckedIn: false,       
+    switchTurn: false,       
     opponentName: '',         
     colorPlayer1: '',       // Figure-Color of Player 1
     colorPlayer2: '',       // Figure-Color of Player 2

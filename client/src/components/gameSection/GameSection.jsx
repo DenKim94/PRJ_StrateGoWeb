@@ -215,6 +215,20 @@ const GameSection = () => {
 
     }, [buttonStates.counterUsedStartButton, setButtonStates])
 
+    /**
+     * Function to be executed when the "End Turn" button is clicked.
+     * Turn of a player is going to be changed
+     * @function
+     */
+    function handleEndTurn(){
+        console.log("[@handleEndTurn] In progress...")
+        
+        setGameStates((prevStates) => ({
+            ...prevStates,
+            switchTurn: true,       
+        })); 
+    }
+
     if(parameters.genCfg.debugMode){
         console.log("######################################################")
         console.log("@GameSection - gameStates: ", gameStates)
@@ -232,7 +246,7 @@ const GameSection = () => {
                         id={!buttonStates.disabledStartButton ? "highlighted-button": ''}
                         className = "btn btn-warning"
                         style={parameters.styleButtonText}
-                        onClick={startGame} 
+                        onClick={buttonStates.counterUsedStartButton > 0 ? handleEndTurn:startGame} 
                         disabled = {gameStates.leaveGame || gameStates.isPaused ? true : buttonStates.disabledStartButton} >
                     {buttonStates.startButtonText}
                 </button> 
