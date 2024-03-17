@@ -437,16 +437,16 @@ export function addPathFigureBack(movedFigObj, defaultFigProps = figProperties){
 }
 
 // Function to add fieldstates of the opponent to the game field states of current player
-export function mergeGameFieldStates(addedOpponentFigureState, gameFieldState){
+export function mergeGameFieldStates(addedOpponentFieldState, gameFieldState){
 
     // Copy input state arrays to avoid changes on the input array
-    const copiedAddedOpponentFigureState = [...addedOpponentFigureState];
-    const copiedGameFieldState           = [...gameFieldState];
+    const copiedAddedOpponentFieldState = [...addedOpponentFieldState];
+    const copiedGameFieldState          = [...gameFieldState];
 
-    console.log(">>[@mergeGameFieldStates] copiedAddedOpponentFigureState_in:", copiedAddedOpponentFigureState)
+    console.log(">>[@mergeGameFieldStates] copiedAddedOpponentFieldState_in:", copiedAddedOpponentFieldState)
     console.log(">>[@mergeGameFieldStates] copiedGameFieldState_in:", copiedGameFieldState)
 
-    copiedAddedOpponentFigureState.forEach(addedProps => {
+    copiedAddedOpponentFieldState.forEach(addedProps => {
         let foundIndex = copiedGameFieldState.findIndex((fieldProps) => fieldProps.id === addedProps.id);
         
         if(foundIndex !== -1){
@@ -464,11 +464,11 @@ export function mergeGameFieldStates(addedOpponentFigureState, gameFieldState){
 export function trackOpponentFieldStateUpdates(prevFieldStateArray, providedFieledState){
 
     let opponentFieldStates = [...prevFieldStateArray];
-    console.log("@trackOpponentFieldStateUpdates - providedFieledState: ", providedFieledState)
-    console.log("@trackOpponentFieldStateUpdates - opponentFieldStates_in: ", opponentFieldStates)
-
     const foundElemIndex = opponentFieldStates.findIndex(obj => obj.figure.id === providedFieledState.figure.id);
-    console.log("@trackOpponentFieldStateUpdates - foundElemIndex: ", foundElemIndex)
+
+    // console.log("@trackOpponentFieldStateUpdates - foundElemIndex: ", foundElemIndex)
+    // console.log("@trackOpponentFieldStateUpdates - providedFieledState: ", providedFieledState)
+    // console.log("@trackOpponentFieldStateUpdates - opponentFieldStates_in: ", opponentFieldStates)
 
     if(foundElemIndex !== -1){
         opponentFieldStates[foundElemIndex] = providedFieledState;
@@ -476,7 +476,7 @@ export function trackOpponentFieldStateUpdates(prevFieldStateArray, providedFiel
     else{
         opponentFieldStates.push(providedFieledState);
     }
-    console.log("@trackOpponentFieldStateUpdates - opponentFieldStates_out: ", opponentFieldStates)
+    // console.log("@trackOpponentFieldStateUpdates - opponentFieldStates_out: ", opponentFieldStates)
 
     return opponentFieldStates
 }
