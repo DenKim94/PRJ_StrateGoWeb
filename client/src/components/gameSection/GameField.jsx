@@ -160,7 +160,6 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
           }else{
             if(turnPlayer === playerNumber){
               // Change turn of current player 
-              // --> To-Do: After pressing the button 'end turn' [17.03.2024]
               setTurnPlayer(playerNumber === 1 ? 2:1)
 
               await channelStates.channelObj.sendEvent({
@@ -173,7 +172,6 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
         catch(error){
           console.error(error)
         }
-
       }
 
       if(movedFigure.figureProps){
@@ -199,7 +197,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                 // Provide update of changed turn of current player after started game
                 setTurnPlayer(event.data.movedFigure.player === 1 ? 2:1)
       
-                // Get properties of added opponent figure
+                // Get properties of added opponent figure [To-Do: Refactoring the function; 23.03.2024]
                 const addedFigure = gameLogic.getAddedFigureOnField(event.data.movedFigure, gameFieldState);
                 
                 console.log("@GameField - addedFigure: ", addedFigure);
@@ -227,8 +225,8 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
   
     // console.log("@GameField - current gameFieldState: ", gameFieldState);
     // console.log("@GameField - addedOpponentFieldStates: ", addedOpponentFieldStates)
-    console.log("@GameField - turnPlayer: ", turnPlayer);
-    console.log("@GameField - gameStates: ", gameStates)
+    // console.log("@GameField - turnPlayer: ", turnPlayer);
+    // console.log("@GameField - gameStates: ", gameStates)
 
     // Rendering all igures of the game when both players are ready to play
     useEffect(() => {
@@ -339,7 +337,6 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
           console.log("##########################################################");
         }   
     }
-
     return(
       <DragDropContext onDragUpdate = { (update) => {
                                     handleDragUpdate(update, gameFieldState, playerNumber)}}
@@ -359,7 +356,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                   
                                   if(turnPlayer && turnPlayer !== playerNumber){
                                       toast.info("It's not your turn!", {
-                                        autoClose: parameters.genCfg.timeOutAutoClose_ms, // Optional: Timeout for closing the pop-up
+                                        autoClose: parameters.genCfg.timeOutAutoClose_ms, 
                                     }); 
 
                                     return null

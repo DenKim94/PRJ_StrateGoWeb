@@ -53,7 +53,6 @@ const GameSection = () => {
 
     }, [gameStates, setGameStates, channelStates, stateIsUpdated]);
 
-
     useEffect(() => {
 
         // Inform player if the opponent has left the game
@@ -198,36 +197,25 @@ const GameSection = () => {
 
     /**
      * Effect hook to change the functionality of the Start Button after starting the game.
-     * Changes the text of the "Start Game" button to "End Turn" after the first usage.
      * @function
      */
     useEffect(() => {
-        const changeStartButton = () => {
+
+        const disableStartButton = () => {
             if (buttonStates.counterUsedStartButton > 0) {
                 setButtonStates((prevStates) => ({
                     ...prevStates,
-                    startButtonText: "End Turn",
+                    disabledStartButton: true,
                 }));
             }
         }; 
-    
-        changeStartButton()
-
-    }, [buttonStates.counterUsedStartButton, setButtonStates])
-
-    /**
-     * Function to be executed when the "End Turn" button is clicked.
-     * Turn of a player is going to be changed
-     * @function
-     */
-    function handleEndTurn(){
-        console.log("[@handleEndTurn] In progress...")
         
-        setGameStates((prevStates) => ({
-            ...prevStates,
-            switchTurn: true,       
-        })); 
-    }
+        if(!buttonStates.disabledStartButton){
+            disableStartButton()
+        }
+
+    }, [buttonStates.counterUsedStartButton, buttonStates.disabledStartButton])
+
 
     if(parameters.genCfg.debugMode){
         console.log("######################################################")
@@ -237,7 +225,7 @@ const GameSection = () => {
         console.log("@GameSection - opponentStates: ", opponentStates)
         console.log("######################################################")
     }
-
+    
     return(
         <div className="ui-container" >
         {(!gameStates.ready2Play || !opponentStates.ready2Play) && (<Cover className={(gameStates.ready2Play && opponentStates.ready2Play) ? '' : 'Cover-FadeOut'}/>)}
@@ -246,8 +234,8 @@ const GameSection = () => {
                         id={!buttonStates.disabledStartButton ? "highlighted-button": ''}
                         className = "btn btn-warning"
                         style={parameters.styleButtonText}
-                        onClick={buttonStates.counterUsedStartButton > 0 ? handleEndTurn:startGame} 
-                        disabled = {gameStates.leaveGame || gameStates.isPaused ? true : buttonStates.disabledStartButton} >
+                        onClick={startGame} 
+                        disabled = {buttonStates.disabledStartButton} >
                     {buttonStates.startButtonText}
                 </button> 
                 <button type="button" 

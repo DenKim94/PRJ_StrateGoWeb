@@ -23,7 +23,7 @@ import SetUp from './components/homeSection/SetUp';
  * 
  * - Developer: D.Kim 
  * - Version: 1.0.0 
- * - Date of last changes: 13.03.2024
+ * - Date of last changes: 23.03.2024
 */
 // *******************************************************************  
 const App = () => {
@@ -54,12 +54,12 @@ const App = () => {
             
                     if (!userConnected) {
                         setUserConnected(true);
-                        console.log(">> Connected user: ", user);
+                        console.log(" Connected user: ", user);
                     }
                     connectionAttemptsCounter = 0;
 
                 } catch (error) {
-                    console.error(">> Connection failed:", error);
+                    console.error(" Connection failed:", error);
 
                     // Try to reconnect the user if maximum attempts currently not exceeded
                     if (connectionAttemptsCounter <= maxConnectionAttempts) {
@@ -67,7 +67,7 @@ const App = () => {
                         connectUser();
 
                     } else {
-                        console.error(">> Connect user: Maximum number of attempts exceeded.");
+                        console.error(" Connect user: Maximum number of attempts exceeded.");
                     }
                 }
             };       
@@ -78,10 +78,10 @@ const App = () => {
         }, [client, userConnected, cookies, userCreated, tokenRef]);
 
         if(parameters.genCfg.debugMode){
-            console.log(">> App: tokenRef: ", tokenRef);
-            console.log(">> App: cookies: ", cookies);
-            console.log("> App: userConnected: ", userConnected)
-            console.log("> App: userCreated: ", userCreated)
+            console.log("@App: tokenRef: ", tokenRef);
+            console.log("@App: cookies: ", cookies);
+            console.log("@App: userConnected: ", userConnected)
+            console.log("@App: userCreated: ", userCreated)
         }
 
         return(

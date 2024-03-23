@@ -14,8 +14,7 @@ export const GameStatesProvider = ({ children }) => {
   const [gameStates, setGameStates] = useState({
 
     playerName: '', 
-    isPlayer1: false,          
-    switchTurn: false,       
+    isPlayer1: false,               
     opponentName: '',         
     colorPlayer1: '',       // Figure-Color of Player 1
     colorPlayer2: '',       // Figure-Color of Player 2
