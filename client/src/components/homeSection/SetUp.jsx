@@ -61,7 +61,7 @@ const SetUp = ({ setToken,
                 console.error(error.message);
 
                 // Error Handling
-                toast.error("User-ID not found, please try again!", {
+                toast.error("Network error, please try again!", {
                     autoClose: parameters.genCfg.timeOutAutoClose_ms, // Optional: Timeout for closing the pop-up
                   });
 

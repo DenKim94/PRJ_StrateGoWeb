@@ -53,7 +53,6 @@ const GameSection = () => {
 
     }, [gameStates, setGameStates, channelStates, stateIsUpdated]);
 
-
     useEffect(() => {
 
         // Inform player if the opponent has left the game
@@ -198,22 +197,25 @@ const GameSection = () => {
 
     /**
      * Effect hook to change the functionality of the Start Button after starting the game.
-     * Changes the text of the "Start Game" button to "End Turn" after the first usage.
      * @function
      */
     useEffect(() => {
-        const changeStartButton = () => {
+
+        const disableStartButton = () => {
             if (buttonStates.counterUsedStartButton > 0) {
                 setButtonStates((prevStates) => ({
                     ...prevStates,
-                    startButtonText: "End Turn",
+                    disabledStartButton: true,
                 }));
             }
         }; 
-    
-        changeStartButton()
+        
+        if(!buttonStates.disabledStartButton){
+            disableStartButton()
+        }
 
-    }, [buttonStates.counterUsedStartButton, setButtonStates])
+    }, [buttonStates.counterUsedStartButton, buttonStates.disabledStartButton])
+
 
     if(parameters.genCfg.debugMode){
         console.log("######################################################")
@@ -223,7 +225,7 @@ const GameSection = () => {
         console.log("@GameSection - opponentStates: ", opponentStates)
         console.log("######################################################")
     }
-
+    
     return(
         <div className="ui-container" >
         {(!gameStates.ready2Play || !opponentStates.ready2Play) && (<Cover className={(gameStates.ready2Play && opponentStates.ready2Play) ? '' : 'Cover-FadeOut'}/>)}
@@ -233,7 +235,7 @@ const GameSection = () => {
                         className = "btn btn-warning"
                         style={parameters.styleButtonText}
                         onClick={startGame} 
-                        disabled = {gameStates.leaveGame || gameStates.isPaused ? true : buttonStates.disabledStartButton} >
+                        disabled = {buttonStates.disabledStartButton} >
                     {buttonStates.startButtonText}
                 </button> 
                 <button type="button" 

@@ -57,7 +57,6 @@ const HomeSection = ({ homeSectionProps = parameters.homeSectionProps }) => {
             ...prevStates,
             playerNumber: 1,
             isPlayer1: true,
-            isCheckedIn: true,
         })) 
         navigate(pathToNextPage)
     }
@@ -67,7 +66,6 @@ const HomeSection = ({ homeSectionProps = parameters.homeSectionProps }) => {
             ...prevStates,
             playerNumber: 2,
             isPlayer1: false,
-            isCheckedIn: true,
         }))
         navigate(pathToNextPage)
     }
