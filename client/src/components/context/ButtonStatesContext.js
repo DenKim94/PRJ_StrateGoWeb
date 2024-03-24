@@ -13,7 +13,7 @@ export const ButtonStatesProvider = ({ children }) => {
   const [buttonStates, setButtonStates] = useState({
     pauseButtonText: "Pause Game",
     startButtonText: "Start Game",
-    exitButtonText: "Exit Game",
+    exitButtonText: "Leave Game",
     disabledStartButton: true,
     counterUsedStartButton: 0,
   });

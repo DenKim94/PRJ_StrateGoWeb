@@ -211,7 +211,7 @@ export const styleButtonContainer = {
     justifyContent: 'center',
     alignItems: 'flex-end',
     maxHeight: '200px',
-    width: '80px',
+    width: '95px',
     right: '20px',
     marginTop: '500px',    
 };
@@ -228,7 +228,7 @@ export const styleCover = {
     position: 'absolute',
     fontFamily: 'Cinzel, serif',
     top: '0px',
-    left: '80px',
+    left: '95px',
     width: `${totalGameFieldSize}px`,
     height: `${totalGameFieldSize/2 + (gameFieldObj.fieldWidth)/10}px`,
     alignItems: 'center',

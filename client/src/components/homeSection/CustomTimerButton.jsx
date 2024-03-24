@@ -49,12 +49,6 @@ const CustomTimerButton = () => {
                     <p style={itemStyle}> 3 Min. </p>
                 </div>
             </Dropdown.Item>   
-            <Dropdown.Item eventKey="240">
-                <div>
-                    <p style={itemStyle}> 4 Min. </p>
-                </div>
-            </Dropdown.Item>  
-
         </DropdownButton>
      );
 }
