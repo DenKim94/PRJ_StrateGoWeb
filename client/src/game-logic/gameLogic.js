@@ -415,25 +415,25 @@ export function getAddedFigureOnField(movedFigObj, currentGameFieldState){
 // Function to add an additional path for the back side of a gamefigure
 export function addPathFigureBack(movedFigObj, defaultFigProps = figProperties){
 
-        // Get a path of an corresponding image to hide the figure of the opponent
-        const indexFigureBack = defaultFigProps.findIndex((figProps) => figProps.figName === "FigureBack.png" && figProps.color === movedFigObj.figureProps.color);
+    // Get a path of an corresponding image to hide the figure of the opponent
+    const indexFigureBack = defaultFigProps.findIndex((figProps) => figProps.figName === "FigureBack.png" && figProps.color === movedFigObj.color);
 
-        if(indexFigureBack !== -1){
-            const imgFigureBackPath = defaultFigProps[indexFigureBack].imgPath[0];
-    
-            let currentFigurePaths = movedFigObj.figureProps.imgPath;
-            currentFigurePaths.push(imgFigureBackPath)
-            
-            const movedFigureProps = {
-                ...movedFigObj.figureProps,
-                imgPath: currentFigurePaths,
-            };
-       
-            return movedFigureProps
-        }
+    if(indexFigureBack !== -1){
+        const imgFigureBackPath = defaultFigProps[indexFigureBack].imgPath[0];
 
-    // Handle case when "FigureBack.png" for the specified color is not found
-    return movedFigObj.figureProps;
+        let currentFigurePaths = movedFigObj.imgPath;
+        currentFigurePaths.push(imgFigureBackPath)
+        
+        const movedFigureProps = {
+            ...movedFigObj,
+            imgPath: currentFigurePaths,
+        };
+   
+        return movedFigureProps
+    }
+
+// Handle case when "FigureBack.png" for the specified color is not found
+return movedFigObj;
 }
 
 // Function to add fieldstates of the opponent to the game field states of current player
@@ -443,8 +443,8 @@ export function mergeGameFieldStates(addedOpponentFieldState, gameFieldState){
     const copiedAddedOpponentFieldState = [...addedOpponentFieldState];
     const copiedGameFieldState          = [...gameFieldState];
 
-    console.log(">>[@mergeGameFieldStates] copiedAddedOpponentFieldState_in:", copiedAddedOpponentFieldState)
-    console.log(">>[@mergeGameFieldStates] copiedGameFieldState_in:", copiedGameFieldState)
+    // console.log(">>[@mergeGameFieldStates] copiedAddedOpponentFieldState_in:", copiedAddedOpponentFieldState)
+    // console.log(">>[@mergeGameFieldStates] copiedGameFieldState_in:", copiedGameFieldState)
 
     copiedAddedOpponentFieldState.forEach(addedProps => {
         let foundIndex = copiedGameFieldState.findIndex((fieldProps) => fieldProps.id === addedProps.id);

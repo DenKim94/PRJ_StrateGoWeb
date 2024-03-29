@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { ToastContainer, toast } from 'react-toastify';
 import './GameField.css'
@@ -97,10 +97,10 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     };
   
     // Create an array (Strings) for the x-Axis 
-    const xAxisLetters = Array.from({ length: arrayLengthAxis }, (_, index) => String.fromCharCode(65 + index));
+    const xAxisLetters = Array.from({ length: arrayLengthAxis }, (_, index) => String.fromCharCode(65 + index)); 
 
     // Create an array (Numbers) for the y-Axis 
-    const yAxisNumbers = (Array.from({ length: arrayLengthAxis }, (_, index) => (arrayLengthAxis - index)));
+    const yAxisNumbers = Array.from({ length: arrayLengthAxis }, (_, index) => (arrayLengthAxis - index));
     
     // Merging the axis arrays into a new array of coordinates 
     let fieldCoordinates = helperFcn.getCoordinatesArray(xAxisLetters,yAxisNumbers, gameStates.isPlayer1);
@@ -110,25 +110,32 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     
     /* ********************************************************************* */
     // Set properties of a single field and store them in an array
-    
-    let defaultFieldState = Array.from({ length: arrayLengthGameFields }).map((_, index) => {
-      let singleFieldProps = helperFcn.setProps4SingleField(
-                                          gameStates.isPlayer1,
-                                          arrayLengthGameFields,
-                                          prefixSingleFieldID,
-                                          index,
-                                          fieldCoordinates[index],
-                                          sizeSingleField,
-                                          backgroundColor);
+    const defaultFieldState = useMemo(() => {
+      console.log("useMemo - Rendered")
 
-      // Define non playable fields and modify the properties
-      helperFcn.setNonPlayableFields(singleFieldProps,
-                                    fieldCoordinates[index],
-                                    coordsNonPlayableFields,
-                                    colorNonPlayableFields);
-      
-        return singleFieldProps
-    });
+      return Array.from({ length: arrayLengthGameFields }).map((_, index) => {
+        let singleFieldProps = helperFcn.setProps4SingleField(
+          gameStates.isPlayer1,
+          arrayLengthGameFields,
+          prefixSingleFieldID,
+          index,
+          fieldCoordinates[index],
+          sizeSingleField,
+          backgroundColor
+        );
+  
+        // Define non playable fields and modify the properties
+        helperFcn.setNonPlayableFields(
+          singleFieldProps,
+          fieldCoordinates[index],
+          coordsNonPlayableFields,
+          colorNonPlayableFields
+        );
+  
+        return singleFieldProps;
+      });
+      // eslint-disable-next-line 
+    }, [arrayLengthGameFields]);
 
     //State as array to store and set game field properties 
     const [gameFieldState, setGameFieldState] = useState(defaultFieldState); 
@@ -148,7 +155,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
       const provideUpdatesToChannel = async (gameFieldStates, movedFigure) => 
       {   
         try{
-          gameLogic.addPathFigureBack(movedFigure);
+          gameLogic.addPathFigureBack(movedFigure.figureProps);
 
           if(!turnPlayer){ 
             const providedGameFieldState = gameFieldStates.filter((props) => props.id === movedFigure.destination.droppableId);
