@@ -111,8 +111,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     /* ********************************************************************* */
     // Set properties of a single field and store them in an array
     const defaultFieldState = useMemo(() => {
-      console.log("useMemo - Rendered")
-
+  
       return Array.from({ length: arrayLengthGameFields }).map((_, index) => {
         let singleFieldProps = helperFcn.setProps4SingleField(
           gameStates.isPlayer1,

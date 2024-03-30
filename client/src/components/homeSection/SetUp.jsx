@@ -103,7 +103,7 @@ const SetUp = ({ setToken,
             console.log("@SetUp - foundUser : ", foundUser )
         }
 
-        // If opponent not found
+        // If opponent was not found by entered name
         if(foundUser.length === 0){
             toast.info("Opponent not found! Please try again!", {
                 autoClose: parameters.genCfg.timeOutAutoClose_ms, // Optional: Timeout for closing the pop-up
@@ -136,14 +136,6 @@ const SetUp = ({ setToken,
                     cookieObj: cookies,
                 })) 
             }            
-        }
-        else{
-
-            toast.info("Names between user and opponent shall not match!", {
-                autoClose: parameters.genCfg.timeOutAutoClose_ms, // Optional: Timeout for closing the pop-up
-              }); 
-
-            return null
         }
     };
 
