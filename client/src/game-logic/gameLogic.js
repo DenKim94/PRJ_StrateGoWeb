@@ -285,7 +285,6 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
     }
     // If destination doesn't exist, do nothing 
     if(!destination){
-        alert("Invalid drop: Please drop the figure inside the game field!")
         return null;        
     } 
     // If source and destination are equal, do nothing 
@@ -388,28 +387,32 @@ export function updateMovedFiguresOnGameField(movedFigObj, currentGameFieldState
 
 }
 
-// Function to get properties of added opponent figures
-export function getAddedFigureOnField(movedFigObj, currentGameFieldState){
+// Function to get properties of moved opponent figures [31.03.2024]
+export function getMovedOpponentFigureOnField(movedFigObj, currentGameFieldState){
     // Default Object
-    let addedFigure = {
+    let movedOpponentFigure = {
         figureProps: null,
         indexDestField: null,
         destFieldID: null,
+        indexSourceField: null,
     };
+    console.log(">>[@getMovedOpponentFigureOnField] movedFigObj:", movedFigObj)
 
+    const indexSourceField = getIndexOfGameField(currentGameFieldState, movedFigObj.source); 
     const indexTargetField = getIndexOfGameField(currentGameFieldState, movedFigObj.destination); 
 
     if(indexTargetField !== null){       
         const targetFieldID = currentGameFieldState[indexTargetField].id;
 
-        addedFigure = {
+        movedOpponentFigure = {
             figureProps: movedFigObj.figureProps,
             indexDestField: indexTargetField,
             destFieldID: targetFieldID,
+            indexSourceField: indexSourceField,
         };
-    }else{ console.log(">>[@getAddedFigureOnField] indexTargetField:", indexTargetField) }
+    }else{ console.log(">>[@getMovedOpponentFigureOnField] indexTargetField:", indexTargetField) }
 
-    return addedFigure
+    return movedOpponentFigure
 }
 
 // Function to add an additional path for the back side of a gamefigure

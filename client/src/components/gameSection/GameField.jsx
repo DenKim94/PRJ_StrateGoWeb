@@ -193,24 +193,32 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     // eslint-disable-next-line
     }, [movedFigure, playerNumber, turnPlayer, channelStates.channelObj])
 
-    // Handle channel events
     useEffect(() => {
       const handleChannelEvent = (event) => {
 
         if(event.user.id !== client.userID) {
           switch(event.type){
             case "moved-figure":
-                // Provide update of changed turn of current player after started game
                 setTurnPlayer(event.data.movedFigure.player === 1 ? 2:1)
       
-                // Get properties of added opponent figure [To-Do: Refactoring the function; 23.03.2024]
-                const addedFigure = gameLogic.getAddedFigureOnField(event.data.movedFigure, gameFieldState);
-                
-                console.log("@GameField - addedFigure: ", addedFigure);
-                console.log("@GameField - event.data.turnPlayer: ", event.data.turnPlayer);
+                const movedOpponentFigure = gameLogic.getMovedOpponentFigureOnField(event.data.movedFigure, gameFieldState);
+                const indexSourceField = movedOpponentFigure.indexSourceField;
+                const indexTargetField = movedOpponentFigure.indexDestField;
 
-                // Update field states (in progress...)
-                // const updatedFieldStates = gameLogic.updateMovedFiguresOnGameField(event.data.movedFigure, gameFieldState);
+                setGameFieldState((prevStates) => {
+                  const updatedState = [...prevStates];
+
+                  updatedState[indexSourceField] = {
+                    ...updatedState[indexSourceField],
+                    figure: null,
+                  };    
+
+                  updatedState[indexTargetField] = {
+                    ...updatedState[indexTargetField],
+                    figure: movedOpponentFigure.figureProps,
+                  };
+                  return updatedState;
+                });
                 break;
 
             case "set-up-figures":
@@ -229,7 +237,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     // eslint-disable-next-line
     }, [gameFieldState, addedOpponentFieldState, client.userID, channelStates.channelObj]); 
   
-    // console.log("@GameField - current gameFieldState: ", gameFieldState);
+    console.log("@GameField - current gameFieldState: ", gameFieldState);
     // console.log("@GameField - addedOpponentFieldStates: ", addedOpponentFieldStates)
     // console.log("@GameField - turnPlayer: ", turnPlayer);
     // console.log("@GameField - gameStates: ", gameStates)
@@ -362,7 +370,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                   
                                   if(turnPlayer && turnPlayer !== playerNumber){
                                       toast.info("It's not your turn!", {
-                                        autoClose: parameters.genCfg.timeOutAutoClose_ms, 
+                                        autoClose: 1000, 
                                     }); 
 
                                     return null
