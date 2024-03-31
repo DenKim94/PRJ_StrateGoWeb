@@ -15,6 +15,7 @@ export const OpponentStatesProvider = ({ children }) => {
     const [opponentStates, setOpponentStates] = useState({
         ready2Play: false,
         pausedGame: false,
+        leaveGame: false,        
         exitConfirmed: false,
     });
 

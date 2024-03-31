@@ -237,11 +237,6 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     // eslint-disable-next-line
     }, [gameFieldState, addedOpponentFieldState, client.userID, channelStates.channelObj]); 
   
-    console.log("@GameField - current gameFieldState: ", gameFieldState);
-    // console.log("@GameField - addedOpponentFieldStates: ", addedOpponentFieldStates)
-    // console.log("@GameField - turnPlayer: ", turnPlayer);
-    // console.log("@GameField - gameStates: ", gameStates)
-
     // Rendering all igures of the game when both players are ready to play
     useEffect(() => {
 
@@ -368,7 +363,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                     return null                           
                                   }        
                                   
-                                  if(turnPlayer && turnPlayer !== playerNumber){
+                                  if(turnPlayer && turnPlayer !== playerNumber && gameStates.ready2Play){
                                       toast.info("It's not your turn!", {
                                         autoClose: 1000, 
                                     }); 

@@ -373,21 +373,9 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
       };       
 }
 
-// Function to update the game field due to moved figures
-export function updateMovedFiguresOnGameField(movedFigObj, currentGameFieldState){
-
-    // In progress ...
-    let updatedGameFieldStates = currentGameFieldState;
-
-    const indexSourceField = getIndexOfGameField(currentGameFieldState, movedFigObj.source);
-    const indexTargetField = getIndexOfGameField(currentGameFieldState, movedFigObj.destination); 
-
-    console.log("@updateMovedFiguresOnGameField - currentGameFieldState: ", currentGameFieldState)  
-    console.log("@updateMovedFiguresOnGameField - [indexSourceField, indexTargetField]: ", [indexSourceField, indexTargetField])
-
-}
-
-// Function to get properties of moved opponent figures [31.03.2024]
+/**  
+ * Function to get properties of moved opponent figures 
+*/
 export function getMovedOpponentFigureOnField(movedFigObj, currentGameFieldState){
     // Default Object
     let movedOpponentFigure = {
@@ -396,7 +384,6 @@ export function getMovedOpponentFigureOnField(movedFigObj, currentGameFieldState
         destFieldID: null,
         indexSourceField: null,
     };
-    console.log(">>[@getMovedOpponentFigureOnField] movedFigObj:", movedFigObj)
 
     const indexSourceField = getIndexOfGameField(currentGameFieldState, movedFigObj.source); 
     const indexTargetField = getIndexOfGameField(currentGameFieldState, movedFigObj.destination); 
@@ -410,12 +397,14 @@ export function getMovedOpponentFigureOnField(movedFigObj, currentGameFieldState
             destFieldID: targetFieldID,
             indexSourceField: indexSourceField,
         };
-    }else{ console.log(">>[@getMovedOpponentFigureOnField] indexTargetField:", indexTargetField) }
+    }
 
     return movedOpponentFigure
 }
 
-// Function to add an additional path for the back side of a gamefigure
+/** 
+ * Function to add an additional path for the back side of a game figure 
+*/
 export function addPathFigureBack(movedFigObj, defaultFigProps = figProperties){
 
     // Get a path of an corresponding image to hide the figure of the opponent
@@ -435,11 +424,12 @@ export function addPathFigureBack(movedFigObj, defaultFigProps = figProperties){
         return movedFigureProps
     }
 
-// Handle case when "FigureBack.png" for the specified color is not found
 return movedFigObj;
 }
 
-// Function to add fieldstates of the opponent to the game field states of current player
+/**  
+ * Function to add fieldstates of the opponent to the game field states of current player 
+ * */
 export function mergeGameFieldStates(addedOpponentFieldState, gameFieldState){
 
     // Copy input state arrays to avoid changes on the input array
@@ -468,10 +458,6 @@ export function trackOpponentFieldStateUpdates(prevFieldStateArray, providedFiel
 
     let opponentFieldStates = [...prevFieldStateArray];
     const foundElemIndex = opponentFieldStates.findIndex(obj => obj.figure.id === providedFieledState.figure.id);
-
-    // console.log("@trackOpponentFieldStateUpdates - foundElemIndex: ", foundElemIndex)
-    // console.log("@trackOpponentFieldStateUpdates - providedFieledState: ", providedFieledState)
-    // console.log("@trackOpponentFieldStateUpdates - opponentFieldStates_in: ", opponentFieldStates)
 
     if(foundElemIndex !== -1){
         opponentFieldStates[foundElemIndex] = providedFieledState;

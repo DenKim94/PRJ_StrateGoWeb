@@ -242,7 +242,7 @@ const GameSection = () => {
                         className="btn btn-warning" 
                         style={parameters.styleButtonText} 
                         onClick={pauseGame}
-                        disabled = {gameStates.leaveGame || opponentStates.pausedGame || opponentStates.exitConfirmed ? true : false}>
+                        disabled = {gameStates.leaveGame || opponentStates.pausedGame || opponentStates.leaveGame || opponentStates.exitConfirmed ? true : false}>
                     {buttonStates.pauseButtonText}
                 </button>  
                 <button type="button" 

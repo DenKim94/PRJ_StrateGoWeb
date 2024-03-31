@@ -1,6 +1,10 @@
 import React, { useState, useEffect }  from 'react';
 import { useGameStates } from '../context/GameStatesContext.js';
 import * as parameters from '../../game-logic/parameters.js';
+import { useChannelStates } from '../context/ChannelStatesContext.js';
+import { useChatContext } from 'stream-chat-react';
+import { useOpponentStates } from '../context/OpponentStatesContext.js';
+import { useButtonStates } from '../context/ButtonStatesContext.js';
 
 /**
  * React component representing an exit confirmation box with options to confirm or cancel.
@@ -20,10 +24,50 @@ import * as parameters from '../../game-logic/parameters.js';
 const ExitBox = ({ exitBoxProps = parameters.exitBoxProps }) => {
 
     const { gameStates, setGameStates } = useGameStates();
+    const { buttonStates } = useButtonStates();
     const [confirmedState, setConfirmedState] = useState(gameStates.exitConfirmed)
     const [canceledState, setCanceledState] = useState(gameStates.exitCanceled)
+    const { setOpponentStates } = useOpponentStates();
+    const { channelStates } = useChannelStates();
+    const { client } = useChatContext();
 
-    // Update game states after using the buttons
+    try{
+        channelStates.channelObj.on((event) => {
+            if(event.type === "exit-update" && event.user.id !== client.userID){
+    
+                if(parameters.genCfg.debugMode){
+                    console.log("########################################")
+                    console.log("@ExitBox - event.data:", event.data)
+                    console.log("########################################")
+                }
+
+                setOpponentStates((prevStates) => ({
+                    ...prevStates,
+                    ready2Play: event.data.ready2Play,
+                    leaveGame: event.data.leaveGame,
+                    exitConfirmed: event.data.exitConfirmed,
+                }))
+               
+            }
+        })
+
+    }catch(error){ 
+        console.error(error.message);
+    }
+
+    // Update states between both players
+    const sendGameStateUpdates = async (gameStates) => {
+        try{
+            await channelStates.channelObj.sendEvent({
+                type: "exit-update",
+                data: gameStates,
+            })
+        }catch(error){
+            console.error(error.message);
+        }
+
+    };
+
     function handleConfirm(){
         setConfirmedState(true)
     }   
@@ -32,24 +76,53 @@ const ExitBox = ({ exitBoxProps = parameters.exitBoxProps }) => {
     }
 
     useEffect(() => {
-        const handleExit = () => {
-            if(confirmedState) {
+        const handleExit = async () => {
+            if(confirmedState) {   
                 setGameStates((prevStates) => ({
                     ...prevStates,
                     exitConfirmed: true,
-                }));                
+                }))             
+
+                await sendGameStateUpdates({  
+                    ...gameStates,  
+                    exitConfirmed: true,
+                });
             }
             
             if(canceledState){
-                setGameStates((prevStates) => ({
-                    ...prevStates,
-                    exitCanceled: true, 
-                }));                
+                if(buttonStates.counterUsedStartButton > 0){
+                    setGameStates((prevStates) => ({
+                        ...prevStates,
+                        ready2Play: true,  
+                        leaveGame: false,
+                        exitCanceled: true,
+                    }))
+                     
+                    await sendGameStateUpdates({  
+                        ...gameStates,
+                        ready2Play: true,  
+                        leaveGame: false,
+                        exitCanceled: true,
+                    });                 
+                }
+                else{
+                    setGameStates((prevStates) => ({
+                        ...prevStates, 
+                        leaveGame: false,
+                        exitCanceled: true,
+                    })) 
+
+                    await sendGameStateUpdates({  
+                        ...gameStates,  
+                        leaveGame: false,
+                        exitCanceled: true,
+                    });
+                }              
             }
         }; 
     
         handleExit()
-        }, [canceledState, confirmedState, setGameStates])    
+        }, [canceledState, confirmedState, buttonStates.counterUsedStartButton])    
 
     return(
         <div className="exit-box" style={exitBoxProps.styleParamsBox}>
