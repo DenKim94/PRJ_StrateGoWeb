@@ -207,12 +207,12 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
 
                 setGameFieldState((prevStates) => {
                   const updatedState = [...prevStates];
-
+                  // Remove figure from prevous field
                   updatedState[indexSourceField] = {
                     ...updatedState[indexSourceField],
                     figure: null,
                   };    
-
+                  // Add figure to the new field
                   updatedState[indexTargetField] = {
                     ...updatedState[indexTargetField],
                     figure: movedOpponentFigure.figureProps,
