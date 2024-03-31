@@ -93,7 +93,6 @@ const ExitBox = ({ exitBoxProps = parameters.exitBoxProps }) => {
                 if(buttonStates.counterUsedStartButton > 0){
                     setGameStates((prevStates) => ({
                         ...prevStates,
-                        ready2Play: true,  
                         leaveGame: false,
                         exitCanceled: true,
                     }))

@@ -248,7 +248,8 @@ const GameSection = () => {
                 <button type="button" 
                         className="btn btn-warning" 
                         style={parameters.styleButtonText} 
-                        onClick={exitGame}>
+                        onClick={exitGame}
+                        disabled = {gameStates.isPaused || opponentStates.pausedGame ? true : false}>
                     {buttonStates.exitButtonText}
                 </button>                                                            
             </div>
