@@ -1,7 +1,7 @@
 /** Main file for setting parameters [developer file]
  * This file is mandatory to run the application! 
  * - Developer: D.Kim
- * - Date of last changes: 30.03.2024  
+ * - Date of last changes: 07.04.2024  
 */
 
 /**** General/Global Configurations ****/
@@ -42,20 +42,6 @@ const figHeight = (gameFieldObj.fieldWidth)*0.95/10 ; // figure height in pixel
 const figSize = [figWidth,figHeight];
 
 /***************** Set and export style and property parameters for components *****************/
-
-// Main Component: App
-export const styleApp = {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',    
-    height: '100vh',        // Relative height of the component
-    backgroundColor: 'rgb(136, 107, 107)',
-};
-export const styleUiContainer = {
-    maxHeight: '1000px',
-    right: '50px',
-    left: '80px',
-};
 
 // Generic Component: GameLogo
 export const styleGameLogo = {
@@ -188,6 +174,7 @@ export const styleXAxis = {
     justifyContent: 'center',
     flexDirection: 'row', 
     top: '92%',
+    marginLeft: '20px',
     marginTop: '5px',
 };
 
@@ -195,7 +182,7 @@ export const styleXAxis = {
 export const styleYAxis = {
     fontFamily: 'Cinzel, serif',
     position: 'relative',
-    left: '-25px',
+    left: '-26px',
     height: `${gameFieldObj.fieldHeight}px`,
     display: 'flex',
     flexDirection: 'column',
@@ -211,7 +198,7 @@ export const styleButtonContainer = {
     justifyContent: 'center',
     alignItems: 'flex-end',
     maxHeight: '200px',
-    width: '95px',
+    width: '70px',
     right: '20px',
     marginTop: '500px',    
 };
@@ -228,7 +215,7 @@ export const styleCover = {
     position: 'absolute',
     fontFamily: 'Cinzel, serif',
     top: '0px',
-    left: '95px',
+    // left: '95px',
     width: `${totalGameFieldSize}px`,
     height: `${totalGameFieldSize/2 + (gameFieldObj.fieldWidth)/10}px`,
     alignItems: 'center',

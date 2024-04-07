@@ -45,8 +45,7 @@ const { opponentStates } = useOpponentStates();
     };
 
     return( 
-        <div style = {coverStyle}>
-          {/* Use an additional component to render and style the cover content  */}
+        <div className = 'cover-section' style = {coverStyle}>
               <CoverContent/>
               {gameStates.leaveGame && !gameStates.exitCanceled && !gameStates.exitConfirmed && 
               (<ExitBox />)}

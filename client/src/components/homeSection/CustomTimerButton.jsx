@@ -34,19 +34,19 @@ const CustomTimerButton = () => {
         title={'Set time limit per turn'}
         onSelect={handleTimeSelection}
         >
-            <Dropdown.Item eventKey='60'>
+            <Dropdown.Item eventKey='15'>
                 <div>
-                    <p style={itemStyle}> 1 Min. </p>
+                    <p style={itemStyle}> 15 sec. </p>
                 </div>
             </Dropdown.Item>
-            <Dropdown.Item eventKey="120">
+            <Dropdown.Item eventKey="30">
                 <div>
-                    <p style={itemStyle}> 2 Min. </p>
+                    <p style={itemStyle}> 30 sec. </p>
                 </div>
             </Dropdown.Item>
-            <Dropdown.Item eventKey="180">
+            <Dropdown.Item eventKey="60">
                 <div>
-                    <p style={itemStyle}> 3 Min. </p>
+                    <p style={itemStyle}> 1 min. </p>
                 </div>
             </Dropdown.Item>   
         </DropdownButton>

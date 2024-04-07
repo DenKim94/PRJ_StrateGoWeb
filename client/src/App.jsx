@@ -23,7 +23,7 @@ import SetUp from './components/homeSection/SetUp';
  * 
  * - Developer: D.Kim 
  * - Version: 1.0.0 
- * - Date of last changes: 30.03.2024
+ * - Date of last changes: 07.04.2024
 */
 // *******************************************************************  
 const App = () => {
@@ -86,7 +86,7 @@ const App = () => {
 
         return(
             <Router>
-                <div className = "App" style={parameters.styleApp}> 
+                <div className = "App"> 
                     <GameLogo/> 
                     <ButtonStatesProvider>
                         <GameStatesProvider>  

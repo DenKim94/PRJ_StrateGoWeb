@@ -24,7 +24,8 @@ export const GameStatesProvider = ({ children }) => {
     exitConfirmed: false,
     exitCanceled: false,
     timePerTurn_ms: null,   // Time limit per turn for each player in ms
-
+    timeIsOut: false,
+    turnPlayer: null,
   });
 
   return (

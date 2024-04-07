@@ -10,6 +10,9 @@ const CoverContent  = ({ coverContentProps = parameters.coverContent }) => {
     const { opponentStates } = useOpponentStates();
     const { gameStates } = useGameStates();
 
+    // console.log("@CoverContent - gameStates: ", gameStates)
+    // console.log("@CoverContent - opponentStates: ", opponentStates)
+
     // Update content/message of the cover depending on the game state 
     useEffect(() => {
       const updateCoverContent = () => {
@@ -22,19 +25,27 @@ const CoverContent  = ({ coverContentProps = parameters.coverContent }) => {
           else if(gameStates.leaveGame){
             setCoverContent([coverContentProps.messageAtExit])
           }
-          else if(!gameStates.isPaused && !gameStates.ready2Play && !opponentStates.ready2Play){
+          else if(!gameStates.isPaused && !gameStates.ready2Play && 
+                  !opponentStates.ready2Play && !opponentStates.timeIsOut && 
+                  !gameStates.timeIsOut && !gameStates.exitConfirmed && !opponentStates.exitConfirmed){
             setCoverContent([defaultCoverContent])
           }
-          else if(!gameStates.ready2Play && opponentStates.ready2Play){
+          else if(!gameStates.ready2Play && opponentStates.ready2Play && !opponentStates.timeIsOut && !gameStates.timeIsOut){
             setCoverContent([`* ${gameStates.opponentName} is waiting for you. *`])
           }
-          else if(gameStates.ready2Play && !opponentStates.ready2Play){
+          else if(gameStates.ready2Play && !opponentStates.ready2Play && !opponentStates.timeIsOut && !gameStates.timeIsOut){
             setCoverContent([`* Waiting for ${gameStates.opponentName} ... *`])
           }          
           else if(opponentStates.exitConfirmed && !gameStates.exitConfirmed){
-            setCoverContent(["*** Congratulations you won! ***", `* ${gameStates.opponentName} left the game *`])
+            setCoverContent([`*** ${gameStates.opponentName} left the game. ***`])
           }
-          else return
+          else if(opponentStates.timeIsOut && !gameStates.timeIsOut){
+            setCoverContent(["*** Congratulations you won the game! ***", `* Time is over for ${gameStates.opponentName} *`])
+          }
+          else if(!opponentStates.timeIsOut && gameStates.timeIsOut){
+            setCoverContent(["*** Your time has run out. You lost the game. ***"])
+          }          
+          else return null
       }; 
       
       updateCoverContent()
@@ -48,12 +59,14 @@ const CoverContent  = ({ coverContentProps = parameters.coverContent }) => {
           opponentStates.pausedGame,
           opponentStates.ready2Play,
           opponentStates.exitConfirmed,
+          opponentStates.timeIsOut,
+          gameStates.timeIsOut,
           coverContentProps.messageAtExit, 
           coverContentProps.messageWhilePause]) 
 
     return (
       <div style = {{ ...coverContentProps.styleCoverContent, whiteSpace: 'pre-line' }}>
-        {coverContent.join('\n')}
+        {coverContent.length > 0 ? coverContent.join('\n') : null}
       </div>
     )
 };

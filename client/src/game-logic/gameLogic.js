@@ -280,7 +280,7 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
     }
 
     // If the game is paused, do nothing
-    if(gameSettings.isPaused || gameSettings.leaveGame){
+    if(gameSettings.isPaused || gameSettings.leaveGame || gameSettings.timeIsOut){
         return null;
     }
     // If destination doesn't exist, do nothing 
@@ -404,6 +404,7 @@ export function getMovedOpponentFigureOnField(movedFigObj, currentGameFieldState
 
 /** 
  * Function to add an additional path for the back side of a game figure 
+ * defaultFigProps: imported object 'figProperties' from 'parameters.js' required
 */
 export function addPathFigureBack(movedFigObj, defaultFigProps = figProperties){
 

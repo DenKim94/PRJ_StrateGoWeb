@@ -34,7 +34,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     const { opponentStates } = useOpponentStates();
     const { channelStates } = useChannelStates();
     const { client } = useChatContext();
-    const { gameStates } = useGameStates();
+    const { gameStates, setGameStates } = useGameStates();
 
     // States to provide updates of moved figures to each player
     const [movedFigure, setMovedFigure] = useState( 
@@ -167,6 +167,11 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
             if(turnPlayer === playerNumber){
               // Change turn of current player 
               setTurnPlayer(playerNumber === 1 ? 2:1)
+              
+              setGameStates((prevStates) => ({ 
+                ...prevStates,
+                turnPlayer: playerNumber === 1 ? 2:1,
+              }));
 
               await channelStates.channelObj.sendEvent({
                   type: "moved-figure",
@@ -182,6 +187,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
 
       if(movedFigure.figureProps){
           provideUpdatesToChannel(gameFieldState, movedFigure)
+          
           // Reset states of moved figure
           setMovedFigure((prevStates) => ({
             ...prevStates,
@@ -200,7 +206,12 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
           switch(event.type){
             case "moved-figure":
                 setTurnPlayer(event.data.movedFigure.player === 1 ? 2:1)
-      
+
+                setGameStates((prevStates) => ({ 
+                  ...prevStates,
+                  turnPlayer: event.data.movedFigure.player === 1 ? 2:1,
+                }));
+
                 const movedOpponentFigure = gameLogic.getMovedOpponentFigureOnField(event.data.movedFigure, gameFieldState);
                 const indexSourceField = movedOpponentFigure.indexSourceField;
                 const indexTargetField = movedOpponentFigure.indexDestField;
@@ -246,6 +257,17 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
         console.log("@GameField - firstTurn: ", firstTurn);
 
         setTurnPlayer(firstTurn)
+
+        setGameStates((prevStates) => ({ 
+          ...prevStates,
+          turnPlayer: firstTurn,
+        }));
+
+        setButtonStates((prevStates) => ({
+          ...prevStates,
+          counterUsedStartButton: prevStates.counterUsedStartButton + 1,
+        })); 
+
         // Update 'gameFieldState' to render hidden opponent and own game figures
         setGameFieldState(mergedSetUpFieldState)
       }
@@ -363,9 +385,9 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                     return null                           
                                   }        
                                   
-                                  if(turnPlayer && turnPlayer !== playerNumber && gameStates.ready2Play){
+                                  if(turnPlayer !== null && turnPlayer !== playerNumber && gameStates.ready2Play){
                                       toast.info("It's not your turn!", {
-                                        autoClose: 1000, 
+                                        autoClose: 900, 
                                     }); 
 
                                     return null
@@ -374,7 +396,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                   // Drag and Drop logic                     
                                   const updatedStates = gameLogic.handleDragDrop(result, gameFieldState, figureStorageState, prefixSingleFieldID, gameStates);
                                 
-                                  if (updatedStates && !opponentStates.pausedGame){                                  
+                                  if(updatedStates !== null && !opponentStates.pausedGame){                                  
                                     // Get updated states from 'updatedStates'
                                     const { draggedFigure, gameFieldState: newGameFieldState, figureStorageState: newFigureStorageState} = updatedStates;
                                     

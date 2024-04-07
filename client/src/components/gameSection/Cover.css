@@ -8,5 +8,15 @@
   }
   
   .Cover-FadeOut {
-    animation: fadeOut 0.5s ease-out;
+    animation: fadeOut 0.5s ease-out;                                       
+  }
+
+  .cover-section{
+    left: 70px;
+  }
+
+  @media (max-height: 999px) {
+    .cover-section{
+      left: -20px;
+    }
   }

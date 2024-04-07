@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import * as parameters from '../../game-logic/parameters.js';
 import GameField from './GameField';  
+import Countdown from "./Countdown.jsx";
 import { useButtonStates } from '../context/ButtonStatesContext.js';
 import { useGameStates } from '../context/GameStatesContext.js';
 import { useOpponentStates } from '../context/OpponentStatesContext.js';
@@ -60,7 +61,6 @@ const GameSection = () => {
             setGameStates((prevStates) => ({
                 ...prevStates,
                 ready2Play: false,
-                isPaused: true,
             }));          
         }
 
@@ -138,11 +138,7 @@ const GameSection = () => {
                 ...prevStates,
                 pauseButtonText: "Proceed Game",
             }));
-            
-            // TO-DO: Pause the timer of the game after triggering the event
-            // In Progress...
 
-            // Set ready2Play = false
             setGameStates((prevStates) => ({
                 ...prevStates,
                 ready2Play: false,
@@ -158,11 +154,7 @@ const GameSection = () => {
                 pauseButtonText: "Pause Game",
             }));            
 
-            // TO-DO: Activate the timer (without resetting) to proceed
-            // In Progress...
-
             if(buttonStates.counterUsedStartButton === 0){
-                // Set isPaused: false to proceed
                 setGameStates((prevStates) => ({
                     ...prevStates,
                     isPaused: false, 
@@ -180,8 +172,8 @@ const GameSection = () => {
     }
 
     /**
-     * Function to be executed when the "Exit Game" button is clicked.
-     * Sets the 'ready2Play' parameter to false and triggers the exit from the game.
+     * Function to be executed when the "Leave Game" button is clicked.
+     * Triggers the exit process of the game
      * @function
      */
     function exitGame(){
@@ -196,7 +188,7 @@ const GameSection = () => {
     }
 
     /**
-     * Effect hook to change the functionality of the Start Button after starting the game.
+     * Effect hook to disable the Start Button after first use to start the game.
      * @function
      */
     useEffect(() => {
@@ -227,40 +219,52 @@ const GameSection = () => {
     }
     
     return(
-        <div className="ui-container" >
-        {(!gameStates.ready2Play || !opponentStates.ready2Play) && (<Cover className={(gameStates.ready2Play && opponentStates.ready2Play) ? '' : 'Cover-FadeOut'}/>)}
-            <div className="btn-container" style = {parameters.styleButtonContainer}>
-                <button type="button" 
-                        id={!buttonStates.disabledStartButton ? "highlighted-button": ''}
-                        className = "btn btn-warning"
-                        style={parameters.styleButtonText}
-                        onClick={startGame} 
-                        disabled = {buttonStates.disabledStartButton} >
-                    {buttonStates.startButtonText}
-                </button> 
-                <button type="button" 
-                        className="btn btn-warning" 
-                        style={parameters.styleButtonText} 
-                        onClick={pauseGame}
-                        disabled = {gameStates.leaveGame || opponentStates.pausedGame || opponentStates.leaveGame || opponentStates.exitConfirmed ? true : false}>
-                    {buttonStates.pauseButtonText}
-                </button>  
-                <button type="button" 
-                        className="btn btn-warning" 
-                        style={parameters.styleButtonText} 
-                        onClick={exitGame}
-                        disabled = {gameStates.isPaused || opponentStates.pausedGame ? true : false}>
-                    {buttonStates.exitButtonText}
-                </button>                                                            
+        <>
+            <div className="ui-container" >
+            {(!gameStates.ready2Play || !opponentStates.ready2Play) && (<Cover className={(gameStates.ready2Play && opponentStates.ready2Play) ? '' : 'Cover-FadeOut'}/>)}
+            {/* {(!gameStates.ready2Play || !opponentStates.ready2Play) && (<Cover />)} */}
+                <div className="btn-container" style = {parameters.styleButtonContainer}>
+                    <button type="button" 
+                            id={!buttonStates.disabledStartButton ? "highlighted-button": ''}
+                            className = "btn btn-warning"
+                            style={parameters.styleButtonText}
+                            onClick={startGame} 
+                            disabled = {gameStates.leaveGame || 
+                                opponentStates.pausedGame || 
+                                gameStates.isPaused || 
+                                opponentStates.leaveGame ? true : buttonStates.disabledStartButton}>
+
+                        {buttonStates.startButtonText}
+                    </button> 
+                    <button type="button" 
+                            className="btn btn-warning" 
+                            style={parameters.styleButtonText} 
+                            onClick={pauseGame}
+                            disabled = {gameStates.leaveGame || 
+                                        opponentStates.pausedGame || 
+                                        opponentStates.leaveGame || 
+                                        opponentStates.exitConfirmed || opponentStates.timeIsOut || 
+                                        gameStates.timeIsOut ? true : false}>
+
+                        {buttonStates.pauseButtonText}
+                    </button>  
+                    <button type="button" 
+                            className="btn btn-warning" 
+                            style={parameters.styleButtonText} 
+                            onClick={exitGame}
+                            disabled = {gameStates.isPaused || opponentStates.pausedGame || gameStates.leaveGame ? true : false}>
+                        {buttonStates.exitButtonText}
+                    </button>                                                            
+                </div>
+                <ScoutStatesProvider> 
+                    <GameField /> 
+                </ScoutStatesProvider> 
+
+                <Countdown />
             </div>
-            <ScoutStatesProvider> 
-                <GameField /> 
-            </ScoutStatesProvider> 
 
-             {/* TO-DO: CHAT-Component */}
-
-             {/* <ToastContainer position='top-right' /> */}
-        </div>         
+            {/* TO-DO: CHAT-Component */}
+        </>
     )
 };
 export default GameSection
