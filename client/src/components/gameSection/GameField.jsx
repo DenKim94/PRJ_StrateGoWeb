@@ -222,11 +222,13 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                   updatedState[indexSourceField] = {
                     ...updatedState[indexSourceField],
                     figure: null,
+                    isPlayable: true,
                   };    
                   // Add figure to the new field
                   updatedState[indexTargetField] = {
                     ...updatedState[indexTargetField],
                     figure: movedOpponentFigure.figureProps,
+                    isPlayable: false,
                   };
                   return updatedState;
                 });

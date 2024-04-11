@@ -5,9 +5,9 @@
   --gapFigureStorage_default: 5px;
   --marginTopFigureStorage_default: 20px;
   --borderRadiusFigureStorage_default: 5px;
-  --maxHeightFigureStorage_media: 300px;
+  --maxHeightFigureStorage_media: 400px;
   --widthFigureStorage_media: 250px;
-  --marginTopFigureStorage_media: 20px;
+  --marginTopFigureStorage_media: 300px;
   --marginLeftFigureStorage_media: 20px;
   --borderPropsFigureStorage: 1px solid black;
   --backGroundColorFigureStorage_default:  lightgoldenrodyellow;
