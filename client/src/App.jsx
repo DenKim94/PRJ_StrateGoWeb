@@ -45,8 +45,7 @@ const App = () => {
             // Connect the user to the Chat-API/Platform with a valid token
             const connectUser = async () => {
                 try {
-
-                    const user = await client.connectUser({
+                    await client.connectUser({
                         id: cookies.get("userID"),
                         name: cookies.get("playerName"),
                         playerNumber: cookies.get("playerNumber"),
@@ -54,12 +53,12 @@ const App = () => {
             
                     if (!userConnected) {
                         setUserConnected(true);
-                        console.log(" Connected user: ", user);
+                        console.log(" User connected.");
                     }
                     connectionAttemptsCounter = 0;
 
                 } catch (error) {
-                    console.error(" Connection failed:", error.message);
+                    console.error(error.message);
 
                     // Try to reconnect the user if maximum attempts currently not exceeded
                     if (connectionAttemptsCounter <= maxConnectionAttempts) {
@@ -76,13 +75,6 @@ const App = () => {
             }
         }
         }, [client, userConnected, cookies, userCreated, tokenRef]);
-
-        if(parameters.genCfg.debugMode){
-            console.log("@App: tokenRef: ", tokenRef);
-            console.log("@App: cookies: ", cookies);
-            console.log("@App: userConnected: ", userConnected)
-            console.log("@App: userCreated: ", userCreated)
-        }
 
         return(
             <Router>
