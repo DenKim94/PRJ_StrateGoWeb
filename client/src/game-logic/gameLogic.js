@@ -57,16 +57,17 @@ function moveFigureOnField(GameFieldState, gameSettings, draggableId, figureStor
     let newGameFieldState = updateGameFieldStateProps(GameFieldState, indexSourceField, [true, null])       
 
     // Handle the action in case of an occupied field
-    if(!isPlayableField){
-        const winner = handleOccupiedField(targetFieldProps, draggedFigure)
+    let winner = null;
+    let loser = null;
 
-        // If the type of returned 'winner' is an object (not as 'null')
-        if(winner && typeof winner !== "string"){
+    if(!isPlayableField){
+        [winner, loser] = handleOccupiedField(targetFieldProps, draggedFigure)
+
+        if(winner !== null && typeof winner !== "string"){
             // Update the State of the target game field 
             newGameFieldState = updateGameFieldStateProps(newGameFieldState, indexTargetField, [false, winner])
         }
-        /* If the type of returned 'winner' is a string, both figures are going to be removed from game field 
-           and will be added to the figure storage list as 'dead' figure */
+
         else if(typeof winner === "string"){
             // Update the State of the target game field 
             newGameFieldState = updateGameFieldStateProps(newGameFieldState, indexTargetField, [true, null]) 
@@ -75,7 +76,6 @@ function moveFigureOnField(GameFieldState, gameSettings, draggableId, figureStor
             1) Put the (dead) figures in an empty list/state of the component 'FigureStorage'
             2) Render the updated component which includes the removed/dead figures */
         }
-        // If returned value of 'winner' is 'null'
         else {
             // Reset the source game field to previous state  
             newGameFieldState = updateGameFieldStateProps(newGameFieldState, indexSourceField, [false, draggedFigure]) 
@@ -96,8 +96,7 @@ function moveFigureOnField(GameFieldState, gameSettings, draggableId, figureStor
         console.log("@moveFigureOnField - newGameFieldState:", newGameFieldState)
         console.log("##############################################")
     }
-    // Return States
-    return [newGameFieldState, newFigureStorageState, draggedFigure]   
+    return [newGameFieldState, newFigureStorageState, draggedFigure, winner, loser]   
 }
 
 /**
@@ -190,6 +189,7 @@ function getMovingSteps(startPos, endPos){
 function handleOccupiedField(targetFieldProps, draggedFigure){ 
     // Get properties of placed figure [object]
     const placedFigure = targetFieldProps.figure;
+
     // Show values of parameters in a console when 'debugMode' is active
     if(genCfg.debugMode){
         console.log("##############################################")
@@ -199,31 +199,45 @@ function handleOccupiedField(targetFieldProps, draggedFigure){
 
     // If 'placedFigure' does not exist, return null
     if(!placedFigure){
-        return null;
+        return [null, null]; 
     }
     // If the destination field is occupied by an opponent --> battle
     if (placedFigure.color !== draggedFigure.color){
-        const winner = battleFigures(draggedFigure, placedFigure);
-        return winner 
+        const [winner, loser] = battleFigures(draggedFigure, placedFigure);
+
+        return [winner, loser] 
     }
     // If the target field is occupied by own figure or is just not playable, return null
     else{ 
-        return null; 
+        return [null, null]; 
     }   
 }
 /**
  * Helper function to handle the battle between two game figures
 */
 function battleFigures(figObj_1, figObj_2){
-    let winner = "drawn"; 
+    let winner = "draw"; 
+    let loser  = "draw"; 
+
     if(figObj_1.value > figObj_2.value){
-        return winner = figObj_1;
+        winner = figObj_1;
+        loser = figObj_2;
+        loser.isActive = false;
+
+        return [winner, loser]
+
     }else if(figObj_1.value < figObj_2.value){
-        return winner = figObj_2;
+        winner = figObj_2;
+        loser = figObj_1;
+        loser.isActive = false;
+
+        return [winner, loser]
+
     }else{
         /* If the compared values are equal, 
-        'winner' will be returned as a string named 'drawn' */
-        return winner;
+        [winner, loser] will be returned as a string named 'draw' */
+
+        return [winner, loser];
     }
 }
 
@@ -293,7 +307,9 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
 
     /**********************************************/
     // Setting default values
-    let draggedFigure = null;                      // Placeholder for object properties of a dragged game figure   
+    let draggedFigure = null;                      // Placeholder for object properties of a dragged game figure  
+    let winner = null;                             // Placeholder for object properties of a winner game figure 
+    let loser = null;                              // Placeholder for object properties of a defeated game figure 
     let newFigureList = [...figureStorageState];   // Updated state of the list, which contains the game figures in starting position
     let newGameFieldState = [...gameFieldState];   // Updated state of the game-field-array
     let newFigureStorageState = null;              // Placeholder for an filtered array with removed game figures
@@ -360,7 +376,7 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
         }
         // Moving figures inside the game field
         else if(destination.droppableId.includes(prefixSingleFieldID) && source.droppableId !== "storageZone"){
-            [newGameFieldState, newFigureStorageState, draggedFigure] = moveFigureOnField(newGameFieldState, gameSettings, 
+            [newGameFieldState, newFigureStorageState, draggedFigure, winner, loser] = moveFigureOnField(newGameFieldState, gameSettings, 
                                                                            draggableId, figureStorageState, 
                                                                            indexSourceField, indexTargetField)
         }  
@@ -370,6 +386,8 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
         draggedFigure: draggedFigure,
         gameFieldState: newGameFieldState,
         figureStorageState: newFigureStorageState,
+        winnerFigure: winner,
+        defeatedFigure : loser,        
       };       
 }
 
@@ -408,21 +426,26 @@ export function getMovedOpponentFigureOnField(movedFigObj, currentGameFieldState
 */
 export function addPathFigureBack(movedFigObj, defaultFigProps = figProperties){
 
-    // Get a path of an corresponding image to hide the figure of the opponent
+    // Get a path of the corresponding image to hide the figure of the opponent
     const indexFigureBack = defaultFigProps.findIndex((figProps) => figProps.figName === "FigureBack.png" && figProps.color === movedFigObj.color);
 
     if(indexFigureBack !== -1){
-        const imgFigureBackPath = defaultFigProps[indexFigureBack].imgPath[0];
-
         let currentFigurePaths = movedFigObj.imgPath;
-        currentFigurePaths.push(imgFigureBackPath)
-        
-        const movedFigureProps = {
-            ...movedFigObj,
-            imgPath: currentFigurePaths,
-        };
-   
-        return movedFigureProps
+        const containsPath = currentFigurePaths.some(path => path.includes("FigureBack"));
+
+        if(!containsPath){
+            const imgFigureBackPath = defaultFigProps[indexFigureBack].imgPath[0];
+            currentFigurePaths.push(imgFigureBackPath);
+
+            const movedFigureProps = {
+                ...movedFigObj,
+                imgPath: currentFigurePaths,
+            };
+            return movedFigureProps
+
+        }else{
+            return movedFigObj
+        }
     }
 
 return movedFigObj;

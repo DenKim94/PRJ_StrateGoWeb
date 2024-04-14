@@ -46,6 +46,13 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
         }
     );
 
+    const [battledFigures, setBattledFigures] = useState( 
+      { 
+          winnerFigProps: null,
+          defeatedFigProps: null,
+      }
+  );
+
     // Set player to make a first turn 
     // --> A player who is ready to start the game first, can make the first turn 
     const [firstTurn, setFirstTurn] = useState(null);
@@ -151,7 +158,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
 
     // Send updates to channel
     useEffect(() => {
-      const provideUpdatesToChannel = async (gameFieldStates, movedFigure) => 
+      const provideUpdatesToChannel = async (gameFieldStates, movedFigure, battledFigures) => 
       {   
         try{
           gameLogic.addPathFigureBack(movedFigure.figureProps);
@@ -175,18 +182,18 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
 
               await channelStates.channelObj.sendEvent({
                   type: "moved-figure",
-                  data: {movedFigure, turnPlayer},
+                  data: {movedFigure, turnPlayer, battledFigures},
               })
             }
           }
         }
         catch(error){
-          console.error(error)
+          console.error(error.message);
         }
       }
 
       if(movedFigure.figureProps){
-          provideUpdatesToChannel(gameFieldState, movedFigure)
+          provideUpdatesToChannel(gameFieldState, movedFigure, battledFigures)
           
           // Reset states of moved figure
           setMovedFigure((prevStates) => ({
@@ -195,9 +202,15 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
             source: null,
             destination: null,
           }));
+
+          setBattledFigures((prevStates) => ({
+            ...prevStates,
+            winnerFigProps: null,
+            defeatedFigProps: null,
+          })); 
       } 
     // eslint-disable-next-line
-    }, [movedFigure, playerNumber, turnPlayer, channelStates.channelObj])
+    }, [movedFigure.figureProps, playerNumber, battledFigures, turnPlayer, channelStates.channelObj])
 
     useEffect(() => {
       const handleChannelEvent = (event) => {
@@ -216,22 +229,44 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                 const indexSourceField = movedOpponentFigure.indexSourceField;
                 const indexTargetField = movedOpponentFigure.indexDestField;
 
-                setGameFieldState((prevStates) => {
-                  const updatedState = [...prevStates];
-                  // Remove figure from prevous field
-                  updatedState[indexSourceField] = {
-                    ...updatedState[indexSourceField],
-                    figure: null,
-                    isPlayable: true,
-                  };    
-                  // Add figure to the new field
-                  updatedState[indexTargetField] = {
-                    ...updatedState[indexTargetField],
-                    figure: movedOpponentFigure.figureProps,
-                    isPlayable: false,
-                  };
-                  return updatedState;
-                });
+                if(typeof event.data.battledFigures.winnerFigProps !== "string"){ 
+                  setGameFieldState((prevStates) => {
+                    const updatedState = [...prevStates];
+  
+                    updatedState[indexSourceField] = {
+                      ...updatedState[indexSourceField],
+                      figure: null,
+                      isPlayable: true,
+                    };    
+  
+                    updatedState[indexTargetField] = {
+                      ...updatedState[indexTargetField],
+                      figure: movedOpponentFigure.figureProps,
+                      isPlayable: false,
+                    };
+                  
+                    return updatedState;
+                  });
+
+                }else{
+                  setGameFieldState((prevStates) => {
+                    const updatedState = [...prevStates];
+  
+                    updatedState[indexSourceField] = {
+                      ...updatedState[indexSourceField],
+                      figure: null,
+                      isPlayable: true,
+                    };    
+  
+                    updatedState[indexTargetField] = {
+                      ...updatedState[indexTargetField],
+                      figure: null,
+                      isPlayable: true,
+                    };
+                  
+                    return updatedState;
+                  });
+                }
                 break;
 
             case "set-up-figures":
@@ -400,24 +435,56 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                 
                                   if(updatedStates !== null && !opponentStates.pausedGame){                                  
                                     // Get updated states from 'updatedStates'
-                                    const { draggedFigure, gameFieldState: newGameFieldState, figureStorageState: newFigureStorageState} = updatedStates;
+                                    const { draggedFigure, gameFieldState: newGameFieldState, figureStorageState: newFigureStorageState, winnerFigure, defeatedFigure} = updatedStates;
                                     
                                     if(draggedFigure){
-                                      setMovedFigure((prevStates) => ({
-                                        ...prevStates,
-                                        player: playerNumber,
-                                        figureProps: draggedFigure,
-                                        source: result.source,
-                                        destination: result.destination,
-                                    }))
+                                      if(winnerFigure !== null && typeof winnerFigure !== "string"){
+                                        setMovedFigure((prevStates) => ({
+                                          ...prevStates,
+                                          player: playerNumber,
+                                          figureProps: winnerFigure,
+                                          source: result.source,
+                                          destination: result.destination,
+                                        }))
+                                        
+                                        setBattledFigures((prevStates) => ({
+                                          ...prevStates,
+                                          winnerFigProps: winnerFigure,
+                                          defeatedFigProps: defeatedFigure,
+                                        }))
+                                      }
+                                      else if(winnerFigure !== null && winnerFigure.includes("draw")){
+                                        draggedFigure.isActive = false;
 
+                                        setMovedFigure((prevStates) => ({
+                                          ...prevStates,
+                                          player: playerNumber,
+                                          figureProps: draggedFigure,
+                                          source: result.source,
+                                          destination: result.destination,
+                                        }))  
+
+                                        setBattledFigures((prevStates) => ({
+                                          ...prevStates,
+                                          winnerFigProps: "draw",
+                                          defeatedFigProps: "draw",
+                                        }))                                       
+                                      }
+                                      else{
+                                        setMovedFigure((prevStates) => ({
+                                          ...prevStates,
+                                          player: playerNumber,
+                                          figureProps: draggedFigure,
+                                          source: result.source,
+                                          destination: result.destination,
+                                        }))                                       
+                                      }
                                     }
 
                                     setGameFieldState(newGameFieldState);         // Update the State of the game field 
                                     setFigureStorageState(newFigureStorageState); // Update the State of the figure storage
                                   }
-                                  else{ return null }
-                                
+                                  else{ return null }                             
                                 }}>
                     
          <div className = "dnd-container" style={parameters.styleDnDContainer}>
