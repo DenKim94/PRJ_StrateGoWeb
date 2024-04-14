@@ -478,6 +478,9 @@ export function mergeGameFieldStates(addedOpponentFieldState, gameFieldState){
     return copiedGameFieldState
 }
 
+/**  
+ * Function to track/provide updates of the opponent fieldstates 
+ * */
 export function trackOpponentFieldStateUpdates(prevFieldStateArray, providedFieledState){
 
     let opponentFieldStates = [...prevFieldStateArray];

@@ -23,7 +23,7 @@ import SetUp from './components/homeSection/SetUp';
  * 
  * - Developer: D.Kim 
  * - Version: 1.0.0 
- * - Date of last changes: 07.04.2024
+ * - Date of last changes: 14.04.2024
 */
 // *******************************************************************  
 const App = () => {
@@ -59,7 +59,7 @@ const App = () => {
                     connectionAttemptsCounter = 0;
 
                 } catch (error) {
-                    console.error(" Connection failed:", error);
+                    console.error(" Connection failed:", error.message);
 
                     // Try to reconnect the user if maximum attempts currently not exceeded
                     if (connectionAttemptsCounter <= maxConnectionAttempts) {

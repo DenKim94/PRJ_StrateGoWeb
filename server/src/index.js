@@ -46,9 +46,9 @@ app.post("/setup", async (req, res) => {
 
         res.json({userProps, token})                        // Provide response as json-data
     }
-    catch(e){
-        console.log(e)
-        res.json({ error: e });
+    catch(error){
+        console.error(error.message)
+        res.json({ error: error });
     }
 })
 
@@ -71,7 +71,7 @@ async function deleteOldUsers(){
         })
     }
     catch(error){
-        console.log("Error: ", error)
+        console.error(error.message);
     }
 }
 

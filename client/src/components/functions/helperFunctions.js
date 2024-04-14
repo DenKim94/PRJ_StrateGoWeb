@@ -387,7 +387,7 @@ export async function disconnectUser(clientObj) {
         console.log(">> User disconnected.") 
 
     } catch (error) {
-        console.error(error);
+        console.error(error.message);
     }
 
     return [clientObj]
@@ -407,8 +407,8 @@ export function deleteCookies(cookiesObj){
           });
           console.log(">> Saved cookies removed.")  
 
-    } catch (error) {
-        console.error(error);
+    } catch(error) {
+        console.error(error.message);
     }
 
     return [cookiesObj]
