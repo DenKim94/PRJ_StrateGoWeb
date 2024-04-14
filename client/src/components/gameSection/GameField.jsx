@@ -290,8 +290,8 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
 
       if(gameStates.ready2Play && opponentStates.ready2Play && buttonStates.counterUsedStartButton === 1){
         const mergedSetUpFieldState = gameLogic.mergeGameFieldStates(addedOpponentFieldState, gameFieldState);
-        console.log("@GameField - mergedSetUpFieldState: ", mergedSetUpFieldState)
-        console.log("@GameField - firstTurn: ", firstTurn);
+        // console.log("@GameField - mergedSetUpFieldState: ", mergedSetUpFieldState)
+        // console.log("@GameField - firstTurn: ", firstTurn);
 
         setTurnPlayer(firstTurn)
 
