@@ -205,9 +205,8 @@ const GameSection = () => {
         if(!buttonStates.disabledStartButton){
             disableStartButton()
         }
-
+    // eslint-disable-next-line
     }, [buttonStates.counterUsedStartButton, buttonStates.disabledStartButton])
-
 
     if(parameters.genCfg.debugMode){
         console.log("######################################################")
