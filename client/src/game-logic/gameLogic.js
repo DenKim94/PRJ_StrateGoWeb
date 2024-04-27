@@ -59,18 +59,19 @@ function moveFigureOnField(GameFieldState, gameSettings, draggableId, figureStor
     // Handle the action in case of an occupied field
     let winner = null;
     let loser = null;
+    let validTurn = true;
 
     if(!isPlayableField){
-        [winner, loser] = handleOccupiedField(targetFieldProps, draggedFigure)
+        [winner, loser, validTurn] = handleOccupiedField(targetFieldProps, draggedFigure);
 
         if(winner !== null && typeof winner !== "string"){
             // Update the State of the target game field 
-            newGameFieldState = updateGameFieldStateProps(newGameFieldState, indexTargetField, [false, winner])
+            newGameFieldState = updateGameFieldStateProps(newGameFieldState, indexTargetField, [false, winner]);
         }
 
         else if(typeof winner === "string"){
             // Update the State of the target game field 
-            newGameFieldState = updateGameFieldStateProps(newGameFieldState, indexTargetField, [true, null]) 
+            newGameFieldState = updateGameFieldStateProps(newGameFieldState, indexTargetField, [true, null]); 
 
             /* TO-DO: Handle removed/dead figures (31.10.2023) 
             1) Put the (dead) figures in an empty list/state of the component 'FigureStorage'
@@ -78,25 +79,15 @@ function moveFigureOnField(GameFieldState, gameSettings, draggableId, figureStor
         }
         else {
             // Reset the source game field to previous state  
-            newGameFieldState = updateGameFieldStateProps(newGameFieldState, indexSourceField, [false, draggedFigure]) 
+            newGameFieldState = updateGameFieldStateProps(newGameFieldState, indexSourceField, [false, draggedFigure]); 
         }
     }
     else {      
         // Update the State of the target game field 
-        newGameFieldState = updateGameFieldStateProps(newGameFieldState, indexTargetField, [false, draggedFigure])
+        newGameFieldState = updateGameFieldStateProps(newGameFieldState, indexTargetField, [false, draggedFigure]);
     }
-    // Show values of parameters in a console when 'debugMode' is active
-    if(genCfg.debugMode){
-        console.log("##############################################")
-        console.log("@moveFigureOnField - GameFieldState:", GameFieldState)
-        console.log("@moveFigureOnField - draggableId:", draggableId)
-        console.log("@moveFigureOnField - sourceFieldProps:", sourceFieldProps)  
-        console.log("@moveFigureOnField - targetFieldProps:", targetFieldProps)           
-        console.log("@moveFigureOnField - draggedFigure:", draggedFigure)
-        console.log("@moveFigureOnField - newGameFieldState:", newGameFieldState)
-        console.log("##############################################")
-    }
-    return [newGameFieldState, newFigureStorageState, draggedFigure, winner, loser]   
+
+    return [newGameFieldState, newFigureStorageState, draggedFigure, winner, loser, validTurn]   
 }
 
 /**
@@ -149,15 +140,7 @@ function checkMovingDirection(startPos, endPos){
     else{
         isAllowed = false;
     }
-    // Show values of parameters in a console when 'debugMode' is active
-    if(genCfg.debugMode){
-        console.log("##############################################")
-        console.log("@checkMovingDirection - startPos: ", startPos)
-        console.log("@checkMovingDirection - endPos: ", endPos)
-        console.log("@checkMovingDirection - absDiff_y: ", absDiff_y)
-        console.log("@checkMovingDirection - isAllowedDirection: ", isAllowed)
-        console.log("##############################################")
-    }   
+ 
     return isAllowed
 }
 
@@ -173,13 +156,7 @@ function getMovingSteps(startPos, endPos){
     const y_steps = Math.abs(endPos[1] - startPos[1]); 
     // Array with steps in x- and y- direction 
     const steps = [x_steps, y_steps]; 
-    // Show values of parameters in a console when 'debugMode' is active
-    if(genCfg.debugMode){
-        console.log("##############################################")
-        console.log("@getMovingSteps - let2num: ", let2num)
-        console.log("@getMovingSteps - [x_steps, y_steps]: ", steps)
-        console.log("##############################################")
-    }   
+ 
     return steps
 }    
 
@@ -190,34 +167,27 @@ function handleOccupiedField(targetFieldProps, draggedFigure){
     // Get properties of placed figure [object]
     const placedFigure = targetFieldProps.figure;
 
-    // Show values of parameters in a console when 'debugMode' is active
-    if(genCfg.debugMode){
-        console.log("##############################################")
-        console.log("@handleOccupiedField - placedFigure: ", placedFigure)
-        console.log("##############################################")
-    }
-
     // If 'placedFigure' does not exist, return null
     if(!placedFigure){
-        return [null, null]; 
+        return [null, null, false]; 
     }
     // If the destination field is occupied by an opponent --> battle
     if (placedFigure.color !== draggedFigure.color){
         const [winner, loser] = battleFigures(draggedFigure, placedFigure);
 
-        return [winner, loser] 
+        return [winner, loser, true]
     }
     // If the target field is occupied by own figure or is just not playable, return null
     else{ 
-        return [null, null]; 
+        return [null, null, false];  
     }   
 }
 /**
  * Helper function to handle the battle between two game figures
 */
 function battleFigures(figObj_1, figObj_2){
-    let winner = "draw"; 
-    let loser  = "draw"; 
+    let winner = figObj_1; 
+    let loser  = figObj_2; 
 
     if(figObj_1.value > figObj_2.value){
         winner = figObj_1;
@@ -234,9 +204,10 @@ function battleFigures(figObj_1, figObj_2){
         return [winner, loser]
 
     }else{
-        /* If the compared values are equal, 
-        [winner, loser] will be returned as a string named 'draw' */
-
+        // If the compared values are equal 
+        winner.isActive = false;
+        loser.isActive = false;
+        
         return [winner, loser];
     }
 }
@@ -286,13 +257,6 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
     // Extract the properties after the DnD action
     const { source, destination, type, draggableId } = results;
 
-    if(genCfg.debugMode){
-        console.log("##############################################")
-        console.log("@handleDragDrop - results: ",results)
-        console.log("@handleDragDrop - gameFieldState: ",gameFieldState)
-        console.log("##############################################")
-    }
-
     // If the game is paused, do nothing
     if(gameSettings.isPaused || gameSettings.leaveGame || gameSettings.timeIsOut){
         return null;
@@ -306,10 +270,11 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
         return null; 
 
     /**********************************************/
-    // Setting default values
+    // Preallocation
     let draggedFigure = null;                      // Placeholder for object properties of a dragged game figure  
     let winner = null;                             // Placeholder for object properties of a winner game figure 
     let loser = null;                              // Placeholder for object properties of a defeated game figure 
+    let validTurn = true;
     let newFigureList = [...figureStorageState];   // Updated state of the list, which contains the game figures in starting position
     let newGameFieldState = [...gameFieldState];   // Updated state of the game-field-array
     let newFigureStorageState = null;              // Placeholder for an filtered array with removed game figures
@@ -376,7 +341,7 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
         }
         // Moving figures inside the game field
         else if(destination.droppableId.includes(prefixSingleFieldID) && source.droppableId !== "storageZone"){
-            [newGameFieldState, newFigureStorageState, draggedFigure, winner, loser] = moveFigureOnField(newGameFieldState, gameSettings, 
+            [newGameFieldState, newFigureStorageState, draggedFigure, winner, loser, validTurn] = moveFigureOnField(newGameFieldState, gameSettings, 
                                                                            draggableId, figureStorageState, 
                                                                            indexSourceField, indexTargetField)
         }  
@@ -387,7 +352,8 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
         gameFieldState: newGameFieldState,
         figureStorageState: newFigureStorageState,
         winnerFigure: winner,
-        defeatedFigure : loser,        
+        defeatedFigure : loser, 
+        isValidTurn: validTurn,       
       };       
 }
 
