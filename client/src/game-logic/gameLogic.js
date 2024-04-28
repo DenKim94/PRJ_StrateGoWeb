@@ -1,11 +1,13 @@
 // import * as helperFcn from '../components/functions/helperFunctions.js'
-import { genCfg } from './parameters';
 import { gameFieldObj } from './parameters';
 import { figProperties } from './parameters';
 
 /**
- * Helper function to get an index of a game field with specific ID
-*/
+ * Helper function to retrieve the index of a game field with a specific ID.
+ * @param {Array} stateArray - The array containing the state of the game field.
+ * @param {object} fieldObj - The object representing the field with the specific ID.
+ * @returns {number|null} The index of the field with the specified ID if found, or null if not found.
+ */
 function getIndexOfGameField(stateArray, fieldObj){
     const indexField = stateArray.findIndex((fieldProps) => fieldProps.id === fieldObj.droppableId);
     
@@ -17,16 +19,32 @@ function getIndexOfGameField(stateArray, fieldObj){
 }
 
 /**
- * Helper function to get properties of a single field element
-*/
+ * Helper function to retrieve properties of a single field element from a state array.
+ * @param {Array} stateArray - The array containing the state of the game field.
+ * @param {number} index - The index of the field element in the state array.
+ * @returns {object|null} The properties of the specified field element if found, or null if not found.
+ */
 function getPropsOfGameField(stateArray, index){
     const fieldProps = stateArray[index];
     return fieldProps || null
 }
 
 /**
- * Helper function to move game figures on the game field 
-*/
+ * Moves a game figure on the game field according to the specified parameters.
+ * @param {Array} GameFieldState - The current state of the game field.
+ * @param {object} gameSettings - The settings of the game.
+ * @param {string} draggableId - The unique identifier of the draggable figure.
+ * @param {object} figureStorageState - The state of the figure storage component.
+ * @param {number} indexSourceField - The index of the source field from which the figure is being moved.
+ * @param {number} indexTargetField - The index of the target field to which the figure is being moved.
+ * @returns {Array} An array containing updated states and information about the move:
+ *                  - The updated state of the game field.
+ *                  - The updated state of the figure storage component.
+ *                  - The dragged figure.
+ *                  - The winner of any battle that occurred during the move.
+ *                  - The loser of any battle that occurred during the move.
+ *                  - A boolean indicating whether the move is valid.
+ */
 function moveFigureOnField(GameFieldState, gameSettings, draggableId, figureStorageState, 
                            indexSourceField, indexTargetField)
 {
@@ -91,8 +109,12 @@ function moveFigureOnField(GameFieldState, gameSettings, draggableId, figureStor
 }
 
 /**
- * Helper function to ensure a correct movement of the game figure 
-*/
+ * Helper function to ensure correct movement of a game figure.
+ * @param {object} sourceFieldProps - The properties of the source game field.
+ * @param {object} targetFieldProps - The properties of the target game field.
+ * @param {object} figureProps - The properties of the game figure being moved.
+ * @returns {boolean} True if the movement is allowed, false otherwise.
+ */
 function checkCorrectMoving(sourceFieldProps, targetFieldProps, figureProps){
     // Start position of dragged figure: [x,y]
     const startPos = [sourceFieldProps.pos_x, sourceFieldProps.pos_y];  
@@ -121,8 +143,11 @@ function checkCorrectMoving(sourceFieldProps, targetFieldProps, figureProps){
 }
 
 /**
- * Helper function to check a valid/allowed direction of a movement
-*/
+ * Helper function to check the valid direction of movement.
+ * @param {Array} startPos - The starting position of the movement as [x, y].
+ * @param {Array} endPos - The ending position of the movement as [x, y].
+ * @returns {boolean} True if the movement is allowed in a vertical or horizontal direction, false otherwise.
+ */
 function checkMovingDirection(startPos, endPos){
     // Initialized parameter, which will be returned as boolean [true or false]
     let isAllowed = true;  
@@ -145,8 +170,11 @@ function checkMovingDirection(startPos, endPos){
 }
 
 /**
- * Helper function to get a number of moving steps of a dragged figure 
-*/
+ * Helper function to calculate the number of steps moved by a dragged figure.
+ * @param {Array} startPos - The starting position of the movement as [x, y].
+ * @param {Array} endPos - The ending position of the movement as [x, y].
+ * @returns {Array} An array containing the number of steps moved in the x- and y-directions.
+ */
 function getMovingSteps(startPos, endPos){
     // Array to translate a letter to corresponding number as defined in 'parameters/gameFieldObj'
     const let2num = gameFieldObj.Letters2Numbers;
@@ -161,8 +189,12 @@ function getMovingSteps(startPos, endPos){
 }    
 
 /**
- * Helper function to handle the interaction in case of an occupied game field 
-*/
+ * Helper function to handle the interaction in case of an occupied game field.
+ * @param {object} targetFieldProps - The properties of the target game field.
+ * @param {object} draggedFigure - The game figure being dragged.
+ * @returns {Array} Array containing information about the result of the interaction:
+ *                  [winnerFigure, defeatedFigure, isValidTurn]
+ */
 function handleOccupiedField(targetFieldProps, draggedFigure){ 
     // Get properties of placed figure [object]
     const placedFigure = targetFieldProps.figure;
@@ -182,9 +214,13 @@ function handleOccupiedField(targetFieldProps, draggedFigure){
         return [null, null, false];  
     }   
 }
+
 /**
- * Helper function to handle the battle between two game figures
-*/
+ * Helper function to handle the battle between two game figures.
+ * @param {object} figObj_1 - The first game figure object.
+ * @param {object} figObj_2 - The second game figure object.
+ * @returns {Array} An array containing the winning and losing game figures.
+ */
 function battleFigures(figObj_1, figObj_2){
     let winner = figObj_1; 
     let loser  = figObj_2; 
@@ -328,16 +364,6 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
                 isPlayable: false,
                 figure: draggedFigure,
             };
-            // Show values of parameters in a console when 'debugMode' is active
-            if(genCfg.debugMode){
-                console.log("##############################################")
-                console.log("@handleDragDrop - figureStorageState: ", figureStorageState)
-                console.log("@handleDragDrop - newFigureStorageState: ", newFigureStorageState)
-                console.log("@handleDragDrop - gameFieldState: ", gameFieldState)
-                console.log("@handleDragDrop - targetFieldProps: ", targetFieldProps)
-                console.log("@handleDragDrop - newGameFieldState:", newGameFieldState)
-                console.log("##############################################")
-            }
         }
         // Moving figures inside the game field
         else if(destination.droppableId.includes(prefixSingleFieldID) && source.droppableId !== "storageZone"){
@@ -357,9 +383,16 @@ export function handleDragDrop(results, gameFieldState, figureStorageState, pref
       };       
 }
 
-/**  
- * Function to get properties of moved opponent figures 
-*/
+/**
+ * Retrieves properties of opponent figures that have been moved on the game field.
+ * @param {object} movedFigObj - Object containing information about the moved figure, including its properties and source/destination fields.
+ * @param {Array} currentGameFieldState - The current state of the game field.
+ * @returns {object} An object containing properties of the moved opponent figure:
+ *                   - figureProps: The properties of the moved figure.
+ *                   - indexDestField: The index of the destination field in the game field state.
+ *                   - destFieldID: The ID of the destination field.
+ *                   - indexSourceField: The index of the source field in the game field state.
+ */
 export function getMovedOpponentFigureOnField(movedFigObj, currentGameFieldState){
     // Default Object
     let movedOpponentFigure = {
@@ -386,10 +419,14 @@ export function getMovedOpponentFigureOnField(movedFigObj, currentGameFieldState
     return movedOpponentFigure
 }
 
-/** 
- * Function to add an additional path for the back side of a game figure 
- * defaultFigProps: imported object 'figProperties' from 'parameters.js' required
-*/
+/**
+ * Adds an additional image path for the back side of a game figure.
+ * @param {object} movedFigObj - Object containing information about the moved figure, including its properties and image paths.
+ * @param {object} defaultFigProps - Optional parameter. Object containing default figure properties. Default value is imported from 'parameters.js'.
+ * @returns {object} An object representing the moved figure with an additional path for the back side:
+ *                   - If the back side path is added successfully, returns the updated figure object.
+ *                   - If the back side path already exists or cannot be found in the default figure properties, returns the original figure object.
+ */
 export function addPathFigureBack(movedFigObj, defaultFigProps = figProperties){
 
     // Get a path of the corresponding image to hide the figure of the opponent
@@ -417,17 +454,17 @@ export function addPathFigureBack(movedFigObj, defaultFigProps = figProperties){
 return movedFigObj;
 }
 
-/**  
- * Function to add fieldstates of the opponent to the game field states of current player 
- * */
+/**
+ * Merges the field states of the opponent into the game field states of the current player.
+ * @param {Array} addedOpponentFieldState - The field states of the opponent to be merged.
+ * @param {Array} gameFieldState - The current game field states of the player.
+ * @returns {Array} The updated game field states after merging the opponent's field states.
+ */
 export function mergeGameFieldStates(addedOpponentFieldState, gameFieldState){
 
     // Copy input state arrays to avoid changes on the input array
     const copiedAddedOpponentFieldState = [...addedOpponentFieldState];
     const copiedGameFieldState          = [...gameFieldState];
-
-    // console.log(">>[@mergeGameFieldStates] copiedAddedOpponentFieldState_in:", copiedAddedOpponentFieldState)
-    // console.log(">>[@mergeGameFieldStates] copiedGameFieldState_in:", copiedGameFieldState)
 
     copiedAddedOpponentFieldState.forEach(addedProps => {
         let foundIndex = copiedGameFieldState.findIndex((fieldProps) => fieldProps.id === addedProps.id);
@@ -435,18 +472,17 @@ export function mergeGameFieldStates(addedOpponentFieldState, gameFieldState){
         if(foundIndex !== -1){
             copiedGameFieldState[foundIndex] = addedProps;
         }
-        else{
-            console.log(">>[@mergeGameFieldStates] foundIndex:", foundIndex)
-            console.log(">>[@mergeGameFieldStates] addedProps:", addedProps)
-        }
     }) 
 
     return copiedGameFieldState
 }
 
-/**  
- * Function to track/provide updates of the opponent fieldstates 
- * */
+/**
+ * Tracks and provides updates of the opponent field states.
+ * @param {Array} prevFieldStateArray - The previous array of opponent field states.
+ * @param {object} providedFieledState - The provided field state update.
+ * @returns {Array} The updated array of opponent field states after tracking/providing updates.
+ */
 export function trackOpponentFieldStateUpdates(prevFieldStateArray, providedFieledState){
 
     let opponentFieldStates = [...prevFieldStateArray];
@@ -458,7 +494,6 @@ export function trackOpponentFieldStateUpdates(prevFieldStateArray, providedFiel
     else{
         opponentFieldStates.push(providedFieledState);
     }
-    // console.log("@trackOpponentFieldStateUpdates - opponentFieldStates_out: ", opponentFieldStates)
-
+ 
     return opponentFieldStates
 }

@@ -414,6 +414,15 @@ export function deleteCookies(cookiesObj){
     return [cookiesObj]
 }
 
+/**
+ * Determines the color and number of the current player based on the specified parameters.
+ * @param {boolean} isPlayer1 - Indicates whether the current player is Player 1.
+ * @param {string} colorPlayer1 - The color assigned to Player 1.
+ * @param {string} colorPlayer2 - The color assigned to Player 2.
+ * @returns {Array} An array containing the color and number of the current player:
+ *                  - The color of the current player.
+ *                  - The number of the current player (1 or 2).
+ */
 export function getColorAndNumberOfCurrentPlayer(isPlayer1, colorPlayer1, colorPlayer2){
     
     let playerColor; 
