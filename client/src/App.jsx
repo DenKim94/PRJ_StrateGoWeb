@@ -23,7 +23,7 @@ import SetUp from './components/homeSection/SetUp';
  * 
  * - Developer: D.Kim 
  * - Version: 1.0.0 
- * - Date of last changes: 14.04.2024
+ * - Date of last changes: 01.05.2024
 */
 // *******************************************************************  
 const App = () => {
@@ -51,11 +51,9 @@ const App = () => {
                         playerNumber: cookies.get("playerNumber"),
                     }, tokenRef);
             
-                    if (!userConnected) {
-                        setUserConnected(true);
-                        console.log(" User connected.");
-                    }
+                    setUserConnected(true);
                     connectionAttemptsCounter = 0;
+                    console.log(" User connected.");
 
                 } catch (error) {
                     console.error(error.message);
