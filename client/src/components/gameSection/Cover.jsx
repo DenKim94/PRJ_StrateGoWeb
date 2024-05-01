@@ -26,7 +26,7 @@ const { opponentStates } = useOpponentStates();
             exitCanceled: false,
             leaveGame: false,
         }));          
-          if(buttonStates.counterUsedStartButton > 0){
+          if(buttonStates.counterUsedStartButton > 0 && (!gameStates.timeIsOut && !opponentStates.timeIsOut)){
             setGameStates((prevStates) => ({
                 ...prevStates,
                 ready2Play: !gameStates.isPaused,
@@ -36,7 +36,7 @@ const { opponentStates } = useOpponentStates();
     }; 
 
     updateCoverState()
-    }, [gameStates.exitCanceled, gameStates.isPaused, setGameStates, buttonStates.counterUsedStartButton]) 
+    }, [gameStates.exitCanceled, gameStates.isPaused, gameStates.timeIsOut, opponentStates.timeIsOut, setGameStates, buttonStates.counterUsedStartButton]) 
 
     // Predefined style of the cover component
     const coverStyle = {

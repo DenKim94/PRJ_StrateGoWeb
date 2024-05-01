@@ -383,22 +383,8 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
         setScoutStates((prevStates) => ({
           ...prevStates,
           isValidMove: isValidMove,
-        }));   
-
-        if(parameters.genCfg.debugMode){
-          console.log("@handleDragUpdate - isValidMove_Scout: ", isValidMove)  
-        }   
-      }
-
-      // Checking values of parameters in 'debugMode' 
-      if(parameters.genCfg.debugMode){
-          console.log("##########################################################");
-          console.log("@handleDragUpdate - update: ", update);
-          console.log("@handleDragUpdate - gameFieldState: ", fieldState);
-          console.log("@handleDragUpdate - isScoutFigure: ", figureProps.isScoutFigure)
-          console.log("@handleDragUpdate - draggedOverFigure: ", draggedOverFigure)
-          console.log("##########################################################");
-        }   
+        }));     
+      }   
     }
     return(
       <DragDropContext onDragUpdate = { (update) => {
@@ -434,9 +420,6 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                     
                                     if(draggedFigure){
                                       const isDraw = (winnerFigure !== null && winnerFigure.value === defeatedFigure.value) ? true : false;
-
-                                      console.log("@GameField - isDraw: ", isDraw)
-                                      console.log("@GameField - isValidTurn: ", isValidTurn)
 
                                       if(isDraw){ draggedFigure.isActive = false; }
                                                                                                         

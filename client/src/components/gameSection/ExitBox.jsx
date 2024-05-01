@@ -27,7 +27,7 @@ const ExitBox = ({ exitBoxProps = parameters.exitBoxProps }) => {
     const { buttonStates } = useButtonStates();
     const [confirmedState, setConfirmedState] = useState(gameStates.exitConfirmed)
     const [canceledState, setCanceledState] = useState(gameStates.exitCanceled)
-    const { setOpponentStates } = useOpponentStates();
+    const { opponentStates, setOpponentStates } = useOpponentStates();
     const { channelStates } = useChannelStates();
     const { client } = useChatContext();
 
@@ -65,7 +65,6 @@ const ExitBox = ({ exitBoxProps = parameters.exitBoxProps }) => {
         }catch(error){
             console.error(error.message);
         }
-
     };
 
     function handleConfirm(){
@@ -99,7 +98,7 @@ const ExitBox = ({ exitBoxProps = parameters.exitBoxProps }) => {
                      
                     await sendGameStateUpdates({  
                         ...gameStates,
-                        ready2Play: true,  
+                        ready2Play: (!gameStates.timeIsOut && !opponentStates.timeIsOut) ? true : false,
                         leaveGame: false,
                         exitCanceled: true,
                     });                 
@@ -121,7 +120,8 @@ const ExitBox = ({ exitBoxProps = parameters.exitBoxProps }) => {
         }; 
     
         handleExit()
-        }, [canceledState, confirmedState, buttonStates.counterUsedStartButton])    
+        // eslint-disable-next-line
+        }, [canceledState, confirmedState, gameStates.timeIsOut, opponentStates.timeIsOut, buttonStates.counterUsedStartButton])    
 
     return(
         <div className="exit-box" style={exitBoxProps.styleParamsBox}>
