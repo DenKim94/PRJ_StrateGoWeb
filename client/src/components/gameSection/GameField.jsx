@@ -5,6 +5,7 @@ import './GameField.css'
 import * as parameters from '../../game-logic/parameters.js';
 import SingleField from './SingleField';
 import FigureStorage from './FigureStorage';
+import BattleCover from './BattleCover';
 import DefeatedFigureStorage from './DefeatedFigureStorage';
 import { useButtonStates } from '../context/ButtonStatesContext.js';
 import { useGameStates } from '../context/GameStatesContext.js';
@@ -214,17 +215,24 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
           switch(event.type){
             case "moved-figure":
                 setTurnPlayer(event.data.movedFigure.player === 1 ? 2:1)
-
                 setGameStates((prevStates) => ({ 
                   ...prevStates,
                   turnPlayer: event.data.movedFigure.player === 1 ? 2:1,
+                  BattleModeOn: (event.data.battledFigures.winnerFigProps !== null && event.data.battledFigures.defeatedFigProps !== null) ? true : false,
                 }));
+                
+                setOpponentStates((prevStates) => ({
+                  ...prevStates,
+                  BattleModeOn: (event.data.battledFigures.winnerFigProps !== null && event.data.battledFigures.defeatedFigProps !== null) ? true : false,
+                }));  
 
                 const movedOpponentFigure = gameLogic.getMovedOpponentFigureOnField(event.data.movedFigure, gameFieldState);
                 const indexSourceField = movedOpponentFigure.indexSourceField;
                 const indexTargetField = movedOpponentFigure.indexDestField;
 
-                if(typeof event.data.battledFigures.winnerFigProps !== "string"){ 
+                if(event.data.battledFigures.winnerFigProps !== null && 
+                  event.data.battledFigures.winnerFigProps.value !== event.data.battledFigures.defeatedFigProps.value){ 
+
                   setGameFieldState((prevStates) => {
                     const updatedState = [...prevStates];
   
@@ -243,8 +251,28 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                     return updatedState;
                   });
 
-                }else{
+                }else if(event.data.battledFigures.winnerFigProps !== null && 
+                  event.data.battledFigures.winnerFigProps.value === event.data.battledFigures.defeatedFigProps.value){
+
                   setGameFieldState((prevStates) => {
+                    const updatedState = [...prevStates];
+
+                    updatedState[indexSourceField] = {
+                      ...updatedState[indexSourceField],
+                      figure: null,
+                      isPlayable: true,
+                    };    
+
+                    updatedState[indexTargetField] = {
+                      ...updatedState[indexTargetField],
+                      figure: null,
+                      isPlayable: true,
+                    };
+                  
+                    return updatedState;
+                  });
+                }else{
+                    setGameFieldState((prevStates) => {
                     const updatedState = [...prevStates];
   
                     updatedState[indexSourceField] = {
@@ -255,13 +283,20 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
   
                     updatedState[indexTargetField] = {
                       ...updatedState[indexTargetField],
-                      figure: null,
-                      isPlayable: true,
+                      figure: movedOpponentFigure.figureProps,
+                      isPlayable: false,
                     };
                   
                     return updatedState;
-                  });
+                    });
                 }
+
+                setBattledFigures((prevStates) => ({
+                  ...prevStates,
+                  winnerFigProps: event.data.battledFigures.winnerFigProps,
+                  defeatedFigProps: event.data.battledFigures.defeatedFigProps,
+                }));
+
                 break;
 
             case "set-up-figures":
@@ -285,8 +320,6 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
 
       if(gameStates.ready2Play && opponentStates.ready2Play && buttonStates.counterUsedStartButton === 1){
         const mergedSetUpFieldState = gameLogic.mergeGameFieldStates(addedOpponentFieldState, gameFieldState);
-        // console.log("@GameField - mergedSetUpFieldState: ", mergedSetUpFieldState)
-        // console.log("@GameField - firstTurn: ", firstTurn);
 
         setTurnPlayer(firstTurn)
 
@@ -470,6 +503,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                 }}>
                     
          <div className = "dnd-container" style={parameters.styleDnDContainer}>
+         {(gameStates.BattleModeOn && opponentStates.BattleModeOn) && (<BattleCover winnerFigProps = {battledFigures.winnerFigProps} defeatedFigProps = {battledFigures.defeatedFigProps}/>)}
           <div className = "game-field-container" style={parameters.styleGameFieldContainer}>
 
               <YAxis yAxisArray = {yAxisNumbers} 

@@ -76,13 +76,7 @@ const GameSection = () => {
     try{
         channelStates.channelObj.on((event) => {
             if(event.type === "game-state-update" && event.user.id !== client.userID){
-    
-                if(parameters.genCfg.debugMode){
-                    console.log("########################################")
-                    console.log("@GameSection - event.data:", event.data)
-                    console.log("########################################")
-                }
-                
+                    
                 if(!stateIsUpdated){ 
                     // Update state to inform user that the opponent is waiting
                     setOpponentStates((prevStates) => ({
@@ -242,7 +236,8 @@ const GameSection = () => {
                                         opponentStates.pausedGame || 
                                         opponentStates.leaveGame || 
                                         opponentStates.exitConfirmed || opponentStates.timeIsOut || 
-                                        gameStates.timeIsOut ? true : false}>
+                                        gameStates.timeIsOut || gameStates.BattleModeOn || 
+                                        opponentStates.BattleModeOn ? true : false}>
 
                         {buttonStates.pauseButtonText}
                     </button>  
@@ -250,7 +245,9 @@ const GameSection = () => {
                             className="btn btn-warning" 
                             style={parameters.styleButtonText} 
                             onClick={exitGame}
-                            disabled = {gameStates.isPaused || opponentStates.pausedGame || gameStates.leaveGame ? true : false}>
+                            disabled = {gameStates.isPaused || opponentStates.pausedGame || 
+                                        gameStates.leaveGame || gameStates.BattleModeOn || 
+                                        opponentStates.BattleModeOn ? true : false}>
                         {buttonStates.exitButtonText}
                     </button>                                                            
                 </div>
