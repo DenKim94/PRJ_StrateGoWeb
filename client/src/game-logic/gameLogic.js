@@ -82,18 +82,18 @@ function moveFigureOnField(GameFieldState, gameSettings, draggableId, figureStor
     if(!isPlayableField){
         [winner, loser, validTurn] = handleOccupiedField(targetFieldProps, draggedFigure);
 
-        if(winner !== null){
+        if(winner !== null && validTurn){
             // Update the State of the target game field 
-            newGameFieldState = updateGameFieldStateProps(newGameFieldState, indexTargetField, [false, winner]);
-        }
-
-        else if(!winner.isActive && !loser.isActive){
-            // Update the State of the target game field 
-            newGameFieldState = updateGameFieldStateProps(newGameFieldState, indexTargetField, [true, null]); 
-
-            /* TO-DO: Handle removed/dead figures (31.10.2023) 
-            1) Put the (dead) figures in an empty list/state of the component 'FigureStorage'
-            2) Render the updated component which includes the removed/dead figures */
+            if(!winner.isActive && !loser.isActive){
+                // Update the State of the target game field 
+                newGameFieldState = updateGameFieldStateProps(newGameFieldState, indexTargetField, [true, null]); 
+    
+                /* TO-DO: Handle removed/dead figures (31.10.2023) 
+                1) Put the (dead) figures in an empty list/state of the component 'FigureStorage'
+                2) Render the updated component which includes the removed/dead figures */
+            }else{   
+                newGameFieldState = updateGameFieldStateProps(newGameFieldState, indexTargetField, [false, winner]);
+            }            
         }
         else {
             // Reset the source game field to previous state  
