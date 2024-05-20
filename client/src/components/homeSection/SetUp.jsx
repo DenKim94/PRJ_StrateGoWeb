@@ -68,7 +68,7 @@ const SetUp = ({ setToken,
                 // Timeout for closing navigate back to the home section
                 setTimeout(() => {
                     navigate(errorPath);
-                }, parameters.genCfg.timeOutFunction_ms);
+                }, parameters.genCfg.timeOutErrorHandling_ms);
             }
 
             setUserCreated(true)
