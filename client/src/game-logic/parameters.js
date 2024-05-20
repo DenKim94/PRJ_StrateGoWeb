@@ -223,7 +223,6 @@ export const styleCover = {
     position: 'absolute',
     fontFamily: 'Cinzel, serif',
     top: '0px',
-    // left: '95px',
     width: `${totalGameFieldSize}px`,
     height: `${totalGameFieldSize/2 + (gameFieldObj.fieldWidth)/10}px`,
     alignItems: 'center',
@@ -250,6 +249,22 @@ export const coverContent = {
         top: '25px',      
     },                   
 };
+
+// GameSection-Component: BattleCover
+export const styleBattleCover = {
+    position: 'absolute',
+    fontFamily: 'Cinzel, serif',
+    display: 'flex',
+    top: '0px',
+    width: `${totalGameFieldSize}px`,
+    height: `${totalGameFieldSize/2 + (gameFieldObj.fieldWidth)/10}px`,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '5px',  
+    backgroundColor: 'rgba(0, 0, 0, 0.95)',  
+    zIndex: 2,                                  // Second layer to cover the GameField-Component
+    transition: 'opacity 0.5s ease-out',        // Transition presets   
+};  
 
 // GameSection-Component: ExitBox 
 export const exitBoxProps = {
