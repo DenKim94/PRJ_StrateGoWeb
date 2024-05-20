@@ -7,3 +7,13 @@
       left: -20px;
     }
   }
+
+  .battle-cover-section{
+    left: 70px;
+  }
+
+  @media (max-height: 999px) {
+    .battle-cover-section{
+      left: -20px;
+    }
+  }
