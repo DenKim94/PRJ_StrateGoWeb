@@ -72,7 +72,9 @@ const Countdown = () => {
         <div className='countdown-container'>
             <CountdownCircleTimer
                 key={key}
-                isPlaying={ gameStates.playerNumber === gameStates.turnPlayer && gameStates.ready2Play && opponentStates.ready2Play ? true : false }
+                isPlaying={ gameStates.playerNumber === gameStates.turnPlayer &&
+                            gameStates.ready2Play && opponentStates.ready2Play && !gameStates.BattleModeOn ? true : false }
+                            
                 duration={gameStates.timePerTurn_ms/1000}
                 colors = {["#66cdaa", "#F7B801", "#A30000"]}
                 colorsTime={[gameStates.timePerTurn_ms/1000, (gameStates.timePerTurn_ms*0.5)/1000, 0]}
