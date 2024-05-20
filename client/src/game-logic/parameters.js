@@ -1,7 +1,7 @@
 /** Main file for setting parameters [developer file]
  * This file is mandatory to run the application! 
  * - Developer: D.Kim
- * - Date of last changes: 07.04.2024  
+ * - Date of last changes: 20.05.2024  
 */
 
 /**** General/Global Configurations ****/
@@ -11,7 +11,8 @@ export const genCfg = {
     minInputLength: 2,              // Minimal length of user input (e.g. > 1 for user name)
     maxInputLength: 20,             // Maximal length of user input (e.g. < 20 for user name)
     timeOutAutoClose_ms: 2500,      // Time value in ms for auto close (e.g. Pop-Ups)  
-    timeOutFunction_ms: 3500,       // Time value in ms for time-out function
+    timeOutErrorHandling_ms: 3500,  
+    timeOutBattle_ms: 8000,   
 };
 
 /**** Settings for GameSection-Component: GameField ****/
@@ -40,6 +41,13 @@ const totalGameFieldSize = 700;
 const figWidth = (gameFieldObj.fieldWidth)*0.95/10 ;  // figure width in pixel
 const figHeight = (gameFieldObj.fieldWidth)*0.95/10 ; // figure height in pixel
 const figSize = [figWidth,figHeight];
+
+/*** Constants for Card-Components (Battle) ***/
+const cardSize_px = 100;
+const cardsGap_px = 10;
+const borderRadius_px = 3;
+const transitionDuration_s = genCfg.timeOutBattle_ms/3000;
+const revealDelay_ms = genCfg.timeOutBattle_ms/3;
 
 /***************** Set and export style and property parameters for components *****************/
 
@@ -299,6 +307,55 @@ export const pageNotFoundProps = {
         color: '#8b0000',
     },        
 };
+
+/**** Settings for CardOpponent ****/
+export const CardOpponentProps = {
+    transitionDuration_s: transitionDuration_s, 
+    style:{
+        width: `${cardSize_px}px`,
+        height: `${cardSize_px}px`, 
+        borderRadius: `${borderRadius_px}px`,    
+        transformStyle: 'preserve-3d',
+        background: 'transparent',
+        cursor: 'pointer'
+    },
+};
+
+/**** Settings for CardPlayer ****/
+export const CardPlayerProps = {
+    transitionDuration_s: transitionDuration_s,
+    style:{
+        width: `${cardSize_px}px`,
+        borderRadius: `${borderRadius_px}px`,
+        height: `${cardSize_px}px`,    
+        transformStyle: 'preserve-3d',
+        background: 'transparent',
+        cursor: 'pointer'
+    },
+};
+
+export const DuellCardProps = {
+    revealDelay_ms: revealDelay_ms, 
+    style:{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: `${cardsGap_px}px`,
+        perspective: 1000, 
+    },
+};
+export const CardValueStyle = { 
+    position: 'absolute',
+    color: 'white',
+    backgroundColor: 'black',
+    borderRadius: '3px', 
+    top: '2px',
+    fontSize: '16px', 
+    left: '6px',
+    width: '18px',
+    textAlign: 'center',    
+}; 
 
 /**** Presets for GameSection-Component: GameFigure ****/
 /* Default paths to images */
