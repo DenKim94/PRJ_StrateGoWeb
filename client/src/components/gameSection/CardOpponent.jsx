@@ -7,9 +7,6 @@ const CardOpponent = ({ opponentFigProps, revealed, props = parameters}) => {
     const styleProps = props.CardOpponentProps.style;
     const valueStyle = {...props.CardValueStyle,
                         textAlign: 'center'};
-
-    console.log("@CardOpponent - opponentFigProps: ", opponentFigProps)
-    console.log("@CardOpponent - revealed: ", revealed)
         
     return ( 
         <motion.div

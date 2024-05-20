@@ -7,9 +7,6 @@ const CardPlayer = ({ playerFigProps, revealed, props = parameters}) => {
     const styleProps = props.CardPlayerProps.style;
     const valueStyle = props.CardValueStyle;
  
-    console.log("@CardPlayer - playerFigProps: ", playerFigProps)
-    console.log("@CardPlayer - revealed: ", revealed)
-
     return ( 
         <motion.div
         className="card"

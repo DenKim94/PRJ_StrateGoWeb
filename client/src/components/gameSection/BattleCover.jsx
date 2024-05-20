@@ -13,10 +13,6 @@ const BattleCover = ({winnerFigProps, defeatedFigProps, styleProps = parameters.
     const playerFigureRef    = useRef(null);
     const opponentFigureRef  = useRef(null);
 
-    console.log("@BattleCover - gameStates: ", gameStates)
-    console.log("@BattleCover - opponentStates: ", opponentStates)
-    console.log("@BattleCover - [winnerFigProps_in, defeatedFigProps_in]: ", [winnerFigProps, defeatedFigProps])
-
     const coverStyle = {
         ...styleProps,
         opacity: (gameStates.ready2Play &&  
@@ -59,8 +55,6 @@ const BattleCover = ({winnerFigProps, defeatedFigProps, styleProps = parameters.
         playerFigureRef.current = playerFigure;
         opponentFigureRef.current = opponentFigure;
     }
-
-    console.log("@BattleCover - [playerFigure, opponentFigure]: ", [playerFigureRef.current, opponentFigureRef.current])
     
     return ( 
         <div className = 'battle-cover-section' style={coverStyle}>

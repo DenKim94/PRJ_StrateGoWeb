@@ -13,6 +13,7 @@ const Countdown = () => {
     const [key, setKey] = useState(0);
     const { channelStates } = useChannelStates();
     const { client } = useChatContext();
+    const colorCodeArray = ["#66cdaa", "#F7B801", "#A30000"];
 
     useEffect(() => {
       if(gameStates.turnPlayer !== gameStates.playerNumber){
@@ -76,7 +77,7 @@ const Countdown = () => {
                             gameStates.ready2Play && opponentStates.ready2Play && !gameStates.BattleModeOn ? true : false }
                             
                 duration={gameStates.timePerTurn_ms/1000}
-                colors = {["#66cdaa", "#F7B801", "#A30000"]}
+                colors = {colorCodeArray}
                 colorsTime={[gameStates.timePerTurn_ms/1000, (gameStates.timePerTurn_ms*0.5)/1000, 0]}
                 onComplete={onComplete}
                 size={140}
