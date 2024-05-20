@@ -82,12 +82,12 @@ function moveFigureOnField(GameFieldState, gameSettings, draggableId, figureStor
     if(!isPlayableField){
         [winner, loser, validTurn] = handleOccupiedField(targetFieldProps, draggedFigure);
 
-        if(winner !== null && typeof winner !== "string"){
+        if(winner !== null){
             // Update the State of the target game field 
             newGameFieldState = updateGameFieldStateProps(newGameFieldState, indexTargetField, [false, winner]);
         }
 
-        else if(typeof winner === "string"){
+        else if(!winner.isActive && !loser.isActive){
             // Update the State of the target game field 
             newGameFieldState = updateGameFieldStateProps(newGameFieldState, indexTargetField, [true, null]); 
 
