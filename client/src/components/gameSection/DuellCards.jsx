@@ -20,16 +20,16 @@ const DuellCards = ({ playerFigProps, opponentFigProps, props = parameters.Duell
 
      useEffect(() => {
         setTimeout(() => {
-            if(gameStates.BattleModeOn || opponentStates.BattleModeOn){
+            if(gameStates.battleModeOn || opponentStates.battleModeOn){
                 // Reset states
                 setGameStates((prevStates) => ({ 
                     ...prevStates,
-                    BattleModeOn: false,
+                    battleModeOn: false,
                 }));
             
                 setOpponentStates((prevStates) => ({
                     ...prevStates,
-                    BattleModeOn: false,
+                    battleModeOn: false,
                 })); 
             }
         }, parameters.genCfg.timeOutBattle_ms);

@@ -74,7 +74,7 @@ const Countdown = () => {
             <CountdownCircleTimer
                 key={key}
                 isPlaying={ gameStates.playerNumber === gameStates.turnPlayer &&
-                            gameStates.ready2Play && opponentStates.ready2Play && !gameStates.BattleModeOn ? true : false }
+                            gameStates.ready2Play && opponentStates.ready2Play && !gameStates.battleModeOn ? true : false }
                             
                 duration={gameStates.timePerTurn_ms/1000}
                 colors = {colorCodeArray}

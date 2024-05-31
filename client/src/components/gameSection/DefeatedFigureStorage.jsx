@@ -16,7 +16,7 @@ const DefeatedFigureStorage = ({ defFigStateArray,
 
     useEffect(() => {
         // Render the defeated figures after completed battle
-        if(gameStates.BattleModeOn && opponentStates.BattleModeOn && defFigStateArray.length === 1){
+        if(gameStates.battleModeOn && opponentStates.battleModeOn && defFigStateArray.length === 1){
 
             const timer = setTimeout(() => {
                 setShowPrevStateArray(true); 
@@ -26,7 +26,7 @@ const DefeatedFigureStorage = ({ defFigStateArray,
             // Reset timer
             return () => clearTimeout(timer);            
         }
-    }, [gameStates.BattleModeOn, opponentStates.BattleModeOn, defFigStateArray.length]);
+    }, [gameStates.battleModeOn, opponentStates.battleModeOn, defFigStateArray.length]);
   
     // Early return if figure storage is not empty (during a set-up phase)
     if(figStorageState.length > 0){
@@ -45,7 +45,7 @@ const DefeatedFigureStorage = ({ defFigStateArray,
         return (
             <div className="figure-storage">
                 <p id="storage-name" style={styleStorageTopic}>* Defeated Figures *</p>
-                {(!gameStates.BattleModeOn && !opponentStates.BattleModeOn) ? (
+                {(!gameStates.battleModeOn && !opponentStates.battleModeOn) ? (
                     <>  
                         <div data-bs-spy="scroll" 
                              data-bs-target="#navbar-example2" 

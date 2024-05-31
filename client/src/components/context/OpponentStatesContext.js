@@ -18,7 +18,7 @@ export const OpponentStatesProvider = ({ children }) => {
         leaveGame: false,        
         exitConfirmed: false,
         timeIsOut: false,
-        BattleModeOn: false,
+        battleModeOn: false,
     });
 
   return (

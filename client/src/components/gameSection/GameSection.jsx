@@ -236,8 +236,8 @@ const GameSection = () => {
                                         opponentStates.pausedGame || 
                                         opponentStates.leaveGame || 
                                         opponentStates.exitConfirmed || opponentStates.timeIsOut || 
-                                        gameStates.timeIsOut || gameStates.BattleModeOn || 
-                                        opponentStates.BattleModeOn ? true : false}>
+                                        gameStates.timeIsOut || gameStates.battleModeOn || 
+                                        opponentStates.battleModeOn ? true : false}>
 
                         {buttonStates.pauseButtonText}
                     </button>  
@@ -246,8 +246,8 @@ const GameSection = () => {
                             style={parameters.styleButtonText} 
                             onClick={exitGame}
                             disabled = {gameStates.isPaused || opponentStates.pausedGame || 
-                                        gameStates.leaveGame || gameStates.BattleModeOn || 
-                                        opponentStates.BattleModeOn ? true : false}>
+                                        gameStates.leaveGame || gameStates.battleModeOn || 
+                                        opponentStates.battleModeOn ? true : false}>
                         {buttonStates.exitButtonText}
                     </button>                                                            
                 </div>

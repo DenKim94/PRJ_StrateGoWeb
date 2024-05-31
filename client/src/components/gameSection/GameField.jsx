@@ -232,12 +232,12 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                 setGameStates((prevStates) => ({ 
                   ...prevStates,
                   turnPlayer: event.data.movedFigure.player === 1 ? 2:1,
-                  BattleModeOn: (event.data.battledFigures.winnerFigProps !== null && event.data.battledFigures.defeatedFigProps !== null) ? true : false,
+                  battleModeOn: (event.data.battledFigures.winnerFigProps !== null && event.data.battledFigures.defeatedFigProps !== null) ? true : false,
                 }));
                 
                 setOpponentStates((prevStates) => ({
                   ...prevStates,
-                  BattleModeOn: (event.data.battledFigures.winnerFigProps !== null && event.data.battledFigures.defeatedFigProps !== null) ? true : false,
+                  battleModeOn: (event.data.battledFigures.winnerFigProps !== null && event.data.battledFigures.defeatedFigProps !== null) ? true : false,
                 }));  
 
                 const movedOpponentFigure = gameLogic.getMovedOpponentFigureOnField(event.data.movedFigure, gameFieldState);
@@ -492,12 +492,12 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                                                                 
                                         setGameStates((prevStates) => ({ 
                                           ...prevStates,
-                                          BattleModeOn: true,
+                                          battleModeOn: true,
                                         }));
 
                                         setOpponentStates((prevStates) => ({
                                           ...prevStates,
-                                          BattleModeOn: true,
+                                          battleModeOn: true,
                                         }));    
                                         
                                         if(defeatedFigure.color !== playerColor){ 
@@ -531,7 +531,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                 }}>
                     
          <div className = "dnd-container" style={parameters.styleDnDContainer}>
-         {(gameStates.BattleModeOn && opponentStates.BattleModeOn) && (<BattleCover winnerFigProps = {battledFigures.winnerFigProps} defeatedFigProps = {battledFigures.defeatedFigProps}/>)}
+         {(gameStates.battleModeOn && opponentStates.battleModeOn) && (<BattleCover winnerFigProps = {battledFigures.winnerFigProps} defeatedFigProps = {battledFigures.defeatedFigProps}/>)}
           <div className = "game-field-container" style={parameters.styleGameFieldContainer}>
 
               <YAxis yAxisArray = {yAxisNumbers} 
