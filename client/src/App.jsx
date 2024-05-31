@@ -23,7 +23,7 @@ import SetUp from './components/homeSection/SetUp';
  * 
  * - Developer: D.Kim 
  * - Version: 1.0.0 
- * - Date of last changes: 20.05.2024
+ * - Date of last changes: 31.05.2024
 */
 // *******************************************************************  
 const App = () => {

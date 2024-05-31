@@ -1,6 +1,4 @@
-// import * as helperFcn from '../components/functions/helperFunctions.js'
-import { gameFieldObj } from './parameters';
-import { figProperties } from './parameters';
+import { gameFieldObj, figProperties  } from './parameters';
 
 /**
  * Helper function to retrieve the index of a game field with a specific ID.
@@ -14,7 +12,7 @@ function getIndexOfGameField(stateArray, fieldObj){
     if(indexField !== -1){ 
         return indexField ;
     }else{
-        return null;    // If index not found return null
+        return null;    // If index is not found, return null
     }
 }
 
@@ -192,8 +190,7 @@ function getMovingSteps(startPos, endPos){
  * Helper function to handle the interaction in case of an occupied game field.
  * @param {object} targetFieldProps - The properties of the target game field.
  * @param {object} draggedFigure - The game figure being dragged.
- * @returns {Array} Array containing information about the result of the interaction:
- *                  [winnerFigure, defeatedFigure, isValidTurn]
+ * @returns {Array} Array containing objects of the interaction: [winnerFigure, defeatedFigure, isValidTurn]
  */
 function handleOccupiedField(targetFieldProps, draggedFigure){ 
     // Get properties of placed figure [object]
@@ -231,11 +228,6 @@ function battleFigures(figObj_1, figObj_2){
 
     const minerVsBomb = ((figObj_1.figName.includes("Miner") || figObj_2.figName.includes("Miner")) && 
                         (figObj_1.figName.includes("Bomb") || figObj_2.figName.includes("Bomb"))) ? true : false ; 
-
-    console.log("@battleFigures - figObj_1: ", figObj_1)
-    console.log("@battleFigures - figObj_2: ", figObj_2)
-    console.log("@battleFigures - spyVsMarshal: ", spyVsMarshal)
-    console.log("@battleFigures - minerVsBomb: ", minerVsBomb)
 
     try {
         if((figObj_1.value > figObj_2.value && !spyVsMarshal && !minerVsBomb) 
