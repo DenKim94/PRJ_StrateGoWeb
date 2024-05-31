@@ -219,32 +219,50 @@ function handleOccupiedField(targetFieldProps, draggedFigure){
  * Helper function to handle the battle between two game figures.
  * @param {object} figObj_1 - The first game figure object.
  * @param {object} figObj_2 - The second game figure object.
- * @returns {Array} An array containing the winning and losing game figures.
+ * @returns {object} Figure objects containing the winning and losing game figure properties
  */
 function battleFigures(figObj_1, figObj_2){
     let winner = figObj_1; 
-    let loser  = figObj_2; 
+    let loser  = figObj_2;
 
-    if(figObj_1.value > figObj_2.value){
-        winner = figObj_1;
-        loser = figObj_2;
-        loser.isActive = false;
+    // Identify special cases
+    const spyVsMarshal = ((figObj_1.figName.includes("Spy") || figObj_2.figName.includes("Spy")) && 
+                         (figObj_1.figName.includes("Marshal") || figObj_2.figName.includes("Marshal"))) ? true : false ;
 
-        return [winner, loser]
+    const minerVsBomb = ((figObj_1.figName.includes("Miner") || figObj_2.figName.includes("Miner")) && 
+                        (figObj_1.figName.includes("Bomb") || figObj_2.figName.includes("Bomb"))) ? true : false ; 
 
-    }else if(figObj_1.value < figObj_2.value){
-        winner = figObj_2;
-        loser = figObj_1;
-        loser.isActive = false;
+    console.log("@battleFigures - figObj_1: ", figObj_1)
+    console.log("@battleFigures - figObj_2: ", figObj_2)
+    console.log("@battleFigures - spyVsMarshal: ", spyVsMarshal)
+    console.log("@battleFigures - minerVsBomb: ", minerVsBomb)
 
-        return [winner, loser]
+    try {
+        if((figObj_1.value > figObj_2.value && !spyVsMarshal && !minerVsBomb) 
+            || (figObj_1.figName.includes("Spy") && spyVsMarshal) 
+            || (figObj_1.figName.includes("Miner") && minerVsBomb)){
 
-    }else{
-        // If the compared values are equal 
-        winner.isActive = false;
-        loser.isActive = false;
-        
-        return [winner, loser];
+            winner = figObj_1;
+            loser = figObj_2;
+            loser.isActive = false;
+    
+        }else if((figObj_1.value < figObj_2.value && !spyVsMarshal && !minerVsBomb) 
+                || (figObj_2.figName.includes("Spy") && spyVsMarshal) 
+                || (figObj_2.figName.includes("Miner") && minerVsBomb)){
+
+            winner = figObj_2;
+            loser = figObj_1;
+            loser.isActive = false;
+       
+        }else{
+            // If the compared values are equal 
+            winner.isActive = false;
+            loser.isActive = false;
+        }
+        return [winner, loser]       
+
+    } catch (error) {
+        console.error(error)
     }
 }
 

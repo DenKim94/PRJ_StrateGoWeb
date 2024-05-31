@@ -155,6 +155,20 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
     // State as array to store defeated game figures
     const [defeatedFigureStorage, setDefeatedFigureStorage] = useState([]); 
 
+    const addDefeatedFigure = (newDefeatedFigure) => {
+      setDefeatedFigureStorage((prevState) => {
+        // Check if the newDefeatedFigure's id already exists in prevState
+        const idExists = prevState.some(figProps => figProps.id === newDefeatedFigure.id);
+        if (idExists) {
+          // If id already exists, return prevState without adding newDefeatedFigure
+          return prevState;
+        } else {
+          // If id does not exist, add newDefeatedFigure to the array
+          return [...prevState, newDefeatedFigure];
+        }
+      });
+    };
+
     // State of added figures on field due to the opponent
     const [addedOpponentFieldState, setAddedOpponentFieldState] = useState([]);
 
@@ -251,6 +265,10 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                     return updatedState;
                   });
 
+                  if(event.data.battledFigures.defeatedFigProps.color !== playerColor){ 
+                    addDefeatedFigure(event.data.battledFigures.defeatedFigProps)
+                  }
+
                 }else if(event.data.battledFigures.winnerFigProps !== null && 
                   event.data.battledFigures.winnerFigProps.value === event.data.battledFigures.defeatedFigProps.value){
 
@@ -271,6 +289,9 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                   
                     return updatedState;
                   });
+                  
+                  addDefeatedFigure(event.data.battledFigures.defeatedFigProps)
+
                 }else{
                     setGameFieldState((prevStates) => {
                     const updatedState = [...prevStates];
@@ -454,7 +475,10 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                     if(draggedFigure){
                                       const isDraw = (winnerFigure !== null && winnerFigure.value === defeatedFigure.value) ? true : false;
 
-                                      if(isDraw){ draggedFigure.isActive = false; }
+                                      if(isDraw){ 
+                                        draggedFigure.isActive = false; 
+                                        addDefeatedFigure(defeatedFigure)
+                                      }
                                                                                                         
                                       if(winnerFigure !== null){
                                         setMovedFigure((prevStates) => ({
@@ -474,7 +498,11 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                                         setOpponentStates((prevStates) => ({
                                           ...prevStates,
                                           BattleModeOn: true,
-                                        }));                                        
+                                        }));    
+                                        
+                                        if(defeatedFigure.color !== playerColor){ 
+                                          addDefeatedFigure(defeatedFigure)
+                                        } 
                                       
                                       }
                                       else{
@@ -544,7 +572,7 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
           </div>
             <FigureStorage figStateArray = {figureStorageState} />    
             <DefeatedFigureStorage defFigStateArray = {defeatedFigureStorage}
-                                   setDefState = {setDefeatedFigureStorage}
+                                   currentDefFig = {battledFigures.defeatedFigProps}
                                    figStorageState = {figureStorageState} />
 
             <ToastContainer position='top-right' />                           

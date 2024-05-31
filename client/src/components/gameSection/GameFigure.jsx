@@ -35,7 +35,7 @@ const GameFigure = ({propsObj, snapshot, figureStyle = parameters.styleGameFigur
       width: '100%', 
       height: '100%', 
       borderRadius: '10%',
-      border: snapshot.isDragging ? `2px solid ${colorBorder}` : 'none' ,
+      border: (snapshot !== null && snapshot.isDragging) ? `2px solid ${colorBorder}` : 'none' ,
     };
 
     let pathIndex
