@@ -19,6 +19,7 @@ export const OpponentStatesProvider = ({ children }) => {
         exitConfirmed: false,
         timeIsOut: false,
         battleModeOn: false,
+        flagIsFound: false,
     });
 
   return (
