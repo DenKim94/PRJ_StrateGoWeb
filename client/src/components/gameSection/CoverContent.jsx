@@ -13,9 +13,6 @@ const CoverContent  = ({ coverContentProps = parameters.coverContent }) => {
     const { opponentStates } = useOpponentStates();
     const { gameStates } = useGameStates();
 
-    console.log("@CoverContent - gameStates: ", gameStates)
-    console.log("@CoverContent - opponentStates: ", opponentStates)
-
     // Update content/message of the cover depending on the game state 
     useEffect(() => {
       const updateCoverContent = () => {
