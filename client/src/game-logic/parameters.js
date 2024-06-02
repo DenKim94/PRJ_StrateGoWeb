@@ -206,7 +206,7 @@ export const styleButtonContainer = {
     justifyContent: 'center',
     alignItems: 'flex-end',
     maxHeight: '200px',
-    width: '70px',
+    width: '95px',
     right: '20px',
     marginTop: '500px',    
 };

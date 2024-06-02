@@ -1,7 +1,7 @@
 :root{
-  --leftUIcontainer_media: 165px;
-  --maxWidthUIcontainer_media: 1000px;
-  --leftUIcontainer_default: 30px;
+  --leftUIcontainer_media: 150px;
+  --maxWidthUIcontainer_media: 1250px;
+  --leftUIcontainer_default: 17px;
   --backGroundColorApp: rgb(136, 107, 107);
   --heightApp_default: 100vh;
 }

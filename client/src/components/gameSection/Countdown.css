@@ -1,8 +1,8 @@
 :root{
-  --paddingLeftCountdown_default: 130px;
+  --paddingLeftCountdown_default: 145px;
   --sizeCountdown_default: 140px;
-  --rightCountdown_media: 20%;
-  --paddingLeftCountdown_media: 0px;
+  --rightCountdown_media: 230px;
+  --paddingLeftCountdown_media: 70px;
 }
 
 
