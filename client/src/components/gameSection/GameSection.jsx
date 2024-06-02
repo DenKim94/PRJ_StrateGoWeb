@@ -214,7 +214,7 @@ const GameSection = () => {
     return(
         <>
             <div className="ui-container" >
-            {(!gameStates.ready2Play || !opponentStates.ready2Play) && (<Cover/>)}
+            {(!gameStates.ready2Play || !opponentStates.ready2Play ) && (<Cover/>)}
                 <div className="btn-container" style = {parameters.styleButtonContainer}>
                     <button type="button" 
                             id={!buttonStates.disabledStartButton ? "highlighted-button": ''}
@@ -237,7 +237,8 @@ const GameSection = () => {
                                         opponentStates.leaveGame || 
                                         opponentStates.exitConfirmed || opponentStates.timeIsOut || 
                                         gameStates.timeIsOut || gameStates.battleModeOn || 
-                                        opponentStates.battleModeOn ? true : false}>
+                                        opponentStates.battleModeOn || gameStates.flagIsFound || 
+                                        opponentStates.flagIsFound ? true : false}>
 
                         {buttonStates.pauseButtonText}
                     </button>  

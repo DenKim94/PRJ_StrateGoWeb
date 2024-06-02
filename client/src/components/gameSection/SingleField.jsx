@@ -26,7 +26,7 @@ const SingleField = ({fieldState, idx}) => {
       const [playerColor] = helperFcn.getColorAndNumberOfCurrentPlayer(gameStates.isPlayer1, gameStates.colorPlayer1, gameStates.colorPlayer2);
 
       // Ednabled drag option depends from the state of the opponent 
-      if(gameStates.ready2Play && !opponentStates.ready2Play){
+      if((gameStates.ready2Play && !opponentStates.ready2Play) || (gameStates.flagIsFound || opponentStates.flagIsFound)){
         setIsDraggable(false);
       }
       // Disabled drag option for 'Flag' and 'Bomb' when the game is started
@@ -36,13 +36,18 @@ const SingleField = ({fieldState, idx}) => {
       // Disable drag property for the opponent figures  
       }else if(figProps.color !== playerColor){
         setIsDraggable(false);
-      }  
+      } 
       else{     
         setIsDraggable(true);       
       }
     }
+    // Disable drag property during a battle
+    if(gameStates.battleModeOn || opponentStates.battleModeOn){
+      setIsDraggable(false);
+    } 
+
     // eslint-disable-next-line
-  }, [gameStates.ready2Play, opponentStates.ready2Play, figProps])
+  }, [ gameStates.ready2Play, opponentStates.ready2Play, figProps, gameStates.battleModeOn, opponentStates.battleModeOn ])
 
   // Set style of the component 
   const fieldStyle = {

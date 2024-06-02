@@ -7,7 +7,7 @@ import { useOpponentStates } from '../context/OpponentStatesContext.js';
 import './Cover.css'
 import ExitBox from './ExitBox.jsx';
 /**
- * This Component informs the user about changed game states
+ * This Component informs the user about the game states
  * @param {Object} styleCover - Object contains specific style parameters of the component (see 'parameters.js')
  */
 const Cover = ({ styleCover = parameters.styleCover }) => {

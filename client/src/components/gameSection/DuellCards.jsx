@@ -32,10 +32,22 @@ const DuellCards = ({ playerFigProps, opponentFigProps, props = parameters.Duell
                     battleModeOn: false,
                 })); 
             }
+
+            if(gameStates.flagIsFound || opponentStates.flagIsFound){
+                setGameStates((prevStates) => ({ 
+                    ...prevStates,
+                    ready2Play: false,
+                }));
+            
+                setOpponentStates((prevStates) => ({
+                    ...prevStates,
+                    ready2Play: false,
+                })); 
+            }
         }, parameters.genCfg.timeOutBattle_ms);
 
         // eslint-disable-next-line
-    }, [])   
+    }, [gameStates.flagIsFound, opponentStates.flagIsFound])   
 
     return( 
         <div style={props.style}>

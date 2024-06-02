@@ -96,14 +96,6 @@ const DefeatedFigureStorage = ({ defFigStateArray,
         const prevStateArray = (sortedDefFigStateArray.length > 1 && currentDefFig) ? 
                                 sortedDefFigStateArray.filter(figProps => figProps.id !== currentDefFig.id) : sortedDefFigStateArray;
 
-        
-        console.log("@DefeatedFigureStorage - prevStateArray: ", currentDefFig)   
-        console.log("@DefeatedFigureStorage - sortedDefFigStateArray: ", sortedDefFigStateArray)
-        console.log("@DefeatedFigureStorage - prevStateArray: ", prevStateArray)
-
-        console.log("@DefeatedFigureStorage - gameStates: ", gameStates)
-        console.log("@DefeatedFigureStorage - opponentStates: ", opponentStates)
-
         return (
             <div className="figure-storage">
                 <p id="storage-name" style={styleStorageTopic}>* Defeated Figures *</p>

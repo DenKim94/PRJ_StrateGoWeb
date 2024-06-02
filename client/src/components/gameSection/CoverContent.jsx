@@ -2,13 +2,19 @@ import React, {useState, useEffect} from 'react';
 import { useGameStates } from '../context/GameStatesContext.js';
 import { useOpponentStates } from '../context/OpponentStatesContext.js';
 import * as parameters from '../../game-logic/parameters.js';
-
+/**
+ * This Component renders the messages depending on game states
+ * @param {Object} coverContentProps - Object contains predefinded messages and parameters of the component (see 'parameters.js')
+ */
 const CoverContent  = ({ coverContentProps = parameters.coverContent }) => {
 
     const defaultCoverContent = coverContentProps.messageBeforeStart ;
     const [coverContent, setCoverContent] = useState([defaultCoverContent]);
     const { opponentStates } = useOpponentStates();
     const { gameStates } = useGameStates();
+
+    console.log("@CoverContent - gameStates: ", gameStates)
+    console.log("@CoverContent - opponentStates: ", opponentStates)
 
     // Update content/message of the cover depending on the game state 
     useEffect(() => {
@@ -17,31 +23,40 @@ const CoverContent  = ({ coverContentProps = parameters.coverContent }) => {
             setCoverContent([coverContentProps.messageWhilePause])
           }
           else if(opponentStates.pausedGame){
-            setCoverContent([`* ${gameStates.opponentName} paused the game. *`])
+            setCoverContent([`* ${gameStates.opponentName} paused the game *`])
           }
           else if(gameStates.leaveGame){
             setCoverContent([coverContentProps.messageAtExit])
           }
           else if(!gameStates.isPaused && !gameStates.ready2Play && 
                   !opponentStates.ready2Play && !opponentStates.timeIsOut && 
-                  !gameStates.timeIsOut && !gameStates.exitConfirmed && !opponentStates.exitConfirmed){
+                  !gameStates.timeIsOut && !gameStates.exitConfirmed && !opponentStates.exitConfirmed && 
+                  !gameStates.flagIsFound && !opponentStates.flagIsFound){
             setCoverContent([defaultCoverContent])
           }
-          else if(!gameStates.ready2Play && opponentStates.ready2Play && !opponentStates.timeIsOut && !gameStates.timeIsOut){
-            setCoverContent([`* ${gameStates.opponentName} is waiting for you. *`])
+          else if(!gameStates.ready2Play && opponentStates.ready2Play && !opponentStates.timeIsOut && !gameStates.timeIsOut && 
+            (!opponentStates.flagIsFound && !gameStates.flagIsFound)){
+            setCoverContent([`* ${gameStates.opponentName} is waiting for you *`])
           }
-          else if(gameStates.ready2Play && !opponentStates.ready2Play && !opponentStates.timeIsOut && !gameStates.timeIsOut){
+          else if(gameStates.ready2Play && !opponentStates.ready2Play && !opponentStates.timeIsOut && !gameStates.timeIsOut && 
+            (!opponentStates.flagIsFound && !gameStates.flagIsFound)){
             setCoverContent([`* Waiting for ${gameStates.opponentName} ... *`])
           }          
           else if(opponentStates.exitConfirmed && !gameStates.exitConfirmed){
-            setCoverContent([`*** ${gameStates.opponentName} left the game. ***`])
+            setCoverContent([`*** ${gameStates.opponentName} left the game ***`])
           }
           else if(opponentStates.timeIsOut && !gameStates.timeIsOut){
-            setCoverContent(["*** Congratulations you won the game! ***", `* Time is over for ${gameStates.opponentName} *`])
+            setCoverContent(["*** Congratulations! You won the game ***", `* Time is over for ${gameStates.opponentName} *`])
           }
           else if(!opponentStates.timeIsOut && gameStates.timeIsOut){
-            setCoverContent(["*** Your time has run out. You lost the game. ***"])
-          }          
+            setCoverContent(["*** Your time has run out! You lost the game ***"])
+          }
+          else if((!opponentStates.ready2Play) && (opponentStates.flagIsFound) && (!gameStates.battleModeOn)){
+            setCoverContent([`*** ! ${gameStates.opponentName} has captured your flag ! ***`, "* You lost the game *"])
+          }   
+          else if((!gameStates.ready2Play) && (gameStates.flagIsFound) && (!gameStates.battleModeOn)){
+            setCoverContent(["*** ! Congratulations ! ***", "* You won the game *"])
+          }                   
           else return null
       }; 
       
@@ -59,6 +74,9 @@ const CoverContent  = ({ coverContentProps = parameters.coverContent }) => {
           opponentStates.timeIsOut,
           gameStates.timeIsOut,
           coverContentProps.messageAtExit, 
+          gameStates.flagIsFound,
+          opponentStates.flagIsFound,
+          gameStates.battleModeOn,
           coverContentProps.messageWhilePause]) 
 
     return (
