@@ -1,7 +1,7 @@
 /** Main file for setting parameters [developer file]
- * This file is mandatory to run the application! 
+ * This file is mandatory to run the application 
  * - Developer: D.Kim
- * - Date of last changes: 20.05.2024  
+ * - Date of last changes: 01.06.2024  
 */
 
 /**** General/Global Configurations ****/
@@ -237,7 +237,7 @@ export const styleCover = {
 export const coverContent = {
     messageBeforeStart: "* Set up you game figures and get ready for the battle! *",
     messageWhilePause: "* Paused Game! *",  
-    messageAtExit: "* You are leaving! *",
+    messageAtExit: "* You are leaving!? *",
     styleCoverContent:{
         display: 'flex',
         position: 'relative',
