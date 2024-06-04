@@ -89,7 +89,13 @@ const HomeSection = ({ homeSectionProps = parameters.homeSectionProps }) => {
                 </p>
             )}    
             <Button buttonName = {"Create New Game"} isDisabled = {isValid ? false : true} onCklickFunction = {createNewGame}/>      
-            <Button buttonName = {"Join Game"} isDisabled = {isValid ? false : true} onCklickFunction = {joinGame}/>   
+            <Button buttonName = {"Join Game"} isDisabled = {isValid ? false : true} onCklickFunction = {joinGame}/>  
+
+            <div style={parameters.instructionsProps.styleDiv}>
+                <a href="/instructions.html" target="_blank" rel="noopener noreferrer" style={parameters.instructionsProps.styleLink}>
+                    {parameters.instructionsProps.linkName}
+                </a>
+            </div>             
         </div>
     )
 };

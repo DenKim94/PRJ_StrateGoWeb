@@ -87,6 +87,20 @@ export const homeSectionProps = {
     }
 };
 
+export const instructionsProps = {
+    linkName: "GAME INSTRUCTIONS",
+    styleDiv:{
+        marginTop: '50px', 
+        justifyContent: 'center', 
+        display: 'flex',   
+    },
+    styleLink:{
+        color: 'black',
+        fontSize: '14px',  
+    },
+
+}; 
+
 // HomeSection-Component: SetUp
 export const setUpProps = {
     messages:{

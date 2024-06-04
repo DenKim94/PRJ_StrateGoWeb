@@ -238,8 +238,14 @@ const SetUp = ({ setToken,
                                         onCklickFunction={handleCancel}
                                     />
                                 </div>
+                                
                             )}
 
+                            <div style={parameters.instructionsProps.styleDiv}>
+                                <a href="/instructions.html" target="_blank" rel="noopener noreferrer" style={parameters.instructionsProps.styleLink}>
+                                    {parameters.instructionsProps.linkName}
+                                </a>
+                            </div> 
                             <ToastContainer position='top-right' />
                         </div>
                     </>
