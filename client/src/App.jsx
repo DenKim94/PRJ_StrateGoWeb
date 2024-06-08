@@ -19,11 +19,11 @@ import SetUp from './components/homeSection/SetUp';
 
 // ******************************************************************* 
 /** 
- * Main component of the application "Stratego" 
+ * Main component of the application "Stratego-Web" 
  * 
  * - Developer: D.Kim 
  * - Version: 1.0.0 
- * - Date of last changes: 01.06.2024
+ * - Date of last changes: 08.06.2024
 */
 // *******************************************************************  
 const App = () => {
