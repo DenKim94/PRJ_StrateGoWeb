@@ -25,18 +25,25 @@ const { opponentStates } = useOpponentStates();
             exitConfirmed: false,
             exitCanceled: false,
             leaveGame: false,
-        }));          
-          if(buttonStates.counterUsedStartButton > 0 && (!gameStates.timeIsOut && !opponentStates.timeIsOut)){
-            setGameStates((prevStates) => ({
-                ...prevStates,
-                ready2Play: !gameStates.isPaused,
-            }));         
+          }));
+
+          if(buttonStates.counterUsedStartButton > 0 
+            && (!gameStates.timeIsOut && !opponentStates.timeIsOut) 
+            && (!gameStates.gameIsOver && !opponentStates.gameIsOver)){
+              
+              setGameStates((prevStates) => ({
+                  ...prevStates,
+                  ready2Play: !gameStates.isPaused,
+              }));         
           }
         }
     }; 
 
     updateCoverState()
-    }, [gameStates.exitCanceled, gameStates.isPaused, gameStates.timeIsOut, opponentStates.timeIsOut, setGameStates, buttonStates.counterUsedStartButton]) 
+    }, [gameStates.exitCanceled, gameStates.isPaused, 
+        gameStates.timeIsOut, opponentStates.timeIsOut, 
+        setGameStates, buttonStates.counterUsedStartButton, 
+        gameStates.gameIsOver, opponentStates.gameIsOver]) 
 
     // Predefined style of the cover component
     const coverStyle = {

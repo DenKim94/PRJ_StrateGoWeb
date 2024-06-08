@@ -33,7 +33,7 @@ const DuellCards = ({ playerFigProps, opponentFigProps, props = parameters.Duell
                 })); 
             }
 
-            if(gameStates.flagIsFound || opponentStates.flagIsFound){
+            if(gameStates.gameIsOver || opponentStates.gameIsOver){
                 setGameStates((prevStates) => ({ 
                     ...prevStates,
                     ready2Play: false,
@@ -47,7 +47,12 @@ const DuellCards = ({ playerFigProps, opponentFigProps, props = parameters.Duell
         }, parameters.genCfg.timeOutBattle_ms);
 
         // eslint-disable-next-line
-    }, [gameStates.flagIsFound, opponentStates.flagIsFound])   
+    }, [gameStates.gameIsOver, opponentStates.gameIsOver])   
+
+    console.log("########################################")
+    console.log("@DuellCards - gameStates:", gameStates)
+    console.log("@DuellCards - opponentStates:", opponentStates)
+    console.log("########################################")
 
     return( 
         <div style={props.style}>

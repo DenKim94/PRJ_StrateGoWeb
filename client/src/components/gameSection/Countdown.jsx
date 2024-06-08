@@ -20,7 +20,7 @@ const Countdown = () => {
         setKey(prevKey => prevKey + 1);
       }  
 
-    },[gameStates.turnPlayer, gameStates.playerNumber, gameStates.ready2Play]) 
+    },[gameStates.turnPlayer, gameStates.playerNumber]) 
 
    async function onComplete(){
         setGameStates((prevStates) => ({

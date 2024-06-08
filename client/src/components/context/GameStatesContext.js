@@ -27,7 +27,7 @@ export const GameStatesProvider = ({ children }) => {
     timeIsOut: false,
     turnPlayer: null,
     battleModeOn: false,
-    flagIsFound: false,
+    gameIsOver: false,
   });
 
   return (

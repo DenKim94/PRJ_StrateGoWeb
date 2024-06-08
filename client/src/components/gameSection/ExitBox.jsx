@@ -40,6 +40,7 @@ const ExitBox = ({ exitBoxProps = parameters.exitBoxProps }) => {
                     console.log("@ExitBox - event.data:", event.data)
                     console.log("########################################")
                 }
+                console.log("@ExitBox - event.data:", event.data)
 
                 setOpponentStates((prevStates) => ({
                     ...prevStates,
@@ -98,7 +99,7 @@ const ExitBox = ({ exitBoxProps = parameters.exitBoxProps }) => {
                      
                     await sendGameStateUpdates({  
                         ...gameStates,
-                        ready2Play: (!gameStates.timeIsOut && !opponentStates.timeIsOut) ? true : false,
+                        ready2Play: ((!gameStates.timeIsOut && !opponentStates.timeIsOut) && (!gameStates.gameIsOver && !opponentStates.gameIsOver)) ? true : false,
                         leaveGame: false,
                         exitCanceled: true,
                     });                 
@@ -121,7 +122,14 @@ const ExitBox = ({ exitBoxProps = parameters.exitBoxProps }) => {
     
         handleExit()
         // eslint-disable-next-line
-        }, [canceledState, confirmedState, gameStates.timeIsOut, opponentStates.timeIsOut, buttonStates.counterUsedStartButton])    
+        }, [canceledState, confirmedState, 
+            gameStates.timeIsOut, opponentStates.timeIsOut, 
+            buttonStates.counterUsedStartButton, gameStates.gameIsOver, opponentStates.gameIsOver])    
+
+        console.log("########################################")
+        console.log("@ExitBox - gameStates:", gameStates)
+        console.log("@ExitBox - opponentStates:", opponentStates)
+        console.log("########################################")
 
     return(
         <div className="exit-box" style={exitBoxProps.styleParamsBox}>

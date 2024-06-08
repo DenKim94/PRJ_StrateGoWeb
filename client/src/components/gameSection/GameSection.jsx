@@ -237,8 +237,8 @@ const GameSection = () => {
                                         opponentStates.leaveGame || 
                                         opponentStates.exitConfirmed || opponentStates.timeIsOut || 
                                         gameStates.timeIsOut || gameStates.battleModeOn || 
-                                        opponentStates.battleModeOn || gameStates.flagIsFound || 
-                                        opponentStates.flagIsFound ? true : false}>
+                                        opponentStates.battleModeOn || gameStates.gameIsOver || 
+                                        opponentStates.gameIsOver ? true : false}>
 
                         {buttonStates.pauseButtonText}
                     </button>  

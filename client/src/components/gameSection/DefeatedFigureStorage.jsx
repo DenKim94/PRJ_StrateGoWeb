@@ -32,11 +32,11 @@ const DefeatedFigureStorage = ({ defFigStateArray,
         }
     }, [gameStates.battleModeOn, opponentStates.battleModeOn, defFigStateArray.length]);
   
-    const provideUpdatesToChannel = async (flagIsFoundBool) => {
+    const provideUpdatesToChannel = async (gameOverBool) => {
         try{
             await channelStates.channelObj.sendEvent({
-                type: "found-flag",
-                data: {flagIsFoundState: flagIsFoundBool},
+                type: "game-over",
+                data: {gameOverState: gameOverBool},
               })
         }
         catch(error){
@@ -47,10 +47,10 @@ const DefeatedFigureStorage = ({ defFigStateArray,
     useEffect(() => {
 
         const handleChannelEvent = (event) => {
-            if (event.user.id !== client.userID && event.type === "found-flag") {
+            if (event.user.id !== client.userID && event.type === "game-over") {
                 setOpponentStates((prevStates) => {
-                    if (prevStates.flagIsFound !== event.data.flagIsFoundState) {
-                        return { ...prevStates, flagIsFound: event.data.flagIsFoundState };
+                    if (prevStates.gameIsOver !== event.data.gameOverState) {
+                        return { ...prevStates, gameIsOver: event.data.gameOverState };
                     }
                     return prevStates;
                 });
@@ -76,15 +76,15 @@ const DefeatedFigureStorage = ({ defFigStateArray,
             }
         });
 
-        if (flagFound && !gameStates.flagIsFound) {
+        if (flagFound && !gameStates.gameIsOver) {
             setGameStates((prevStates) => ({
                 ...prevStates,
-                flagIsFound: true,
+                gameIsOver: true,
             }));
             provideUpdatesToChannel(true);
         }
     // eslint-disable-next-line
-    }, [defFigStateArray, gameStates.flagIsFound]);
+    }, [defFigStateArray, gameStates.gameIsOver]);
 
     // Early return if figure storage is not empty (during a set-up phase)
     if(figStorageState.length > 0){
@@ -108,7 +108,6 @@ const DefeatedFigureStorage = ({ defFigStateArray,
                              tabIndex="0">
                             {sortedDefFigStateArray.map((figProps, idx) => (
                                 <div key={idx}>
-                                    {/* Render each figure here, e.g., figProps.name */}
                                     <GameFigure propsObj={figProps} snapshot = {null}/>
                                 </div>
                             ))}
@@ -123,7 +122,6 @@ const DefeatedFigureStorage = ({ defFigStateArray,
                         tabIndex="0">
                         {prevStateArray.map((figProps, idx) => (
                             <div key={idx}>
-                                {/* Render each figure here, e.g., figProps.name */}
                                 <GameFigure propsObj={figProps} snapshot = {null}/>
                             </div>
                         ))}

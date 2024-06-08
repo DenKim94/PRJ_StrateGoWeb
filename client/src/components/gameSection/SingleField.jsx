@@ -26,7 +26,7 @@ const SingleField = ({fieldState, idx}) => {
       const [playerColor] = helperFcn.getColorAndNumberOfCurrentPlayer(gameStates.isPlayer1, gameStates.colorPlayer1, gameStates.colorPlayer2);
 
       // Ednabled drag option depends from the state of the opponent 
-      if((gameStates.ready2Play && !opponentStates.ready2Play) || (gameStates.flagIsFound || opponentStates.flagIsFound)){
+      if((gameStates.ready2Play && !opponentStates.ready2Play) || (gameStates.gameIsOver || opponentStates.gameIsOver)){
         setIsDraggable(false);
       }
       // Disabled drag option for 'Flag' and 'Bomb' when the game is started
