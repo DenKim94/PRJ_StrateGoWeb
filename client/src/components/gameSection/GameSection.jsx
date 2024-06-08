@@ -201,15 +201,6 @@ const GameSection = () => {
         }
     // eslint-disable-next-line
     }, [buttonStates.counterUsedStartButton, buttonStates.disabledStartButton])
-
-    if(parameters.genCfg.debugMode){
-        console.log("######################################################")
-        console.log("@GameSection - gameStates: ", gameStates)
-        console.log("@GameSection - buttonStates: ", buttonStates)
-        console.log("@GameSection - stateIsUpdated: ", stateIsUpdated) 
-        console.log("@GameSection - opponentStates: ", opponentStates)
-        console.log("######################################################")
-    }
     
     return(
         <>

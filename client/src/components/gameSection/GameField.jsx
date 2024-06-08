@@ -364,22 +364,6 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
        firstTurn,
        buttonStates.counterUsedStartButton])
 
-    // Checking values of parameters in 'debugMode' 
-    if(parameters.genCfg.debugMode){
-      console.log("#############################################################");
-      console.log("@GameField - gameFieldSettings: ", gameFieldSettings);
-      console.log("@GameField - sizeSingleField [px]: ", sizeSingleField);
-      console.log("@GameField - fieldCoordinates: ", fieldCoordinates);
-      console.log("@GameField - playerColor: ", playerColor);
-      console.log("@GameField - firstTurn: ", firstTurn);
-      console.log("@GameField - playerFigures: ", playerFigures);
-      console.log("@GameField - gameFieldState: ", gameFieldState);
-      console.log("@GameField - figureStorageState: ", figureStorageState);
-      console.log("@GameField - defeatedFigureStorage: ", defeatedFigureStorage);
-      console.log("@GameField - gameStates: ", gameStates);
-      console.log("#############################################################");
-    }
-
     // Enable the button to start the game, when the figure storage list is empty
     useEffect(() => {
       const updateStartButton = () => {

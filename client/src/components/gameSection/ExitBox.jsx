@@ -35,20 +35,12 @@ const ExitBox = ({ exitBoxProps = parameters.exitBoxProps }) => {
         channelStates.channelObj.on((event) => {
             if(event.type === "exit-update" && event.user.id !== client.userID){
     
-                if(parameters.genCfg.debugMode){
-                    console.log("########################################")
-                    console.log("@ExitBox - event.data:", event.data)
-                    console.log("########################################")
-                }
-                console.log("@ExitBox - event.data:", event.data)
-
                 setOpponentStates((prevStates) => ({
                     ...prevStates,
                     ready2Play: event.data.ready2Play,
                     leaveGame: event.data.leaveGame,
                     exitConfirmed: event.data.exitConfirmed,
-                }))
-               
+                }))             
             }
         })
 
@@ -125,11 +117,6 @@ const ExitBox = ({ exitBoxProps = parameters.exitBoxProps }) => {
         }, [canceledState, confirmedState, 
             gameStates.timeIsOut, opponentStates.timeIsOut, 
             buttonStates.counterUsedStartButton, gameStates.gameIsOver, opponentStates.gameIsOver])    
-
-        console.log("########################################")
-        console.log("@ExitBox - gameStates:", gameStates)
-        console.log("@ExitBox - opponentStates:", opponentStates)
-        console.log("########################################")
 
     return(
         <div className="exit-box" style={exitBoxProps.styleParamsBox}>

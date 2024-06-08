@@ -49,11 +49,6 @@ const DuellCards = ({ playerFigProps, opponentFigProps, props = parameters.Duell
         // eslint-disable-next-line
     }, [gameStates.gameIsOver, opponentStates.gameIsOver])   
 
-    console.log("########################################")
-    console.log("@DuellCards - gameStates:", gameStates)
-    console.log("@DuellCards - opponentStates:", opponentStates)
-    console.log("########################################")
-
     return( 
         <div style={props.style}>
             <CardOpponent opponentFigProps = {opponentFigProps} revealed = {revealed}/>

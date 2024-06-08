@@ -49,14 +49,7 @@ const Countdown = () => {
     try{
         channelStates.channelObj.on((event) => {
             if(event.type === "time-over" && event.user.id !== client.userID){
-    
-                if(parameters.genCfg.debugMode){
-                    console.log("########################################")
-                    console.log("@Countdown - gameStates:", gameStates)
-                    console.log("@Countdown - event.data:", event.data)
-                    console.log("########################################")
-                }
-                
+                   
                 setOpponentStates((prevStates) => ({
                     ...prevStates,
                     ready2Play: event.data.ready2Play,

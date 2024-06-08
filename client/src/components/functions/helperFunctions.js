@@ -271,12 +271,10 @@ export function checkValidScoutMove(startPos, endPos, fieldStates, playerNumber)
 
                 if(elementProps.pos_y !== startPos[1]){ // Ignore the same scout figure
                    if(elementProps.pos_y > startPos[1] && elementProps.pos_y < endPos[1]){ // scout 'jumped over' another figure from bottom to top
-                    //  console.log("scout 'jumped over' another figure from bottom to top")
                      isValidMove = false;
                      break;
 
                    }else if(elementProps.pos_y < startPos[1] && elementProps.pos_y > endPos[1]){ // scout 'jumped over' another figure from top to bottom
-                    // console.log("scout 'jumped over' another figure from top to bottom")
                     isValidMove = false;
                     break;
                    }                   
@@ -288,12 +286,10 @@ export function checkValidScoutMove(startPos, endPos, fieldStates, playerNumber)
 
                 if(elementProps.pos_y !== startPos[1]){ // Ignore the same scout figure
                    if(elementProps.pos_y < startPos[1] && elementProps.pos_y > endPos[1]){ // scout 'jumped over' another figure from bottom to top
-                    //  console.log("scout 'jumped over' another figure from bottom to top")
                      isValidMove = false;
                      break;
 
                    }else if(elementProps.pos_y > startPos[1] && elementProps.pos_y < endPos[1]){ // scout 'jumped over' another figure from top to bottom
-                    // console.log("scout 'jumped over' another figure from top to bottom")
                     isValidMove = false;
                     break;
                    }                   
@@ -309,12 +305,10 @@ export function checkValidScoutMove(startPos, endPos, fieldStates, playerNumber)
                 
                 if(elementProps.pos_x !== startPos[0]){ // Ignore the same scout figure
                    if(elementProps.pos_x > startPos[0] && elementProps.pos_x < endPos[0]){ // scout 'jumped over' another figure from left to right
-                    //  console.log("scout 'jumped over' another figure from left to right")
                      isValidMove = false;
                      break;
 
                    }else if(elementProps.pos_x < startPos[0] && elementProps.pos_x > endPos[0]){ // scout 'jumped over' another figure from right to left
-                    // console.log("scout 'jumped over' another figure from right to left")
                     isValidMove = false;
                     break;
                    }                   
@@ -326,12 +320,10 @@ export function checkValidScoutMove(startPos, endPos, fieldStates, playerNumber)
 
                 if(elementProps.pos_x !== startPos[0]){ // Ignore the same scout figure
                    if(elementProps.pos_x < startPos[0] && elementProps.pos_x > endPos[0]){ // scout 'jumped over' another figure from left to right
-                    //  console.log("scout 'jumped over' another figure from left to right")
                      isValidMove = false;
                      break;
 
                    }else if(elementProps.pos_x > startPos[0] && elementProps.pos_x <= endPos[0]){ // // scout 'jumped over' another figure from right to left
-                    // console.log("scout 'jumped over' another figure from right to left")
                     isValidMove = false;
                     break;
                    }                   
