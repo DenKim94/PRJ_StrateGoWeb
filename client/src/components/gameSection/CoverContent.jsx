@@ -46,10 +46,10 @@ const CoverContent  = ({ coverContentProps = parameters.coverContent }) => {
             setCoverContent(["*** CONGRATULATIONS! You won the game ***", `* Time is over for ${gameStates.opponentName} *`])
           }
           else if(!opponentStates.timeIsOut && gameStates.timeIsOut){
-            setCoverContent(["*** Your time has run out! You lost the game ***"])
+            setCoverContent(["*** Your time has run out! ***", "* You lost the game *"])
           }
           else if((!opponentStates.ready2Play) && (opponentStates.gameIsOver) && (!gameStates.battleModeOn)){
-            setCoverContent([`*** ! GAME OVER ! ***`, "* You lost the game *"])
+            setCoverContent(["*** ! GAME OVER ! ***", "* You lost the game *"])
           }   
           else if((!gameStates.ready2Play) && (gameStates.gameIsOver) && (!gameStates.battleModeOn)){
             setCoverContent(["*** ! CONGRATULATIONS ! ***", "* You won the game *"])
