@@ -57,7 +57,6 @@ app.listen(portNumber, () => {
     console.log(">> Server is running... ")
 })
 
-
 // Function to clean up the user list
 async function deleteOldUsers(){
     console.log(">> Run user clean-up... ")
