@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useChatContext } from 'stream-chat-react';
-import * as parameters from '../../game-logic/parameters.js';
 import { useGameStates } from '../context/GameStatesContext.js';
 import { useChannelStates } from '../context/ChannelStatesContext.js';
 
@@ -22,12 +21,6 @@ const WaitingRoom = () => {
     // Update states of player 2
     channelStates.channelObj.on((event) => {
         if(event.type === "game-state-sync" && event.user.id !== client.userID){
-
-            if(parameters.genCfg.debugMode){
-                console.log("############################################")
-                console.log("@WaitingRoom - event.data:", event.data)
-                console.log("############################################")
-            }
 
             if(event.data.isPlayer1){
                 setGameStates((prevStates) => ({
@@ -74,17 +67,6 @@ const WaitingRoom = () => {
     
     }, [gameStates, setGameStates, channelStates, statesSynced, connectedPlayers, setStatesSynced]);
 
-    
-    if(parameters.genCfg.debugMode){
-        console.log("############################################")
-        console.log("@WaitingRoom - client:", client)
-        console.log("@WaitingRoom - gameStates:", gameStates)
-        console.log("@WaitingRoom - connectedPlayers:", connectedPlayers)
-        console.log("@WaitingRoom - statesSynced:", statesSynced)
-        console.log("@WaitingRoom - channelStates.channelObj:", channelStates.channelObj)
-        console.log("############################################")
-    }
-
     useEffect(() => {
         const provideUserToGame = () => {
             if(connectedPlayers && statesSynced){
@@ -101,7 +83,6 @@ const WaitingRoom = () => {
     return ( 
         <div>
             {!statesSynced ? ( 
-                // TO-DO: Add a Bootstrap-Component for waiting | 10.02.2024
 
                 <div> Waiting for the opponent... </div>
             ):(

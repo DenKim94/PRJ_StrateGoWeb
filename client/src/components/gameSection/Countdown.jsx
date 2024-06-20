@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
-import * as parameters from '../../game-logic/parameters.js';
 import { useGameStates } from '../context/GameStatesContext.js';
 import { useOpponentStates } from '../context/OpponentStatesContext.js';
 import { useChannelStates } from '../context/ChannelStatesContext.js';
 import { useChatContext } from 'stream-chat-react';
 import './Countdown.css'
+
+/**
+ * React component representing the time per turn of each player
+ * @component
+ * @returns {JSX.Element} Returns the JSX element representing the time in seconds 
+ */
 
 const Countdown = () => {
     const { gameStates, setGameStates } = useGameStates();

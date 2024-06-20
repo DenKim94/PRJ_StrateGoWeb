@@ -23,7 +23,7 @@ import SetUp from './components/homeSection/SetUp';
  * 
  * - Developer: D.Kim 
  * - Version: 1.0.0 
- * - Date of last changes: 08.06.2024
+ * - Date of last changes: 20.06.2024
 */
 // *******************************************************************  
 const App = () => {
@@ -62,7 +62,6 @@ const App = () => {
                     if (connectionAttemptsCounter <= maxConnectionAttempts) {
                         connectionAttemptsCounter += 1;
                         connectUser();
-
                     } else {
                         console.error(" Connect user: Maximum number of attempts exceeded.");
                     }

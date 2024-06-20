@@ -56,7 +56,7 @@ const SetUp = ({ setToken,
           
                 setToken(token);
 
-            } catch(error) {
+            }catch(error){
                 const errorPath = "/";
                 console.error(error.message);
 
@@ -79,7 +79,8 @@ const SetUp = ({ setToken,
         }
 
         // Ensure complete game settings provided by player 1 and player 2
-        if(gameStates.isPlayer1 && gameStates.opponentName.length > parameters.genCfg.minInputLength && gameStates.colorPlayer1 && gameStates.timePerTurn_ms){
+        if(gameStates.isPlayer1 && gameStates.opponentName.length > parameters.genCfg.minInputLength && 
+            gameStates.colorPlayer1 && gameStates.timePerTurn_ms){
             setReadyToStart(true)
 
         }else if(!gameStates.isPlayer1 && gameStates.opponentName.length > parameters.genCfg.minInputLength){
@@ -99,10 +100,6 @@ const SetUp = ({ setToken,
             props.playerNumber !== gameStates.playerNumber
         )
 
-        if(parameters.genCfg.debugMode){
-            console.log("@SetUp - foundUser : ", foundUser )
-        }
-
         // If opponent was not found by entered name
         if(foundUser.length === 0){
             toast.info("Opponent not found! Please try again!", {
@@ -117,10 +114,6 @@ const SetUp = ({ setToken,
             const newChannel = client.channel("messaging", {
                 members: [client.userID, foundUser[0].id],
             });
-
-            if(parameters.genCfg.debugMode){
-                console.log("@SetUp - newChannel: ", newChannel)  
-            }
 
             await newChannel.watch() // Listening to the channel
 
@@ -169,15 +162,6 @@ const SetUp = ({ setToken,
         navigate(homePath);
     }
      
-    if(parameters.genCfg.debugMode){
-        console.log("######################################################")
-        console.log("@SetUp - cookies:", cookies.cookies)
-        console.log("@SetUp - gameStates:", gameStates)
-        console.log("@SetUp - channelStates:", channelStates)
-        console.log("@SetUp - userCreated:", userCreated)
-        console.log("######################################################")
-    }
-
     return (
         <div style={setUpProps.style}>
             
