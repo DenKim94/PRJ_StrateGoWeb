@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import * as parameters from '../../game-logic/parameters.js';
 import * as helperFcn from '../functions/helperFunctions.js'
 import { useGameStates } from '../context/GameStatesContext.js';
+import { GameFieldContext } from "./GameField.jsx";
+import './GameFigure.css'
 
 /**
  * React component representing a game figure.
@@ -18,9 +20,36 @@ import { useGameStates } from '../context/GameStatesContext.js';
 const GameFigure = ({propsObj, snapshot, figureStyle = parameters.styleGameFigure, valueStyle = parameters.valueStyleGameFigure}) => {
     
     const { gameStates } = useGameStates();
+    const battledFigures = useContext(GameFieldContext)
+    const [blinkBorder, setBlinkBorder] = useState(false)
 
     // Get only a color of current player
     const [playerColor] = helperFcn.getColorAndNumberOfCurrentPlayer(gameStates.isPlayer1, gameStates.colorPlayer1, gameStates.colorPlayer2);
+
+    useEffect(() => {
+      if(battledFigures?.winnerFigProps?.isActive && 
+        !gameStates.BattleModeOn && 
+        battledFigures?.winnerFigProps?.color !== playerColor &&
+        propsObj?.id === battledFigures?.winnerFigProps?.id){
+        
+        const timerBlinkOn = setTimeout(() => {
+          setBlinkBorder(true);
+
+        }, parameters.genCfg.timeOutBattle_ms);          
+        
+        // Set a timer to stop blink animation
+        const timerBlinkOff = setTimeout(() => {
+            setBlinkBorder(false);
+        }, (parameters.genCfg.timeOutBattle_ms + parameters.genCfg.timeOutBlinkBorder_ms));
+
+        // Clean up both timers
+        return () => {
+          clearTimeout(timerBlinkOn);
+          clearTimeout(timerBlinkOff);
+        };
+      }
+      // eslint-disable-next-line
+    }, [battledFigures?.winnerFigProps, gameStates.BattleModeOn, propsObj?.id])
 
     if(!propsObj){
       return null;
@@ -35,7 +64,9 @@ const GameFigure = ({propsObj, snapshot, figureStyle = parameters.styleGameFigur
       width: '100%', 
       height: '100%', 
       borderRadius: '10%',
-      border: (snapshot !== null && snapshot.isDragging) ? `2px solid ${colorBorder}` : 'none' ,
+      alignItems: 'center', 
+      justifyContent: 'center',       
+      border: (snapshot !== null && snapshot.isDragging) ? `3px solid ${colorBorder}` : 'none' ,
     };
 
     let pathIndex
@@ -52,7 +83,7 @@ const GameFigure = ({propsObj, snapshot, figureStyle = parameters.styleGameFigur
     } 
 
     return (
-      <div style={figureStyle}>
+      <div style={figureStyle} className={`game-figure ${blinkBorder ? 'blink-border' : ''}`}>
         <img
           src={imgPath[pathIndex]}
           alt={"Name of the game figure: " + figName}
@@ -64,6 +95,6 @@ const GameFigure = ({propsObj, snapshot, figureStyle = parameters.styleGameFigur
         )}
     </div>
     );   
-};
-
-export default GameFigure;
+  };
+  
+  export default GameFigure;

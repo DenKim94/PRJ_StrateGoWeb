@@ -1,18 +1,18 @@
 /** Main file for setting parameters [developer file]
  * This file is mandatory to run the application 
  * - Developer: D.Kim
- * - Date of last changes: 01.06.2024  
+ * - Date of last changes: 20.06.2024  
 */
 
 /**** General/Global Configurations ****/
 export const genCfg = {
-    debugMode: false,               // Boolean for showing parameter values in the console (if true) 
     maxConnectionAttempts: 3,       // Maximum number of attempts to reconnect the user in case of failed connection
     minInputLength: 2,              // Minimal length of user input (e.g. > 1 for user name)
     maxInputLength: 20,             // Maximal length of user input (e.g. < 20 for user name)
     timeOutAutoClose_ms: 2500,      // Time value in ms for auto close (e.g. Pop-Ups)  
     timeOutErrorHandling_ms: 3500,  
-    timeOutBattle_ms: 8000,   
+    timeOutBattle_ms: 7000,   
+    timeOutBlinkBorder_ms: 3000,    // Time in ms for the blink duration of winner figure after a battle (consider to update the settings in GameFigure.css as well --> same durations)      
 };
 
 /**** Settings for GameSection-Component: GameField ****/
@@ -170,8 +170,6 @@ export const styleGameFigure = {
     height: `${figSize[1]}px`,
     margin: 'auto', 
     display: 'flex',
-    alignItems: 'flex-start', 
-    justifyContent: 'flex-start', 
     cursor: 'grab',
     position: 'relative', 
   };

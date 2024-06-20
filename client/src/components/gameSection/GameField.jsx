@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import React, {useState, useEffect, useMemo, createContext} from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { ToastContainer, toast } from 'react-toastify';
 import './GameField.css'
@@ -27,6 +27,7 @@ import XAxis from './xAxis';
  * @param {Object} gameFieldSettings - Settings for the game field, including dimensions, colors, and non-playable field coordinates.
  * @returns {JSX.Element} Returns the JSX element representing the game field and its components.
  */
+export const GameFieldContext = createContext(); 
 
 function GameField({ gameFieldSettings = parameters.gameFieldObj })
   {
@@ -523,32 +524,32 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
                      gameStates = {gameStates} 
                      axisStyle = {parameters.styleYAxis}/>
 
-              <div className="game-field" style={fieldStyle}>
-
-                {gameFieldState.map((fieldProps, index) => {   
-                  return (
-
-                    <Droppable droppableId={defaultFieldState[index].id} 
-                    key={`${prefixSingleFieldID}_${index}`}
-                    type = "FIGURE"
-                    > 
-                    {(provided) => (             
-                      <div
-                        style={fieldProps.style}
-                        key={index}
-                        className={"single-field"}
-                        ref={provided.innerRef} 
-                        {...provided.droppableProps}
-                      >
-                        <SingleField fieldState={fieldProps} idx = {index}/>
-                        {provided.placeholder}                        
-                      </div>
-                    )}
-                    </Droppable>                    
-                  )
-                })}
-              </div>
-                 
+              <GameFieldContext.Provider value = {battledFigures}>
+                <div className="game-field" style={fieldStyle}>
+                  {gameFieldState.map((fieldProps, index) => {   
+                    return (
+                      <Droppable droppableId={defaultFieldState[index].id} 
+                      key={`${prefixSingleFieldID}_${index}`}
+                      type = "FIGURE"
+                      > 
+                      {(provided) => (             
+                        <div
+                          style={fieldProps.style}
+                          key={index}
+                          className={"single-field"}
+                          ref={provided.innerRef} 
+                          {...provided.droppableProps}
+                        >
+                          <SingleField fieldState={fieldProps} idx = {index}/>
+                          {provided.placeholder}                        
+                        </div>
+                      )}
+                      </Droppable>                    
+                    )
+                  })}
+                </div>
+              </GameFieldContext.Provider>
+              
               <XAxis xAxisArray = {xAxisLetters} 
                      singleFieldWidth = {sizeSingleField} 
                      gameStates = {gameStates} 
