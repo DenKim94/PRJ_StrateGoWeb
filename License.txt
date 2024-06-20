@@ -1,11 +1,11 @@
 Copyright (c) 2024 Denis Kim
 
-Permission is hereby granted, free of charge, to permit any person obtaining a copy
-of this software and the accompanying documentation files (the “Software”), 
-use the Software without restriction, including without limitation the right to
-use, copy, modify, merge, publish,
-distribute, sublicense and/or sell the Software, and to permit persons to whom the Software is
-Software is made available to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and the accompanying documentation files to
+use the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software 
+and to permit persons to whom the Software is furnished to do so, 
+subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies
 or substantial portions of the software.
