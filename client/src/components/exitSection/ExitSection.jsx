@@ -21,7 +21,6 @@ const ExitSection = ({exitSectionProps = parameters.exitSectionProps}) => {
     const cookiesObj = channelStates?.cookieObj;
     const { clearLocalStorage } = useLocalStorage();
 
-
     useEffect(() => {
         const checkoutUser = async () => {
             // Disconnect user and delete all saved cookies 

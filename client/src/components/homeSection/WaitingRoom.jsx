@@ -17,12 +17,10 @@ const WaitingRoom = () => {
     const { channelStates } = useChannelStates();
     const { gameStates, setGameStates } = useGameStates();
     const { client } = useChatContext();
-
     const { clearLocalStorage } = useLocalStorage();
 
     // Synchronize states between players
     const [statesSynced, setStatesSynced] = useState(false);
-
     try{
         // Update states of player 2
         channelStates.channelObj.on((event) => {
@@ -37,7 +35,6 @@ const WaitingRoom = () => {
                 }
             }
         })   
-
     }catch(error){
         console.error(error.message)
         // Error handling
@@ -53,7 +50,7 @@ const WaitingRoom = () => {
             return channelStates.channelObj.state.watcher_count === 2;
         } catch (error) {
             console.error("Error accessing channelObj: ", error);
-            return false; // oder einen anderen Standardwert
+            return false;
         }
     });
     
