@@ -14,6 +14,8 @@ import * as parameters from '../../game-logic/parameters.js';
 import * as helperFcn from '../functions/helperFunctions.js'
 import { useGameStates } from '../context/GameStatesContext.js';
 import { useChannelStates } from '../context/ChannelStatesContext.js';
+import { useLocalStorage } from '../functions/useLocalStorage.js';
+import { restoreChannel } from '../functions/restoreChannel.js';
 
 /**
  * React component responsible for managing the setup phase before the game starts.
@@ -36,10 +38,25 @@ const SetUp = ({ setToken,
     const { gameStates, setGameStates } = useGameStates();
     const [isReadyToStart, setReadyToStart] = useState(false);
     const { channelStates, setChannelStates } = useChannelStates();
+    const { setItem, getItem, clearLocalStorage } = useLocalStorage();
 
     const navigate = useNavigate();
     const SETUPURL = process.env.REACT_APP_SETUP_URL;
-    
+
+    // Get stored states from local storage in case of page reload                
+    useEffect(() => {
+        const storedGameState = getItem('game-states');
+        const storedUserCreated = getItem('userCreated');
+
+        if(storedGameState !== null){
+            setGameStates(storedGameState)
+        } 
+        if(storedUserCreated !== null){
+            setUserCreated(storedUserCreated)
+        } 
+        // eslint-disable-next-line
+    }, [])
+
     useEffect(() => {
         const setUserProps = async () => {
 
@@ -53,11 +70,9 @@ const SetUp = ({ setToken,
                 cookies.set("userID", userProps.userID);
                 cookies.set("playerName", userProps.playerName);
                 cookies.set("playerNumber", userProps.playerNumber);
-          
                 setToken(token);
 
             }catch(error){
-                const errorPath = "/";
                 console.error(error.message);
 
                 // Error Handling
@@ -67,7 +82,7 @@ const SetUp = ({ setToken,
 
                 // Timeout for closing navigate back to the home section
                 setTimeout(() => {
-                    navigate(errorPath);
+                    navigate("/");
                 }, parameters.genCfg.timeOutErrorHandling_ms);
             }
 
@@ -86,51 +101,97 @@ const SetUp = ({ setToken,
         }else if(!gameStates.isPlayer1 && gameStates.opponentName.length > parameters.genCfg.minInputLength){
             setReadyToStart(true)
         }
+        // Save states in local storage
+        setItem('game-states', gameStates)
+        setItem('userCreated', userCreated)
 
         // eslint-disable-next-line
     },[gameStates, setReadyToStart, userCreated, setUserCreated, SETUPURL, cookies, setToken])
 
+    // Store channel ID for reconnection in case of page reload
+    useEffect(() => {
+        if(channelStates.channelObj !== null){
+            setItem('channel-id', channelStates.channelObj.id)
+        }
+        // eslint-disable-next-line
+    }, [channelStates])
+
     // Function to create a channel
     const createChannel = async () => {
-        // Search user with defined opponent name
-        const response = await client.queryUsers({name: { $eq: gameStates.opponentName }}); 
-    
-        const foundUser = response.users.filter( props => 
-            props.online === true &&
-            props.playerNumber !== gameStates.playerNumber
-        )
+        try{
+            // Search user with defined opponent name
+            const response = await client.queryUsers({name: { $eq: gameStates.opponentName }}); 
+        
+            const foundUser = response.users.filter( props => 
+                props.online === true &&
+                props.playerNumber !== gameStates.playerNumber
+            )
 
-        // If opponent was not found by entered name
-        if(foundUser.length === 0){
-            toast.info("Opponent not found! Please try again!", {
-                autoClose: parameters.genCfg.timeOutAutoClose_ms, // Optional: Timeout for closing the pop-up
+            // If opponent was not found by entered name
+            if(foundUser.length === 0){
+                toast.info("Opponent not found! Please try again!", {
+                    autoClose: parameters.genCfg.timeOutAutoClose_ms, // Optional: Timeout for closing the pop-up
+                }); 
+                            
+                return null
+            }
+
+            // Create a channel for both players
+            if(client.userID !== foundUser[0].id){
+                const newChannel = client.channel("messaging", {
+                    members: [client.userID, foundUser[0].id],
+                });
+
+                await newChannel.watch() // Listening to the channel
+
+                setChannelStates((prevStates) => ({
+                    ...prevStates,
+                    channelObj: newChannel,
+                })) 
+
+                // Add cookie properties to the channel state
+                if(cookies.cookies){
+                    setChannelStates((prevStates) => ({
+                        ...prevStates,
+                        cookieObj: cookies,
+                    })) 
+                } 
+
+                // Put the channel ID to local storage
+                if(getItem('channelMember-id') === null){
+                    setItem('channelMember-id', [client.userID, foundUser[0].id])
+                }                           
+            }
+        }catch(error){
+            // Error handling
+            toast.error("Network error, please cancel and try again!", {
+                autoClose: parameters.genCfg.timeOutAutoClose_ms, 
               }); 
-                         
-            return null
+            console.error(error.message)
         }
+    };
 
-        // Create a channel for both players
-        if(client.userID !== foundUser[0].id){
-            const newChannel = client.channel("messaging", {
-                members: [client.userID, foundUser[0].id],
-            });
+    // Restore established channel in case of page reload
+    useEffect(() => {
+        const storedChannelID = getItem('channel-id');
+        if(storedChannelID !== null){
+            console.log(">> @SetUp - reconnect ...")
 
-            await newChannel.watch() // Listening to the channel
+            const channel = restoreChannel(client, cookies, storedChannelID);
+            setItem('channel-id', channel.id);
 
             setChannelStates((prevStates) => ({
                 ...prevStates,
-                channelObj: newChannel,
-            })) 
+                channelObj: channel,
+            })); 
 
-            // Add cookie properties to the channel state
-            if(cookies.cookies){
-                setChannelStates((prevStates) => ({
-                    ...prevStates,
-                    cookieObj: cookies,
-                })) 
-            }            
-        }
-    };
+            setChannelStates((prevStates) => ({
+                ...prevStates,
+                cookieObj: cookies,
+            }));
+        } 
+    // eslint-disable-next-line
+    }, [])
 
     // Update the state with opponent name
     const handleChangedName = (event) => {
@@ -155,9 +216,9 @@ const SetUp = ({ setToken,
     const handleCancel = async () => {
         const homePath = "/";
 
+        clearLocalStorage()
         await helperFcn.disconnectUser(client); 
         setUserConnected(false)
-        helperFcn.deleteCookies(cookies)
         setUserCreated(false)
         navigate(homePath);
     }
@@ -168,7 +229,6 @@ const SetUp = ({ setToken,
                 {channelStates.channelObj ? (   
                     // Rendered section if channel is established 
                     <WaitingRoom />
-
                 ) : (
                     // Rendered section if channel is not established
                     <>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGameStates } from '../context/GameStatesContext.js';
 import { useNavigate } from 'react-router-dom';
+import { useLocalStorage } from '../functions/useLocalStorage.js';
 import * as parameters from '../../game-logic/parameters.js';
 import Button from '../gameSection/Button.jsx'
 import '../gameSection/Buttons.css'
@@ -19,6 +20,16 @@ const HomeSection = ({ homeSectionProps = parameters.homeSectionProps }) => {
     const navigate = useNavigate();
     const { gameStates, setGameStates } = useGameStates();
     const pathToNextPage = "/setUp";
+    const { getItem } = useLocalStorage();
+
+    // Get stored states from local storage in case of page reload
+    useEffect(() => {
+        const storedGameStates = getItem('game-states');
+        if(storedGameStates !== null){
+            setGameStates(storedGameStates)
+        } 
+        // eslint-disable-next-line
+    }, [])
 
     // Ensure a valid input length of user name  
     useEffect(() => {
@@ -35,7 +46,6 @@ const HomeSection = ({ homeSectionProps = parameters.homeSectionProps }) => {
                 }
             }
         };
-
         ensureValidInputLength()
         
     }, [gameStates, homeSectionProps]);
@@ -48,8 +58,7 @@ const HomeSection = ({ homeSectionProps = parameters.homeSectionProps }) => {
         setGameStates((prevStates) => ({
             ...prevStates,
             playerName: inputValue.trim(),
-        })) 
-               
+        }))                
     };
 
     const createNewGame = () => {
@@ -85,7 +94,7 @@ const HomeSection = ({ homeSectionProps = parameters.homeSectionProps }) => {
 
             {isInfoVisible && (
                 <p style={{ fontSize: '15px', color: 'yellow' }}>
-                    Please notice that the user name should have more than 1 and less than 20 characters. 
+                    Please notice that the user name should have more than {parameters.genCfg.minInputLength} and less than {parameters.genCfg.maxInputLength} characters. 
                 </p>
             )}    
             <Button buttonName = {"Create New Game"} isDisabled = {isValid ? false : true} onCklickFunction = {createNewGame}/>      

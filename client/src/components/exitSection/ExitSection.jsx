@@ -4,6 +4,7 @@ import * as helperFcn from '../functions/helperFunctions.js'
 import { useChatContext } from 'stream-chat-react';
 import { useGameStates } from '../context/GameStatesContext.js';
 import { useChannelStates } from '../context/ChannelStatesContext.js';
+import { useLocalStorage } from '../functions/useLocalStorage.js';
 
 /**
  * React component rendered after the user leaves the game.
@@ -17,7 +18,9 @@ const ExitSection = ({exitSectionProps = parameters.exitSectionProps}) => {
     const { channelStates } = useChannelStates();
     const { gameStates } = useGameStates();
     const { client } = useChatContext();
-    const cookiesObj = channelStates.cookieObj;
+    const cookiesObj = channelStates?.cookieObj;
+    const { clearLocalStorage } = useLocalStorage();
+
 
     useEffect(() => {
         const checkoutUser = async () => {
@@ -28,8 +31,9 @@ const ExitSection = ({exitSectionProps = parameters.exitSectionProps}) => {
 
         if(gameStates.exitConfirmed){
             checkoutUser()
+            clearLocalStorage()
         }
-
+        // eslint-disable-next-line
     },[client, cookiesObj, gameStates.exitConfirmed])
 
     return(

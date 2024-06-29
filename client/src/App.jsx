@@ -16,6 +16,7 @@ import GameSection from './components/gameSection/GameSection';
 import ExitSection from './components/exitSection/ExitSection';  
 import PageNotFound from './components/PageNotFound';
 import SetUp from './components/homeSection/SetUp';
+import { useLocalStorage } from './components/functions/useLocalStorage';
 
 // ******************************************************************* 
 /** 
@@ -23,19 +24,34 @@ import SetUp from './components/homeSection/SetUp';
  * 
  * - Developer: D.Kim 
  * - Version: 1.0.0 
- * - Date of last changes: 20.06.2024
+ * - Date of last changes: 29.06.2024
 */
 // *******************************************************************  
 const App = () => {
     const cookies = useMemo(() => new Cookies(), []);
     const apiKey = process.env.REACT_APP_API_KEY; 
-    
+
+    const { setItem, getItem } = useLocalStorage();
+
     // Client side authentication to the Chat-API with a valid key
     const client = StreamChat.getInstance(apiKey); 
     const [userConnected, setUserConnected] = useState(false);
     const [userCreated, setUserCreated]     = useState(false);
     const [tokenRef, setTokenRef]           = useState(null);
 
+    // Get stored states from local storage in case of page reload
+    useEffect(() => {
+        const storedUserConnected = getItem('userConnected');
+        const storedUserCreated = getItem('userCreated');
+
+        if(storedUserConnected !== null){
+            setUserConnected(storedUserConnected)
+        } 
+        if(storedUserCreated !== null){
+            setUserCreated(storedUserCreated)
+        } 
+        // eslint-disable-next-line
+    }, [])
 
     useEffect(() => {
         const maxConnectionAttempts = parameters.genCfg.maxConnectionAttempts;
@@ -71,6 +87,9 @@ const App = () => {
                 connectUser();
             }
         }
+        setItem('userConnected', userConnected)
+
+        // eslint-disable-next-line
         }, [client, userConnected, cookies, userCreated, tokenRef]);
 
         return(
