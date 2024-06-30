@@ -17,7 +17,6 @@ async function initChannel(clientObj, channelID) {
     let channel;
 
     if(channelID){
-        // Bestehenden Channel wiederherstellen
         channel = clientObj.channel("messaging", channelID);
         await channel.watch();
     }else{
@@ -28,11 +27,7 @@ async function initChannel(clientObj, channelID) {
 }    
 
 export async function restoreChannel(clientObj, cookiesObj, channelID){
-    initClient(clientObj,cookiesObj)
-    .then(() => {        
-        return initChannel(clientObj, channelID);
-    })
-    .catch(error => {
-        console.error(error.message)
-    });
+    await initClient(clientObj,cookiesObj)
+    const channel = await initChannel(clientObj, channelID);
+    return channel;
 }

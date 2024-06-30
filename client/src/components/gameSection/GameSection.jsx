@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'universal-cookie'
 import * as parameters from '../../game-logic/parameters.js';
 import GameField from './GameField';  
 import Countdown from "./Countdown.jsx";
@@ -9,6 +10,8 @@ import { useOpponentStates } from '../context/OpponentStatesContext.js';
 import { ScoutStatesProvider } from '../context/ScoutStatesContext';
 import { useChatContext } from 'stream-chat-react';
 import { useChannelStates } from '../context/ChannelStatesContext.js';
+import { useLocalStorage } from '../functions/useLocalStorage.js';
+import { restoreChannel } from '../functions/restoreChannel.js';
 import Cover from './Cover';
 import './Buttons.css'
 
@@ -19,35 +22,63 @@ import './Buttons.css'
 const GameSection = () => {
 
     const { buttonStates, setButtonStates } = useButtonStates();
-    const { channelStates } = useChannelStates();
+    const { channelStates, setChannelStates } = useChannelStates();
     const { gameStates, setGameStates } = useGameStates();
     const { opponentStates, setOpponentStates } = useOpponentStates();
     const { client } = useChatContext();
-
+    const { setItem, getItem } = useLocalStorage();
     const [stateIsUpdated, setStateIsUpdated] = useState(false);
+    const [pageRefreshed, setPageRefreshed] = useState(false);
 
+    const cookies = useMemo(() => new Cookies(), []);
     const navigate = useNavigate();
+
+    // Get stored states from local storage in case of page reload                
+    useEffect(() => {
+        const storedGameState     = getItem('game-states');
+        const storedOpponentState = getItem('opponent-states');
+        const storedIsUpdated     = getItem('state-isUpdated');
+
+        if(storedGameState !== null){
+            setGameStates(storedGameState)
+        } 
+        if(storedOpponentState !== null){
+            setOpponentStates(storedOpponentState)
+        }         
+        if(storedIsUpdated !== null){
+            setStateIsUpdated(storedIsUpdated)
+        } 
+
+        const isPageRefreshed = getItem('pageRefreshed');
+        if (isPageRefreshed) {
+            setPageRefreshed(isPageRefreshed)
+        } else {
+            setItem('pageRefreshed', true);
+        }        
+        // eslint-disable-next-line
+    }, [])
 
     // Update states between both players
     useEffect(() => {
-       
         const sendGameStateUpdates = async (gameStates) => {
-            await channelStates.channelObj.sendEvent({
-                type: "game-state-update",
-                data: gameStates,
-            })
+            try{
+                await channelStates.channelObj.sendEvent({
+                    type: "game-state-update",
+                    data: gameStates,
+                })           
+            }catch(error){
+                console.error(error.message);
+            }            
         };
 
          // Function to provide states, which shall be updated
         const updateStates = async () => {
             try{
                 await sendGameStateUpdates(gameStates);
-
             }catch(error){
                 console.error(error.message);
             }
-        };
-        
+        };       
         if(!stateIsUpdated){      
             updateStates();           
         }
@@ -65,18 +96,19 @@ const GameSection = () => {
         }
 
         if(gameStates.exitConfirmed){
-
             // Navigate the player to the exit section
             navigate("/exitSection")
         }
+        // Save states in local storage
+        setItem('game-states', gameStates)
 
+        // eslint-disable-next-line
     }, [gameStates.exitConfirmed, stateIsUpdated, setGameStates, opponentStates.exitConfirmed, navigate])
 
     // Exchange game states between players 
     try{
         channelStates.channelObj.on((event) => {
-            if(event.type === "game-state-update" && event.user.id !== client.userID){
-                    
+            if(event.type === "game-state-update" && event.user.id !== client.userID){        
                 if(!stateIsUpdated){ 
                     // Update state to inform user that the opponent is waiting
                     setOpponentStates((prevStates) => ({
@@ -89,12 +121,36 @@ const GameSection = () => {
                     setStateIsUpdated(true);
                 }
             }
-        })
+        })       
+        setItem('state-isUpdated', stateIsUpdated)
+        setItem('opponent-states', opponentStates)
 
     }catch(error){ 
-        // Error handling: Navigate the player back to the home section
-        console.error(error.message);
+        console.error(error.message);   
     }
+
+    // Restore established channel in case of reloaded page
+    useEffect(() => {
+        const storedChannelID = getItem('channel-id');
+        console.log(">> [@GameSection]: reconnect... ")
+        if(storedChannelID !== null && pageRefreshed){
+            restoreChannel(client, cookies, storedChannelID)
+            .then((channel) => {
+              if (channel) {
+                setChannelStates((prevStates) => ({
+                  ...prevStates,
+                  channelObj: channel,
+                  cookieObj: cookies,
+                }));
+              }
+            })
+            .catch(error => {
+              console.error(error.message);
+            });
+        } 
+        
+    // eslint-disable-next-line
+    }, [client, pageRefreshed])
 
     /**
      * Function to be executed when the "Start Game" button is clicked.
@@ -249,8 +305,6 @@ const GameSection = () => {
 
                 <Countdown />
             </div>
-
-            {/* TO-DO: CHAT-Component */}
         </>
     )
 };

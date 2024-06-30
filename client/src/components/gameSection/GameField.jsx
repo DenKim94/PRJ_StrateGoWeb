@@ -332,8 +332,13 @@ function GameField({ gameFieldSettings = parameters.gameFieldObj })
           }
         }
       };
-  
-      channelStates.channelObj.on(handleChannelEvent);
+      
+      try{
+        channelStates.channelObj.on(handleChannelEvent);
+      }catch(error){
+        console.error(error.message);  
+      }
+
     // eslint-disable-next-line
     }, [gameFieldState, addedOpponentFieldState, client.userID, channelStates.channelObj]); 
   

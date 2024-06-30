@@ -57,12 +57,12 @@ const DefeatedFigureStorage = ({ defFigStateArray,
             }
         };
 
-        channelStates.channelObj.on(handleChannelEvent);
-
-        // Cleanup 
-        return () => {
-            channelStates.channelObj.off(handleChannelEvent);
-        };
+        try{
+            channelStates.channelObj.on(handleChannelEvent);
+          }catch(error){
+            console.error(error.message);  
+        }
+        
     // eslint-disable-next-line
     }, [channelStates.channelObj, client.userID]);
 
