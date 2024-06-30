@@ -24,7 +24,7 @@ import { useLocalStorage } from './components/functions/useLocalStorage';
  * 
  * - Developer: D.Kim 
  * - Version: 1.0.0 
- * - Date of last changes: 29.06.2024
+ * - Date of last changes: 30.06.2024
 */
 // *******************************************************************  
 const App = () => {
@@ -54,7 +54,7 @@ const App = () => {
     }, [])
 
     useEffect(() => {
-        const maxConnectionAttempts = parameters.genCfg.maxConnectionAttempts;
+        const maxConnectionAttempts   = parameters.genCfg.maxConnectionAttempts;
         let connectionAttemptsCounter = 0;
 
         if(userCreated && tokenRef){
@@ -69,7 +69,7 @@ const App = () => {
             
                     setUserConnected(true);
                     connectionAttemptsCounter = 0;
-                    console.log(" User connected.");
+                    console.log(">> User connected.");
 
                 } catch (error) {
                     console.error(error.message);
@@ -79,7 +79,7 @@ const App = () => {
                         connectionAttemptsCounter += 1;
                         connectUser();
                     } else {
-                        console.error(" Connect user: Maximum number of attempts exceeded.");
+                        console.error("Connecting user: Maximum number of attempts exceeded.");
                     }
                 }
             };       

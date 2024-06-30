@@ -117,7 +117,6 @@ const GameSection = () => {
                         pausedGame: event.data.isPaused,
                         exitConfirmed: event.data.exitConfirmed,
                     }))
-                
                     setStateIsUpdated(true);
                 }
             }
@@ -233,7 +232,6 @@ const GameSection = () => {
             ready2Play: false,
             leaveGame: true,       
         })); 
-
         setStateIsUpdated(false)
     }
 

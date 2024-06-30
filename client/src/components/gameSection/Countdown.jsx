@@ -54,7 +54,6 @@ const Countdown = () => {
     try{
         channelStates.channelObj.on((event) => {
             if(event.type === "time-over" && event.user.id !== client.userID){
-                   
                 setOpponentStates((prevStates) => ({
                     ...prevStates,
                     ready2Play: event.data.ready2Play,

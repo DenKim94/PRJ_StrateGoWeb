@@ -175,20 +175,21 @@ const SetUp = ({ setToken,
     useEffect(() => {
         const storedChannelID = getItem('channel-id');
         if(storedChannelID !== null){
-            console.log(">> @SetUp - reconnect ...")
+            console.log(">> [@SetUp]: reconnect ...")
 
-            const channel = restoreChannel(client, cookies, storedChannelID);
-            setItem('channel-id', channel.id);
-
-            setChannelStates((prevStates) => ({
-                ...prevStates,
-                channelObj: channel,
-            })); 
-
-            setChannelStates((prevStates) => ({
-                ...prevStates,
-                cookieObj: cookies,
-            }));
+            restoreChannel(client, cookies, storedChannelID)
+            .then((channel) => {
+              if (channel) {
+                setChannelStates((prevStates) => ({
+                  ...prevStates,
+                  channelObj: channel,
+                  cookieObj: cookies,
+                }));
+              }
+            })
+            .catch(error => {
+              console.error(error.message);
+            });
         } 
     // eslint-disable-next-line
     }, [])
